@@ -37,41 +37,29 @@
   :focus-visible { outline: 1px solid var(--blue); outline-offset: 2px; }
   button:focus:not(:focus-visible) { outline: none; }
 
-  .bg-composition { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .bg-rule { position: absolute; display: block; background: var(--line-2); opacity: 0.45; }
-  .bg-rule-v { top: 20%; left: 5%; width: 1px; height: 60%; }
-  .bg-corner { position: absolute; display: block; border-color: var(--line-2); border-style: solid; opacity: 0.6; }
-  .bg-corner-tl { top: calc(20% - 8px); left: calc(5% - 8px); width: 16px; height: 16px; border-width: 1px 0 0 1px; }
-  .bg-yao { position: absolute; display: block; height: 1px; left: calc(5% + 1px); opacity: 0.4; }
-  .yao-1 { top: 30%; width: 22px; background: #6a3d38; }
-  .yao-2 { top: 36%; width: 10px; background: #6a3d38; }
-  .yao-3 { top: 42%; width: 28px; background: linear-gradient(to right, #6a3d38 0 9px, transparent 9px 14px, #6a3d38 14px 28px); }
-  .yao-4 { top: 48%; width: 10px; background: #6a3d38; }
-  .yao-5 { top: 54%; width: 18px; background: linear-gradient(to right, #6a3d38 0 12px, transparent 12px 16px, #6a3d38 16px 18px); }
-  .yao-6 { top: 60%; width: 26px; background: #6a3d38; }
-  .bg-yao.flash { animation: yao-flash 0.4s steps(2, end); }
-  @keyframes yao-flash { 0% { opacity: 0.4; } 50% { opacity: 0.9; } 100% { opacity: 0.4; } }
-  .bg-tick { position: absolute; display: block; height: 1px; background: var(--line-2); opacity: 0.5; left: calc(5% - 14px); }
-  .bg-tick-1 { top: 26%; width: 8px; }
-  .bg-tick-2 { top: 34%; width: 6px; }
-  .bg-tick-3 { top: 50%; width: 10px; }
-  .bg-tick-4 { top: 64%; width: 6px; }
-  .bg-tick-5 { top: 72%; width: 8px; }
-  .bg-banner { position: absolute; display: block; width: 1px; top: 0; opacity: 0.3; }
-  .banner-1 { left: 46%; height: 44px; background: var(--line-2); }
-  .banner-2 { left: 54%; height: 68px; background: repeating-linear-gradient(to bottom, var(--line-2) 0 2px, transparent 2px 4px); }
-  .banner-3 { left: 61%; height: 28px; background: var(--line-2); }
-  .bg-dot { position: absolute; display: block; width: 3px; height: 3px; }
-  .bg-dot-1 { top: 20%; left: 5%; background: var(--blue); transform: translate(-1px, -1px); opacity: 0.7; }
+  .bg-composition,
+  .grid-field,
+  .noise-overlay,
+  .ark-deco { display: none !important; }
 
-  .grid-field {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    --gx: -300px; --gy: -300px;
-    background-image: radial-gradient(circle, rgba(140,150,160,0.05) 1px, transparent 1px);
-    background-size: 22px 22px;
-    -webkit-mask-image: radial-gradient(circle 260px at var(--gx) var(--gy), transparent 0%, transparent 35%, black 100%);
-    mask-image: radial-gradient(circle 260px at var(--gx) var(--gy), transparent 0%, transparent 35%, black 100%);
+  /* 背景点阵：越靠近中间越透明 */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle, rgba(150,150,160,0.13) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(150,150,160,0.09) 2.5px, transparent 2.5px);
+    background-size: 18px 18px, 44px 44px;
+    background-position: 0 0, 9px 9px;
+    transform: perspective(700px) rotateX(8deg) rotateY(15deg);
+    transform-origin: 0% 100%;
+    -webkit-mask-image: radial-gradient(circle at 0% 100%, black 0%, rgba(0,0,0,0.5) 25%, transparent 60%);
+    mask-image: radial-gradient(circle at 0% 100%, black 0%, rgba(0,0,0,0.5) 25%, transparent 60%);
   }
+
   .cross-mark {
     position: fixed; width: 9px; height: 9px; pointer-events: none; z-index: 1; opacity: 0;
     transition: opacity 0.25s ease-out; margin: -4.5px 0 0 -4.5px;
@@ -81,59 +69,8 @@
   .cross-mark::after { top: 50%; left: 0; width: 100%; height: 1px; }
   .cross-mark.show { opacity: 0.35; }
   .dust-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; width: 100%; height: 100%; }
-  .noise-overlay {
-    position: fixed; inset: 0; pointer-events: none; z-index: 3; opacity: 0.035; mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 220px 220px;
-  }
 
-  .ark-deco { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .deco-ruler {
-    position: absolute; top: 6px; left: 26%; right: 26%; height: 5px; opacity: 0.25;
-    background-image: repeating-linear-gradient(to right, rgba(90,90,100,0.5) 0 1px, transparent 1px 15px);
-  }
-  .deco-ruler::before {
-    content: ""; position: absolute; inset: 0;
-    background-image: repeating-linear-gradient(to right, rgba(90,90,100,0.6) 0 1px, transparent 1px 75px);
-    height: 7px;
-  }
-  .deco-data {
-    position: absolute; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em;
-    color: var(--ash); opacity: 0.35; white-space: nowrap; text-transform: uppercase;
-  }
-  .deco-data.d1 { top: 22%; left: 38%; }
-  .deco-data.d2 { bottom: 16%; right: 10%; }
-  .deco-bars { position: absolute; right: 36px; bottom: 14%; display: flex; gap: 3px; align-items: flex-end; height: 46px; opacity: 0.5; }
-  .deco-bars span { width: 1px; background: var(--vermilion); }
-  .deco-bars span:nth-child(1) { height: 22%; } .deco-bars span:nth-child(2) { height: 48%; }
-  .deco-bars span:nth-child(3) { height: 32%; } .deco-bars span:nth-child(4) { height: 76%; }
-  .deco-bars span:nth-child(5) { height: 58%; } .deco-bars span:nth-child(6) { height: 92%; }
-  .deco-bars span:nth-child(7) { height: 64%; } .deco-bars span:nth-child(8) { height: 40%; }
-  .deco-bars span:nth-child(9) { height: 82%; } .deco-bars span:nth-child(10) { height: 28%; }
-  .deco-bars span:nth-child(11) { height: 55%; } .deco-bars span:nth-child(12) { height: 18%; }
-  .deco-ring {
-    position: absolute; top: 12%; right: 8%; width: 68px; height: 68px;
-    border: 1px solid var(--line-2); border-radius: 50%;
-    pointer-events: auto; cursor: grab; user-select: none; z-index: 1;
-    transition: border-color 0.2s ease;
-  }
-  .deco-ring:hover { border-color: var(--blue); }
-  .deco-ring.dragging { cursor: grabbing; border-color: var(--pink); }
-  .deco-ring::before {
-    content: ""; position: absolute; top: 50%; left: 50%;
-    width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px; background: var(--blue); opacity: 0.6;
-  }
-  .deco-ring::after {
-    content: ""; position: absolute; top: -4px; left: 50%;
-    width: 1px; height: 8px; background: var(--vermilion); transform: translateX(-0.5px);
-  }
-  .ring-readout {
-    position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px;
-    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em;
-    color: var(--dim); white-space: nowrap; opacity: 0; transition: opacity 0.2s ease;
-  }
-  .deco-ring:hover .ring-readout, .deco-ring.dragging .ring-readout, .deco-ring.confirmed .ring-readout { opacity: 1; color: var(--pink); }
-
+  /* ========== 雷达 ========== */
   .radar-field {
     position: fixed; top: 46%; left: 72%; width: 700px; height: 700px;
     margin-top: -350px; margin-left: -350px; pointer-events: none; z-index: 0;
@@ -161,6 +98,16 @@
   .radar-trace { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .radar-trace line { transition: opacity 0.3s ease-out; }
 
+  .radar-field::before {
+    content: ""; position: absolute; bottom: 90px; right: 60px;
+    width: 8px; height: 8px; background: var(--blue); opacity: 0.4; pointer-events: none;
+  }
+  .radar-field::after {
+    content: ""; position: absolute; bottom: 60px; right: 100px;
+    width: 60px; height: 60px; border: 1px solid rgba(26,159,255,0.2);
+    border-radius: 50%; pointer-events: none;
+  }
+
   .signal-layer { position: fixed; inset: 0; pointer-events: none; z-index: 2; }
   .signal {
     position: fixed; width: 22px; height: 22px; pointer-events: auto; cursor: crosshair; z-index: 2; opacity: 0;
@@ -182,6 +129,17 @@
   .signal .bracket.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
   .signal .bracket.br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
 
+  .signal.flash { animation: signal-flash 0.5s ease-out; }
+  @keyframes signal-flash {
+    0%   { filter: brightness(1);   transform: scale(var(--k,1)) translate(var(--jx,0), var(--jy,0)); }
+    30%  { filter: brightness(2.4) drop-shadow(0 0 8px rgba(255,45,85,0.9)); transform: scale(calc(var(--k,1) * 1.5)) translate(var(--jx,0), var(--jy,0)); }
+    100% { filter: brightness(1);   transform: scale(var(--k,1)) translate(var(--jx,0), var(--jy,0)); }
+  }
+  .signal.flash::before { background: #ff3355 !important; box-shadow: 0 0 12px #ff3355; }
+  .signal.flash .cross-x,
+  .signal.flash .cross-y,
+  .signal.flash .bracket { border-color: #ff3355 !important; }
+
   .signal-card {
     position: fixed; width: 228px; background: #0a0a0c; border: 1px solid var(--line-2);
     border-left: 2px solid var(--vermilion); padding: 12px 14px 10px;
@@ -199,7 +157,24 @@
   .signal-card .card-row b.pink { color: var(--pink); }
   .signal-card .card-foot { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 8px; letter-spacing: 0.2em; color: #3a3a40; text-transform: uppercase; }
 
-  .live-log { display: flex; align-items: center; gap: 10px; padding: 10px 0 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; color: var(--dim); border-top: 1px solid var(--line); opacity: 0; transition: opacity 0.5s ease-out; cursor: pointer; }
+  .live-log { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    padding: 10px 0 8px; 
+    font-family: var(--font-mono); 
+    font-size: 10px; 
+    letter-spacing: 0.06em; 
+    color: var(--dim); 
+    border-top: 1px solid var(--line); 
+    opacity: 0; 
+    transition: opacity 0.5s ease-out; 
+    cursor: pointer; 
+
+    transform: translateY(-16px); 
+    margin-bottom: -16px; 
+  }
+  
   .live-log.show { opacity: 1; }
   .live-log:hover { border-top-color: var(--blue); }
   .live-log.locked { border-top-color: var(--vermilion); }
@@ -211,7 +186,7 @@
   .log-lock { margin-left: auto; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; color: var(--pink); opacity: 0; transition: opacity 0.2s ease; flex-shrink: 0; }
   .live-log.locked .log-lock { opacity: 1; }
 
-  .terminal { position: relative; z-index: 1; height: 100vh; padding: 26px 34px 36px; display: flex; flex-direction: column; border: 1px solid var(--line); margin: 12px; overflow: hidden; }
+  .terminal { position: relative; z-index: 1; height: 100vh; padding: 16px 34px 24px; display: flex; flex-direction: column; border: 1px solid var(--line); margin: 12px; overflow: hidden; }
   .terminal.surging::before { content: ""; position: absolute; inset: -1px; border: 1px solid var(--blue); pointer-events: none; z-index: 15; animation: surge-border 0.8s steps(3, end) forwards; }
   @keyframes surge-border { 0% { clip-path: inset(0 100% 0 0); opacity: 1; } 60% { clip-path: inset(0 0 100% 0); opacity: 1; } 100% { clip-path: inset(0 0 0 100%); opacity: 0; } }
   .scanline { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--blue); opacity: 0.06; animation: scan 20s linear infinite alternate; pointer-events: none; z-index: 4; }
@@ -222,7 +197,30 @@
   .corner.bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
   .corner.br { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
 
-  .hud-top { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-en); font-size: 12px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; padding-bottom: 16px; border-bottom: 1px solid var(--line); position: relative; z-index: 10; }
+ .hud-top { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-family: var(--font-en); 
+    font-size: 12px; 
+    letter-spacing: 0.18em; 
+    color: var(--dim); 
+    text-transform: uppercase; 
+    padding-bottom: 14px; 
+    position: relative; 
+    z-index: 10; 
+  }
+  
+  .hud-top::after {
+    content: "";
+    position: absolute;
+    left: -34px; 
+    right: -34px; 
+    bottom: 0; 
+    height: 2px;
+    background: var(--line-2); 
+    pointer-events: none;
+  }
   .hud-top .brand { color: var(--text); display: flex; align-items: center; gap: 10px; white-space: nowrap; }
   .hud-top .brand .mark { width: 5px; height: 5px; background: var(--blue); }
   .hud-top .status { display: flex; gap: 24px; align-items: center; }
@@ -232,22 +230,127 @@
   .dot { width: 4px; height: 4px; background: var(--blue); }
   .dot.pink { background: var(--pink); }
 
-  .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 36px 0; position: relative; overflow: hidden; }
-  .hero .kicker { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; font-family: var(--font-en); font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; }
+  .hud-top::before {
+    content: "";
+    position: absolute;
+    inset: -16px -34px 0 -34px;
+    background: #1a1a22c2;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  .hud-top .brand { position: relative; padding: 2px 8px; }
+  .hud-top .brand::before {
+    content: "";
+    position: absolute;
+    inset: -3px -8px;
+    background: #0c1a2c;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 18px 0; position: relative; overflow: hidden; padding-left: 0; padding-right: 0; }
+  .hero .kicker { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; font-family: var(--font-en); font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; }
   .kicker-tag { color: var(--pink); font-weight: 500; letter-spacing: 0.22em; }
   .kicker-line { width: 40px; height: 1px; background: var(--line-2); }
   .kicker-text { color: var(--dim); font-weight: 500; }
-  .hero h1 {
-    width: fit-content; font-size: clamp(40px, 7.5vw, 92px); font-weight: 900; line-height: 1.04;
-    letter-spacing: -0.01em; color: #fff; position: relative; padding-bottom: 24px;
+
+  /* ================= 第一页 Hero 区域重构 ================= */
+  .hero-title-wrap {
+    display: flex;
+    flex-direction: column;
+    margin-left: -34px;
+    margin-bottom: 30px;
+    width: max-content;
+    position: relative;
   }
-  .hero h1::after { content: ""; position: absolute; bottom: 0; left: 0; width: calc(100% + 20px); height: 4px; background: #1c1c22; }
-  .hero h1::before { content: ""; position: absolute; bottom: -8px; left: -8px; width: calc(100% + 6px); height: 1px; background: #141418; pointer-events: none; }
-  .hero h1 .en { display: block; font-family: var(--font-en); font-size: clamp(12px, 1.4vw, 16px); font-weight: 400; letter-spacing: 0.36em; color: var(--dim); margin-top: 18px; text-transform: uppercase; }
-  .hero .mission { margin-top: 28px; max-width: 600px; font-size: 14px; line-height: 1.9; color: var(--text); border-left: 1px solid var(--line-2); padding-left: 18px; }
+  .title-box {
+    display: block;
+    background-color: #1f1f26;
+    padding: 14px 60px 14px 34px; 
+    background-image: repeating-linear-gradient(45deg, transparent 0 3px, rgba(120,120,130,0.04) 3px 4px, transparent 4px 7px),
+                      radial-gradient(circle, rgba(120,120,130,0.06) 1px, transparent 1px);
+    background-size: auto, 6px 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .title-text {
+    font-size: clamp(40px, 7.5vw, 92px); 
+    font-weight: 900; 
+    line-height: 1.1;
+    letter-spacing: -0.01em; 
+    color: #fff; 
+    display: block;
+    white-space: nowrap;
+  }
+  .hero-title-wrap .en {
+    position: relative;
+    display: block;
+    font-family: var(--font-en);
+    font-size: clamp(12px, 1.4vw, 16px);
+    font-weight: 400;
+    letter-spacing: 0.36em;
+    color: var(--dim);
+    margin-top: 10px;
+    text-transform: uppercase;
+    width: 100%;
+    padding-left: 34px;
+    box-sizing: border-box;
+  }
+  .hero-title-wrap .blue-block {
+    position: absolute;
+    right: 0; 
+    top: -16px;
+    width: 12px;
+    height: 12px;
+    background: var(--blue);
+  }
+  .gray-bar-thin {
+    height: 1px;
+    background: rgba(140,140,150,0.2);
+    margin: 10px 0 0 0;
+    width: 100%;
+  }
+  .gray-bar-thick {
+    height: 14px;
+    background: #1f1f26;
+    background-image: repeating-linear-gradient(90deg, rgba(140,140,150,0.08) 0 1px, transparent 1px 4px);
+    margin: 6px 0 0 0;
+    width: 100%;
+  }
+  .pink-block {
+    display: block;
+    width: 80px;
+    height: 20px;
+    background: var(--pink);
+    margin-top: 10px;
+    margin-left: 34px;
+  }
+ .deco-sq-solid {
+    position: absolute; 
+    top: 30px; 
+    right: 80px; 
+    width: 60px; 
+    height: 60px; 
+    background: #1a1a22; 
+    pointer-events: none; 
+    z-index: 2;
+  }
+  .deco-sq-outline {
+    position: absolute; 
+    top: 40px;   
+    right: 112px; 
+    width:75px; 
+    height: 75px; 
+    border: 1px solid rgba(26,159,255,0.4); 
+    pointer-events: none; 
+    z-index: 1;
+  }
+
+  .hero .mission { margin-top: 28px; max-width: 600px; font-size: 14px; line-height: 1.9; color: var(--text); border-left: 4px solid var(--pink); padding-left: 20px; }
   .hero .mission .tag { font-family: var(--font-en); letter-spacing: 0.24em; color: var(--pink); font-size: 11px; font-weight: 500; text-transform: uppercase; display: block; margin-bottom: 8px; }
 
-  .access { margin-top: 44px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .access { margin-top: 40px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
   .btn-access {
     position: relative; display: inline-flex; align-items: center; gap: 12px;
     background: transparent; color: var(--blue); border: 1px solid var(--blue);
@@ -261,10 +364,36 @@
   .access .hint { font-family: var(--font-en); font-size: 11px; letter-spacing: 0.22em; color: var(--dim); text-transform: uppercase; }
 
   .hud-bottom {
-    display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;
-    padding-top: 16px; border-top: 1px solid var(--line);
-    font-family: var(--font-en); font-size: 11px; letter-spacing: 0.16em; color: var(--dim);
-    text-transform: uppercase; flex-wrap: wrap;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+    gap: 20px;
+    padding-top: 16px; 
+    font-family: var(--font-en); 
+    font-size: 11px; 
+    letter-spacing: 0.16em; 
+    color: var(--dim);
+    text-transform: uppercase; 
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hud-bottom::before {
+    content: ""; 
+    position: absolute;
+    inset: 0 -34px -16px -34px;
+    background: #1a1a22c2; 
+    z-index: -2;
+    pointer-events: none;
+  }
+  .hud-bottom::after {
+    content: "";
+    position: absolute;
+    left: -34px; 
+    right: -34px; 
+    top: 0; 
+    height: 2px; 
+    background: var(--line-2); 
+    pointer-events: none;
   }
   .hud-bottom .metric strong { color: var(--text); font-size: 18px; font-weight: 600; display: block; letter-spacing: 0.06em; margin-top: 4px; }
   .hud-bottom .metric.pink strong { color: var(--pink); }
@@ -287,19 +416,32 @@
   .idle-ping { position: fixed; width: 20px; height: 20px; margin: -10px 0 0 -10px; border: 1px solid rgba(26,159,255,0.4); border-radius: 50%; pointer-events: none; z-index: 4; animation: idle-ping-out 1.6s ease-out forwards; }
   @keyframes idle-ping-out { 0% { transform: scale(0.3); opacity: 0.7; } 100% { transform: scale(9); opacity: 0; } }
 
+  /* ========== 第二页面 ========== */
   .portal {
     position: fixed; inset: 0; z-index: 20;
-    background: linear-gradient(180deg,
-      #000000 25%,
-      #0d1014 50%,
-      #0c1014 75%,
-      #0e1622 90%);
+    background: #060607 !important;
     opacity: 0; visibility: hidden;
     transition: opacity 0.3s steps(2), visibility 0.3s steps(2);
     display: flex; flex-direction: column;
   }
   .portal.open { opacity: 1; visibility: visible; }
-
+  .portal::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle, rgba(150,150,160,0.12) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(150,150,160,0.08) 2.5px, transparent 2.5px);
+    background-size: 18px 18px, 44px 44px;
+    background-position: 0 0, 9px 9px;
+    transform: perspective(700px) rotateX(8deg) rotateY(15deg);
+    transform-origin: 0% 100%;
+    -webkit-mask-image: radial-gradient(circle at 0% 100%, black 0%, rgba(0,0,0,0.5) 25%, transparent 60%);
+    mask-image: radial-gradient(circle at 0% 100%, black 0%, rgba(0,0,0,0.5) 25%, transparent 60%);
+  }
+  .portal-nav, .portal-main { position: relative; z-index: 1; }
   .portal-nav {
     position: relative; display: flex; align-items: center; justify-content: space-between;
     gap: 20px; padding: 0 24px; height: 56px; border-bottom: 1px solid var(--line);
@@ -308,21 +450,16 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-
   .pn-brand {
     display: flex; align-items: center; gap: 10px;
     padding: 7px 14px 7px 10px;
     border: 1px solid var(--line-2);
     background: #060607;
     font-family: var(--font-en);
-    font-size: 11px;
-    font-weight: 500;
-    color: #ececee;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    position: relative;
-    height: 40px;
+    font-size: 11px; font-weight: 500;
+    color: #ececee; letter-spacing: 0.12em;
+    text-transform: uppercase; white-space: nowrap;
+    position: relative; height: 40px;
   }
   .pn-brand::before {
     content: ""; position: absolute; top: -1px; left: -1px;
@@ -339,8 +476,7 @@
   .pn-logo { width: 26px; height: 26px; color: #ececee; flex-shrink: 0; }
   .pn-name { font-family: var(--font-en); font-size: 11px; letter-spacing: 0.14em; }
   .pn-sub { font-family: var(--font-en); font-size: 9px; font-weight: 400; letter-spacing: 0.2em; color: var(--dim); }
-
-  .pn-menu { display: flex; height: 100%; flex-wrap: wrap; }
+  .pn-menu { display: flex; height: 100%; flex-wrap: wrap; margin-left: auto; }
   .pn-item { position: relative; background: transparent; border: none; color: var(--dim); padding: 0 15px; font-family: var(--font-cn); font-size: 12px; letter-spacing: 0.06em; cursor: pointer; transition: color 0.12s steps(2); height: 100%; }
   .pn-item:hover { color: var(--text); }
   .pn-item.active { color: var(--blue); }
@@ -349,30 +485,35 @@
     background: var(--blue);
     transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
                 width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    will-change: transform, width;
+    pointer-events: none; will-change: transform, width;
   }
+  .pn-item#wikiNavBtn { background: #0c1a2c; }
   .pn-status { display: flex; align-items: center; gap: 16px; font-family: var(--font-en); font-size: 11px; letter-spacing: 0.14em; color: var(--dim); text-transform: uppercase; white-space: nowrap; }
   .pn-status span { display: flex; align-items: center; gap: 6px; }
   .pn-exit { background: transparent; border: 1px solid var(--line-2); color: var(--dim); padding: 5px 12px; font-family: var(--font-en); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: color 0.12s steps(2), border-color 0.12s steps(2); }
   .pn-exit:hover { color: var(--pink); border-color: var(--pink); }
 
-  .portal-main { flex: 1; overflow-y: auto; padding: 32px 40px 48px; position: relative; }
+  .portal-main { flex: 1; overflow-y: auto; padding: 24px 40px 48px; position: relative; }
   .portal-main::-webkit-scrollbar { width: 5px; }
   .portal-main::-webkit-scrollbar-thumb { background: var(--line-2); }
   .portal-view { display: none; max-width: 1120px; margin: 0 auto; }
   .portal-view.active { display: block; animation: view-in 0.18s ease-out; }
   @keyframes view-in { from { opacity: 0.4; } to { opacity: 1; } }
 
-  .portal-hero { border-left: 1px solid var(--line-2); padding-left: 20px; margin-bottom: 32px; }
+  .portal-hero {
+    position: relative;
+    border-left: 1px solid var(--line-2);
+    padding-left: 20px;
+    margin-bottom: 32px;
+  }
   .ph-tag {
     font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
     color: var(--ash); text-transform: uppercase; margin-bottom: 14px;
     padding-bottom: 6px; border-bottom: 1px solid var(--vermilion);
     display: inline-block;
   }
-  .portal-hero h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 700; color: #fff; line-height: 1.2; letter-spacing: -0.005em; margin-bottom: 14px; }
-  .portal-hero p { font-size: 13px; line-height: 1.9; color: var(--dim); max-width: 660px; margin-bottom: 22px; }
+  .portal-hero h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 700; color: #fff; line-height: 1.2; letter-spacing: -0.005em; margin-bottom: 14px; max-width: calc(62% - 22px); }
+  .portal-hero p { font-size: 13px; line-height: 1.9; color: var(--dim); max-width: calc(58% - 22px); margin-bottom: 22px; }
   .ph-status { display: flex; gap: 36px; flex-wrap: wrap; font-family: var(--font-en); }
   .ph-status div { display: flex; flex-direction: column; gap: 6px; }
   .ph-status span { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
@@ -380,10 +521,8 @@
   .ph-status b.pink { color: var(--pink); }
 
   .entry-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0;
-    background: transparent;
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 0; background: transparent;
     border-top: 1px solid var(--line);
     border-left: 1px solid var(--line);
     margin-bottom: 32px;
@@ -434,8 +573,7 @@
   .dt-row {
     display: grid; grid-template-columns: 52px 1fr 86px 66px 126px 116px 76px 36px;
     gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); align-items: center;
-    color: var(--text); transition: background 0.1s steps(2); cursor: pointer;
-    position: relative;
+    color: var(--text); transition: background 0.1s steps(2); cursor: pointer; position: relative;
   }
   .dt-row:last-child { border-bottom: none; }
   .dt-row:not(.dt-head):hover { background: rgba(16,16,19,0.7); }
@@ -446,7 +584,8 @@
   }
   .dt-row:not(.dt-head):hover::before { opacity: 1; }
   .dt-head { font-family: var(--font-en); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--line-2); cursor: default; }
-  .dt-photo { width: 38px; height: 38px; object-fit: cover; border: 1px solid var(--line-2); background: var(--panel-2); display: block; }
+  .dt-photo { width: 38px; height: 38px; object-fit: cover; border: 1px solid var(--line-2); background: var(--panel-2); display: block; transition: filter 0.25s ease-out; }
+  .dt-row:not(.dt-head):hover .dt-photo { filter: brightness(0.55) contrast(1.4); }
   .dt-photo.empty { display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--dim); }
   .tag-a { color: var(--pink); font-weight: 600; } .tag-b { color: var(--blue); font-weight: 600; }
   .tag-c { color: var(--dim); } .tag-ok { color: #5a9; } .tag-warn { color: var(--pink); }
@@ -468,7 +607,7 @@
   .af-empty { padding: 18px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--dim); opacity: 0.5; }
 
   .person-card {
-    position: fixed; top: 0; right: 0; bottom: 0; width: 320px;
+    position: fixed; top: 0; right: 0; bottom: 0;  width: 600px;
     background: #0a0a0c; border-left: 1px solid var(--line-2); z-index: 30;
     transform: translateX(100%); transition: transform 0.25s steps(4);
     display: flex; flex-direction: column; pointer-events: auto;
@@ -513,8 +652,10 @@
   .task-row {
     display: grid; grid-template-columns: 116px 1fr 86px 96px 116px 96px;
     gap: 12px; align-items: center; padding: 13px 16px; border-bottom: 1px solid var(--line);
-    font-size: 12px; color: var(--text); transition: background 0.1s steps(2);
-    position: relative;
+    font-size: 12px; color: var(--text); transition: background 0.1s steps(2); position: relative;
+    overflow: hidden;
+    --mx: 50%;
+    --my: 50%;
   }
   .task-row:last-child { border-bottom: none; }
   .task-row:hover { background: rgba(16,16,19,0.7); }
@@ -524,6 +665,28 @@
     transition: opacity 0.15s steps(2);
   }
   .task-row:hover::before { opacity: 1; }
+  .task-row::after {
+    content: "";
+    position: absolute;
+    left: var(--mx, 50%);
+    top: var(--my, 50%);
+    width: 320px;
+    height: 320px;
+    margin-left: -160px;
+    margin-top: -160px;
+    background: radial-gradient(circle, rgba(168,50,58,0.18) 0%, rgba(168,50,58,0.06) 35%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transform: scale(0.1);
+    transition: opacity 0.4s ease-out, transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .task-row:hover::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .task-row > * { position: relative; z-index: 1; }
   .t-code { font-family: var(--font-mono); font-size: 11px; color: var(--blue); }
   .t-desc small { display: block; color: var(--dim); font-size: 11px; margin-top: 3px; }
   .t-level { font-family: var(--font-mono); font-size: 11px; color: var(--dim); text-align: right; }
@@ -601,7 +764,7 @@
   .wiki-main { flex: 1; display: grid; grid-template-columns: 220px 1fr; min-height: 0; }
   .wiki-side {
     position: relative; border-right: 1px solid var(--line); padding: 16px 0; overflow-y: auto;
-    background: linear-gradient(180deg, rgba(168,50,58,0.04), transparent 24%), #060607;
+    background: #060607 !important;
     scrollbar-width: thin; scrollbar-color: var(--line-2) transparent;
   }
   .wiki-side::-webkit-scrollbar { width: 4px; }
@@ -614,7 +777,7 @@
       var(--vermilion) 28px 29px, transparent 29px 42px);
     opacity: 0.28; pointer-events: none;
   }
-  .ws-search { display: block; width: calc(100% - 32px); margin: 0 16px 12px; background: transparent; border: 1px solid var(--line-2); border-bottom-color: var(--line-2); color: var(--text); padding: 7px 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; outline: none; border-radius: 0; }
+  .ws-search { display: block; width: calc(100% - 32px); margin: 0 16px 12px; background: transparent; border: 1px solid var(--line-2); color: var(--text); padding: 7px 10px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; outline: none; border-radius: 0; }
   .ws-search:focus { border-color: var(--vermilion); box-shadow: 0 2px 8px -6px rgba(168,50,58,0.6); }
   .ws-group { position: relative; padding: 10px 20px 4px 26px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.22em; color: var(--ash); text-transform: uppercase; }
   .ws-group::before { content: ""; position: absolute; left: 20px; top: 50%; width: 1px; height: 10px; margin-top: -5px; background: var(--vermilion); opacity: 0.7; }
@@ -630,10 +793,7 @@
   .wiki-side button.active::before { height: 18px; margin-top: -9px; background: var(--blue); opacity: 0.9; }
   .wiki-content {
     position: relative; padding: 32px 44px 52px; overflow-y: auto; max-width: 860px;
-    background-image:
-      radial-gradient(circle at 20% 10%, rgba(168,50,58,0.05), transparent 38%),
-      radial-gradient(circle at 80% 90%, rgba(26,159,255,0.03), transparent 42%),
-      radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(0,0,0,0.38) 100%);
+    background: #060607 !important; background-image: none !important;
     scrollbar-width: thin; scrollbar-color: var(--line-2) transparent;
   }
   .wiki-content::-webkit-scrollbar { width: 4px; }
@@ -659,8 +819,8 @@
   .wk-empty { color: var(--dim); font-family: var(--font-mono); font-size: 12px; opacity: 0.5; }
   .wiki-content.replaying { animation: wk-in 0.42s cubic-bezier(0.2, 0.9, 0.2, 1); }
   @keyframes wk-in {
-    0%   { opacity: 0; transform: translateY(10px); }
-    60%  { opacity: 1; }
+    0% { opacity: 0; transform: translateY(10px); }
+    60% { opacity: 1; }
     100% { opacity: 1; transform: translateY(0); }
   }
   .wiki-nav::after {
@@ -753,6 +913,117 @@
   .dz-title { font-size: 18px; font-weight: 700; color: #ececee; margin-bottom: 10px; }
   .dz-hint { font-family: var(--font-mono); font-size: 11px; color: var(--dim); letter-spacing: 0.1em; line-height: 1.8; }
 
+    /* ========== 世界观终端加载动画 ========== */
+  .wiki-loader {
+    position: fixed; inset: 0; z-index: 1000; background: #0a0a0c;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.4s ease-out;
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.08em; color: #8a8a93;
+    overflow: hidden;
+  }
+  .wiki-loader.show { opacity: 1; visibility: visible; }
+
+  .wl-top-bar, .wl-bottom-bar {
+    position: absolute; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.05);
+  }
+  .wl-top-bar { top: 50px; }
+  .wl-bottom-bar { bottom: 50px; }
+
+  .wl-content {
+    width: min(800px, 85vw);
+    height: min(500px, 75vh);
+    position: absolute; top: 8vh; left: 8vw;
+    display: flex; flex-direction: column;
+  }
+
+  .wl-head {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: #5a5a63; border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px; margin-bottom: 20px;
+  }
+  
+  /* 随机生成的乱码 Session ID */
+  .wl-session-id { color: #ff2d55; opacity: 0.8; letter-spacing: 0.1em; }
+
+  .wl-body { flex: 1; }
+  .wl-line { margin-bottom: 8px; white-space: pre-wrap; position: relative; transition: color 0.1s; }
+  .wl-dim { color: #5a5a63; }
+  .wl-mt { margin-top: 20px; }
+  .wl-prompt { color: #d0d0d4; margin-right: 8px; }
+  
+  /* 光标 */
+  .wl-typing::after {
+    content: "█"; display: inline-block; vertical-align: bottom; font-size: 10px;
+    color: #d0d0d4; animation: wl-blink 0.8s step-end infinite;
+  }
+  @keyframes wl-blink { 50% { opacity: 0; } }
+
+  /* 报错行颜色 */
+  .wl-error { color: #ff2d55; }
+  
+  /* 抖动错位特效 */
+  .glitch-effect {
+    animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  }
+  @keyframes glitch-anim {
+    0% { transform: translate(0); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+    20% { transform: translate(-2px, 2px); text-shadow: -2px 0 #1a9fff, 2px 0 #ff2d55; }
+    40% { transform: translate(2px, -2px); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+    60% { transform: translate(-2px, -2px); text-shadow: -2px 0 #1a9fff, 2px 0 #ff2d55; }
+    80% { transform: translate(2px, 2px); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+    100% { transform: translate(0); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+  }
+
+  /* 底部错误提示容器 */
+  .wl-foot {
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    margin-top: auto; position: relative;
+  }
+  
+  /* 进度条 */
+  .wl-bar-anim {
+    width: 100%; height: 4px; background: rgba(255,255,255,0.1);
+    position: relative; overflow: hidden; margin-bottom: 20px;
+  }
+  .wl-bar-anim::after {
+    content: ""; position: absolute; top: 0; left: 0; height: 100%;
+    width: 100%; background: #ff2d55;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .wl-bar-anim.error::after { transform: scaleX(1); }
+
+  /* 底部文字及抖动样式 */
+  .wl-access-denied {
+    font-family: var(--font-cn); font-size: 20px; font-weight: 700;
+    color: #ff2d55; text-shadow: 0 0 10px rgba(255,45,85,0.5);
+    margin-bottom: 4px; opacity: 0; transition: opacity 0.3s;
+  }
+  .wl-access-denied-en {
+    font-size: 12px; color: #ff2d55; opacity: 0; transition: opacity 0.3s;
+    font-family: var(--font-mono); letter-spacing: 0.1em;
+  }
+  .wl-access-denied.show, .wl-access-denied-en.show { opacity: 1; }
+  
+  /* 让底部文字也加入抖动 */
+  .glitch-text {
+    animation: glitch-text-anim 0.2s infinite;
+  }
+  @keyframes glitch-text-anim {
+    0% { transform: translate(0); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+    25% { transform: translate(-2px, 2px); text-shadow: -2px 0 #1a9fff, 2px 0 #ff2d55; }
+    50% { transform: translate(2px, -2px); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+    75% { transform: translate(-2px, -2px); text-shadow: -2px 0 #1a9fff, 2px 0 #ff2d55; }
+    100% { transform: translate(0); text-shadow: 2px 0 #1a9fff, -2px 0 #ff2d55; }
+  }
+
+  @keyframes drop-fall {
+    0% { transform: translateY(0); opacity: 0; }
+    15% { opacity: 0.7; }
+    85% { opacity: 0.45; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
   @media (max-width: 1200px) { .entry-grid { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 1100px) {
     .dept-grid { grid-template-columns: repeat(2, 1fr); }
@@ -768,12 +1039,12 @@
     .hud-top .status { gap: 12px; font-size: 11px; } .hud-top .status .hide-sm { display: none; }
     .hero { padding: 20px 0; } .hud-bottom { gap: 10px; } .live-log { font-size: 9px; }
     .radar-field { width: 520px; height: 520px; margin-top: -260px; margin-left: -260px; }
-    .ark-deco, .grid-field, .noise-overlay, .dust-canvas, .cross-mark, .bg-composition { display: none; }
+    .dust-canvas, .cross-mark, .bg-composition { display: none; }
     .person-card { width: 100%; }
     .portal-nav { flex-wrap: wrap; padding: 8px 12px; gap: 8px; height: auto; }
     .pn-brand { height: 36px; padding: 5px 10px 5px 8px; }
     .pn-name { display: inline; }
-    .pn-menu { order: 3; width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; height: auto; }
+    .pn-menu { order: 3; width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; height: auto; margin-left: 0; }
     .portal-main { padding: 18px 14px 28px; }
     .entry-grid { grid-template-columns: 1fr 1fr; }
     .dept-grid { grid-template-columns: 1fr; }
@@ -796,46 +1067,565 @@
     .cmd-overlay { padding-top: 8vh; }
     .dept-preview { display: none; }
     .task-toolbar { flex-wrap: wrap; }
+    .hero-title-wrap .blue-block { right: 0; }
+    .hud-top::after, .hud-bottom::after { display: none; }
+    .deco-sq-solid, .deco-sq-outline { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .wiki-content.replaying { animation: none !important; }
     .radar-field .sweep, .scanline, .log-pulse { animation: none !important; }
-    .bg-yao.flash { animation: none !important; }
     .pc-photo-wrap { transform: none !important; }
+    .task-row::after { transition: none !important; }
+  }
+  .taint-text {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--vermilion);
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+  }
+  .taint-text.show { 
+    opacity: 0.3;
+  }
+    /* 屏幕信号断裂花屏特效 */
+  .tv-static {
+    position: fixed; inset: 0; z-index: 1001; 
+    pointer-events: none; background: #000;
+    opacity: 0; visibility: hidden;
+  }
+  .tv-static.play {
+    animation: tv-glitch 1.2s steps(1, end) forwards;
+    visibility: visible;
+  }
+  .tv-static::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent 0 2px, rgba(255,255,255,0.15) 2px 4px, transparent 4px 6px
+    ), repeating-linear-gradient(
+      90deg, rgba(255,0,50,0.3) 0 2px, transparent 2px 6px, rgba(0,150,255,0.3) 6px 10px
+    );
+    mix-blend-mode: screen;
+    animation: static-noise 0.15s infinite;
+  }
+  .tv-static::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 4px;
+    background: #fff; box-shadow: 0 0 15px #fff;
+    animation: scanline-blink 0.3s infinite;
+  }
+  @keyframes static-noise {
+    0% { background-position: 0 0, 0 0; }
+    50% { background-position: 0 8px, 10px 0; }
+    100% { background-position: 0 4px, 6px 0; }
+  }
+  @keyframes scanline-blink {
+    0% { top: 10%; opacity: 0.8; }
+    50% { top: 90%; opacity: 0.2; }
+    100% { top: 40%; opacity: 0.9; }
+  }
+  @keyframes tv-glitch {
+    0%   { opacity: 1; transform: scale(1); filter: none; }
+    10%  { opacity: 0.8; transform: scale(1.02) translateX(5px); filter: invert(1) hue-rotate(90deg); }
+    20%  { opacity: 0.9; transform: scale(0.98) translateX(-10px); filter: contrast(200%) brightness(1.5); }
+    30%  { opacity: 0.5; transform: scale(1.05) translateY(5px); filter: none; }
+    40%  { opacity: 1; transform: scale(1) translateX(10px); filter: invert(1) hue-rotate(180deg); }
+    50%  { opacity: 0.7; transform: scale(0.95) translateX(-5px); filter: contrast(300%); }
+    60%  { opacity: 0.3; transform: scale(1); filter: none; }
+    70%  { opacity: 1; transform: scale(1.02); filter: invert(0.5) hue-rotate(45deg); }
+    85%  { opacity: 0.6; transform: translateY(-10px); filter: none; }
+    100% { opacity: 0; transform: scale(1); filter: none; }
+  }
+
+  /* ========== 登录界面新增样式 ========== */
+  .login-screen {
+  position: fixed; inset: 0; z-index: 30;
+  background: rgba(6, 6, 7, 0.88);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+}
+  .login-screen.open { opacity: 1; visibility: visible; }
+  
+  .login-box {
+    position: relative;
+    width: min(420px, 86vw);
+    background: #0a0a0c;
+    border: 1px solid var(--line-2);
+    border-top: 2px solid var(--blue);
+    padding: 40px 32px 32px;
+    font-family: var(--font-en);
+  }
+  .login-box::before {
+    content: ""; position: absolute; top: -1px; left: -1px;
+    width: 12px; height: 12px;
+    border-top: 1px solid var(--blue);
+    border-left: 1px solid var(--blue);
+  }
+  .login-box::after {
+    content: ""; position: absolute; bottom: -1px; right: -1px;
+    width: 12px; height: 12px;
+    border-bottom: 1px solid var(--vermilion);
+    border-right: 1px solid var(--vermilion);
+  }
+  .login-brand {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .login-brand .lb-mark {
+    width: 8px; height: 8px; background: var(--blue);
+  }
+  .login-brand span {
+    font-family: var(--font-en);
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #ececee;
+    text-transform: uppercase;
+  }
+  .login-brand small {
+    font-family: var(--font-en);
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--dim);
+    margin-left: auto;
+  }
+  .login-field {
+    margin-bottom: 18px;
+  }
+  .login-field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .login-field input {
+    width: 100%;
+    background: rgba(6, 6, 7, 0.6);
+    border: 1px solid var(--line-2);
+    color: var(--text);
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    outline: none;
+    border-radius: 0;
+    transition: border-color 0.12s steps(2);
+  }
+  .login-field input:focus {
+    border-color: var(--blue);
+    background: rgba(26, 159, 255, 0.04);
+  }
+  .login-submit {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    padding: 14px;
+    font-family: var(--font-en);
+    font-size: 13px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.12s steps(2), color 0.12s steps(2);
+    margin-top: 8px;
+    clip-path: polygon(0 0, 100% 0, 100% 72%, 88% 100%, 0 100%);
+  }
+  .login-submit:hover {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: #fff;
+  }
+  .login-foot {
+    margin-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+  .login-foot .dot { background: var(--pink); }
+
+  /* 登录后档案弹窗 */
+  .post-login-modal {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(420px, 92vw);
+    background: #0a0a0c;
+    border-left: 2px solid var(--blue);
+    z-index: 35;
+    transform: translateX(100%);
+    transition: transform 0.3s steps(4);
+    display: flex; flex-direction: column;
+    pointer-events: auto;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+  }
+  .post-login-modal.open { transform: translateX(0); }
+  .plm-head {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-en);
+    font-size: 11px; letter-spacing: 0.18em;
+    color: var(--dim); text-transform: uppercase;
+  }
+  .plm-head .plm-tag { color: var(--blue); }
+  .plm-close {
+    background: transparent; border: 1px solid var(--line-2);
+    color: var(--dim); width: 26px; height: 26px;
+    line-height: 1; cursor: pointer;
+    font-family: var(--font-mono);
+    transition: color 0.1s steps(2), border-color 0.1s steps(2);
+  }
+  .plm-close:hover { color: var(--pink); border-color: var(--pink); }
+  .plm-body {
+    padding: 22px 20px 18px;
+    overflow-y: auto; flex: 1;
+  }
+  .plm-title {
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .plm-sub {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.14em;
+    color: var(--dim);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .plm-form .af-row { margin-bottom: 14px; }
+  .plm-form .af-row label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.16em;
+    color: var(--dim); text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .plm-form .af-row input,
+  .plm-form .af-row select {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--line-2);
+    color: var(--text);
+    padding: 9px 12px;
+    font-family: var(--font-cn);
+    font-size: 13px;
+    outline: none;
+    border-radius: 0;
+  }
+  .plm-form .af-row input:focus,
+  .plm-form .af-row select:focus { border-color: var(--blue); }
+  .plm-form .af-row input[type="file"] {
+    padding: 6px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dim);
+  }
+  .plm-form .af-preview {
+    margin-top: 8px;
+    width: 56px; height: 56px;
+    border: 1px solid var(--line-2);
+    object-fit: cover;
+    display: none;
+  }
+  .plm-form .af-preview.show { display: block; }
+  .plm-submit {
+    background: transparent;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    padding: 11px 28px;
+    font-family: var(--font-en);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.1s steps(2), color 0.1s steps(2);
+    width: 100%;
+    margin-top: 8px;
+  }
+  .plm-submit:hover { background: var(--blue); color: var(--bg); }
+  .plm-hint {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    opacity: 0.6;
+    line-height: 1.7;
+  }
+
+  /* 查询模式图标按钮 */
+  .search-mode-btn {
+    background: transparent;
+    border: 1px solid var(--line-2);
+    color: var(--dim);
+    width: 34px; height: 34px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: color 0.12s steps(2), border-color 0.12s steps(2), background 0.12s steps(2);
+    flex-shrink: 0;
+    border-radius: 0;
+  }
+  .search-mode-btn:hover {
+    color: var(--blue);
+    border-color: var(--blue);
+    background: rgba(26, 159, 255, 0.06);
+  }
+  .search-mode-btn svg {
+    width: 18px; height: 18px;
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  .view-head .head-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  /* 鼠标3D倾斜效果 */
+  .tilt-element {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+  }
+  .tilt-element.tilting {
+    transition: transform 0.06s ease-out;
+  }
+    /* 右上角角色头像 */
+  .hud-avatar {
+    position: relative;
+    width: 34px; height: 34px;
+    border: 1px solid var(--line-2);
+    background: var(--panel-2);
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-en); font-size: 11px; color: var(--dim);
+    transition: border-color 0.12s steps(2);
+    z-index: 12;
+  }
+  .hud-avatar:hover { border-color: var(--blue); }
+  .hud-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .avatar-card {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 300px;
+    background: #0a0a0c;
+    border: 1px solid var(--line-2);
+    border-top: 2px solid var(--blue);
+    padding: 16px;
+    opacity: 0; visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.15s steps(2), transform 0.15s steps(2), visibility 0.15s;
+    z-index: 60;
+    pointer-events: none;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+  }
+  .hud-avatar:hover .avatar-card,
+  .avatar-card:hover { opacity: 1; visibility: visible; transform: translateY(0); pointer-events: auto; }
+  .ac-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; }
+  .ac-name { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .ac-id { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; color: var(--dim); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .ac-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 11px; color: var(--dim); border-bottom: 1px solid var(--line); }
+  .ac-row b { color: var(--text); font-weight: 500; }
+  .ac-service-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: var(--ash); text-transform: uppercase; margin: 12px 0 8px; }
+  .ac-service { display: flex; flex-direction: column; gap: 0; }
+  .ac-service button {
+    background: transparent; border: none; border-bottom: 1px solid var(--line);
+    color: var(--dim); text-align: left; padding: 7px 2px;
+    font-family: var(--font-cn); font-size: 11.5px; cursor: pointer;
+    transition: color 0.1s steps(2), padding-left 0.1s steps(2);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ac-service button:hover { color: var(--blue); padding-left: 6px; }
+  .ac-service button span { font-family: var(--font-mono); font-size: 9px; opacity: 0.5; }
+    /* ========== 新版档案卡片网格 ========== */
+  .archive-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .archive-card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line-2);
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 0.1s ease-out, border-color 0.2s, box-shadow 0.2s;
+  }
+  .archive-card:hover {
+    border-color: var(--blue);
+    box-shadow: 0 10px 30px rgba(26,159,255,0.15);
+  }
+  .archive-card .ac-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: var(--panel-2);
+    overflow: hidden;
+    transform: translateZ(20px); /* 3D悬浮感 */
+  }
+  .archive-card .ac-image-wrap img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .archive-card .ac-image-wrap .no-img {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    color: var(--dim); font-family: var(--font-en); font-size: 12px; letter-spacing: 0.1em;
+  }
+  .archive-card .ac-badge {
+    position: absolute;
+    top: 0; left: 0;
+    background: rgba(6,6,7,0.8);
+    border-right: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    color: var(--blue);
+    font-family: var(--font-mono); font-size: 10px;
+    padding: 4px 8px;
+    z-index: 2;
+    transform: translateZ(30px);
+  }
+  .archive-card .ac-info {
+    padding: 12px;
+    background: #0a0a0c;
+    border-top: 1px solid var(--line-2);
+    transform: translateZ(15px);
+  }
+  .archive-card .ac-name {
+    font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px;
+  }
+  .archive-card .ac-sub {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 10px; color: var(--dim); text-transform: uppercase;
+  }
+
+   /* 详情侧边栏 - 背景/主图上传区 */
+  .pc-image-upload-wrap {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 200px; 
+    max-height: 450px; 
+    margin-bottom: 16px;
+    background: var(--panel); 
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  
+  .pc-image-upload-wrap img {
+    width: 100%; height: 100%; 
+    object-fit: contain; 
+    display: block;
+  }
+  .pc-image-upload-wrap .upload-hint {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.7);
+    color: var(--text);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    text-align: center; padding: 8px 0;
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .pc-image-upload-wrap:hover .upload-hint {
+    opacity: 1;
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 </head>
 
 <body>
+   <!-- 世界观加载遮罩 -->
+  <div id="wikiLoader" class="wiki-loader">
+    <div class="wl-top-bar"></div>
+    <div class="wl-bottom-bar"></div>
+    
+    <div class="wl-content">
+      <div class="wl-head">
+        <span>PRTS.TERARCHIVE :: INQUIRY TERMINAL</span>
+        <span class="wl-session-id">session 00000000</span>
+      </div>
+      
+      <div class="wl-body">
+        <div class="wl-line">
+          <span class="wl-typing" data-text=">> login --Exorcist SALS_Exorcist"></span>
+        </div>
+        <div class="wl-line wl-dim">
+          <span class="wl-typing" data-text="identity token accepted"></span>
+        </div>
+        <div class="wl-line wl-dim">
+          <span class="wl-typing" data-text="session opened"></span>
+        </div>
+        
+        <div class="wl-line wl-mt">
+          <span class="wl-typing" data-text=">> query --subject SALS 正在访问权限 --scopestory"></span>
+        </div>
+        <div class="wl-line wl-dim">
+          <span class="wl-typing" data-text="resolving corpus... 45 / 45"></span>
+        </div>
+        
+        <div class="wl-line wl-error" id="wlGlitchLine1">
+          <span class="wl-typing" data-text="X access denied - clearance insufficient"></span>
+        </div>
+        <div class="wl-line wl-error wl-dim" id="wlGlitchLine2">
+          <span class="wl-typing" data-text="required: Director Authorization"></span>
+        </div>
+        
+        <div class="wl-line wl-mt">
+          <span class="wl-typing" data-text=">> logout"></span>
+        </div>
+        <div class="wl-line wl-dim">
+          <span class="wl-typing" data-text="connection forcibly terminated"></span>
+        </div>
+      </div>
+      
+      <div class="wl-foot">
+        <div class="wl-bar-anim"></div>
+        <div class="wl-bottom-text">
+          <div class="wl-access-denied" id="wlDenied1"></div>
+          <div class="wl-access-denied-en" id="wlDenied2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="boot" id="boot">
     <div class="boot-inner">
       <div class="boot-head">SALS / SYSTEM BOOT</div>
-      <div class="boot-log" id="bootLog">正在初始化终端</div>
+      <div class="boot-log" id="bootLog">正在初始化</div>
       <div class="boot-track"><div class="boot-bar" id="bootBar"></div></div>
       <div class="boot-meta"><span id="bootPct">0%</span><span class="boot-note">Special Affairs Life Safety Co., Ltd.</span></div>
     </div>
   </div>
 
-  <div class="bg-composition" aria-hidden="true">
-    <span class="bg-rule bg-rule-v"></span><span class="bg-corner bg-corner-tl"></span>
-    <span class="bg-yao yao-1"></span><span class="bg-yao yao-2"></span><span class="bg-yao yao-3"></span>
-    <span class="bg-yao yao-4"></span><span class="bg-yao yao-5"></span><span class="bg-yao yao-6"></span>
-    <span class="bg-tick bg-tick-1"></span><span class="bg-tick bg-tick-2"></span><span class="bg-tick bg-tick-3"></span>
-    <span class="bg-tick bg-tick-4"></span><span class="bg-tick bg-tick-5"></span>
-    <span class="bg-banner banner-1"></span><span class="bg-banner banner-2"></span><span class="bg-banner banner-3"></span>
-    <span class="bg-dot bg-dot-1"></span>
-  </div>
+  <div class="bg-composition" aria-hidden="true"></div>
   <div class="grid-field" id="gridField"></div>
   <canvas class="dust-canvas" id="dustCanvas"></canvas>
   <div class="noise-overlay"></div>
 
   <div class="ark-deco">
-    <div class="deco-ruler"></div>
     <div class="deco-ring" id="decoRing"><span class="ring-readout" id="ringReadout">SWEEP 12s</span></div>
-    <div class="deco-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="deco-data d1">// 7A-04 SIGNAL LOST</div>
-    <div class="deco-data d2">SECTOR 12-08 // CLEAR</div>
   </div>
 
   <div class="radar-field">
@@ -858,15 +1648,54 @@
         <span class="hide-sm"><i class="dot"></i>除灵师在线 <b id="top-dispatch">24</b></span>
         <span class="hide-sm"><i class="dot pink"></i>发现灵体 <b id="top-contained" class="pink-num">7</b></span>
         <span id="clock" class="hide-sm">--:--:--</span>
+        <div class="hud-avatar" id="hudAvatar">
+          <span id="hudAvatarFallback">?</span>
+          <div class="avatar-card" id="avatarCard">
+            <div class="ac-head"><span>// PERSONNEL</span><span>SALS</span></div>
+            <div class="ac-name" id="acName">—</div>
+            <div class="ac-id" id="acId">SALS / PERSONNEL RECORD</div>
+            <div class="ac-row"><span>工龄</span><b id="acExp">—</b></div>
+            <div class="ac-row"><span>等级</span><b id="acGrade">—</b></div>
+            <div class="ac-row"><span>除灵方式</span><b id="acSchool">—</b></div>
+            <div class="ac-row"><span>所属部门</span><b id="acDistrict">—</b></div>
+            <div class="ac-row"><span>当前状态</span><b id="acStatus">—</b></div>
+            <div class="ac-service-title">// 个人办事</div>
+            <div class="ac-service">
+              <button data-svc="执照年审">执照年审<span>办理</span></button>
+              <button data-svc="任务申请">任务申请<span>进入</span></button>
+              <button data-svc="武器申领">武器申领<span>申领</span></button>
+              <button data-svc="贡献点查询">贡献点查询<span>查询</span></button>
+              <button data-svc="等级考核">等级考核<span>报名</span></button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="hero">
+       <main class="hero">
+      <div class="deco-sq-solid"></div>
+      <div class="deco-sq-outline"></div>
+
       <div class="kicker">
         <span class="kicker-tag">// FILE 001</span><span class="kicker-line"></span>
         <span class="kicker-text">SPECIAL AFFAIRS LIFE SAFETY</span>
       </div>
-      <h1>特殊事件<br>生命安全有限公司<span class="en">Special Affairs Life Safety Co., Ltd.</span></h1>
+      
+      <div class="hero-title-wrap">
+        <div class="title-box">
+          <div class="title-text">特殊事件<br>生命安全有限公司</div>
+        </div>
+        
+        <div class="en">
+          SPECIAL AFFAIRS LIFE SAFETY CO., LTD.
+          <div class="blue-block"></div>
+        </div>
+        
+        <div class="gray-bar-thin"></div>
+        <div class="gray-bar-thick"></div>
+        <div class="pink-block"></div>
+      </div>
+
       <div class="mission">
         <span class="tag">// 未经授权，不得查阅本终端。</span>
         本公司负责派遣除灵师、收容特殊灵体、解决灵异问题，保障居民生命安全与维护社会秩序稳定。
@@ -889,6 +1718,86 @@
       <div class="metric">居民安全指数<strong id="bot-safety">98.6%</strong></div>
       <div class="metric static">终端版本<strong>v0.2.0</strong></div>
     </footer>
+  </div>
+
+  <!-- 登录界面 -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-brand">
+        <span class="lb-mark"></span>
+        <span>SALS ACCESS</span>
+        <small>SECURE LOGIN</small>
+      </div>
+      <div class="login-field">
+        <label for="loginUser">除灵师代号 / EXORCIST ID</label>
+        <input type="text" id="loginUser" placeholder="输入代号" autocomplete="off">
+      </div>
+      <div class="login-field">
+        <label for="loginPass">访问密钥 / ACCESS KEY</label>
+        <input type="password" id="loginPass" placeholder="输入密钥" autocomplete="off">
+      </div>
+      <button class="login-submit" id="loginSubmit">验证身份</button>
+      <div class="login-foot">
+        <span><i class="dot"></i> 加密通道 · AES-256</span>
+        <span>SALS © 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 登录后档案弹窗 -->
+  <div class="post-login-modal" id="postLoginModal">
+    <div class="plm-head">
+      <span class="plm-tag">// 档案录入</span>
+      <button class="plm-close" id="plmClose">×</button>
+    </div>
+    <div class="plm-body">
+      <div class="plm-title">除灵师档案登记</div>
+      <div class="plm-sub">SALS / PERSONNEL ENROLLMENT</div>
+      <form class="plm-form" id="postLoginForm" autocomplete="off">
+        <div class="af-row">
+          <label>姓名</label>
+          <input type="text" name="name" placeholder="姓名">
+        </div>
+        <div class="af-row">
+          <label>工龄</label>
+          <input type="text" name="experience" placeholder="例如 3 年">
+        </div>
+        <div class="af-row">
+          <label>等级</label>
+          <select name="grade">
+            <option value="特级">特级</option>
+            <option value="高级">高级</option>
+            <option value="中级">中级</option>
+            <option value="初级">初级</option>
+          </select>
+        </div>
+        <div class="af-row">
+          <label>除灵方式</label>
+          <input type="text" name="school" placeholder="武器 / 符箓 / 特殊手段">
+        </div>
+        <div class="af-row">
+          <label>所属部门</label>
+          <input type="text" name="district" placeholder="特殊任务行动局">
+        </div>
+        <div class="af-row">
+          <label>当前状态</label>
+          <select name="status">
+            <option value="在岗">在岗</option>
+            <option value="派遣中">派遣中</option>
+            <option value="值守中">值守中</option>
+            <option value="监控中">监控中</option>
+            <option value="休整中">休整中</option>
+          </select>
+        </div>
+        <div class="af-row">
+          <label>头像（可选）</label>
+          <input type="file" name="photo" accept="image/*">
+          <img class="af-preview" id="plmPreview" alt="">
+        </div>
+        <button type="submit" class="plm-submit">录入档案</button>
+        <div class="plm-hint">图片会压缩到长边 800px、JPEG 质量 0.7 后存入浏览器本地，建议单张小于 1MB。</div>
+      </form>
+    </div>
   </div>
 
   <section class="portal" id="portal">
@@ -921,7 +1830,6 @@
         <button class="pn-item active" data-view="home">首页</button>
         <button class="pn-item" data-view="archive">除灵师档案</button>
         <button class="pn-item" data-view="tasks">任务板</button>
-        <button class="pn-item" data-view="service">个人办事</button>
         <button class="pn-item" data-view="department">部门服务</button>
         <button class="pn-item" data-view="mobile">移动服务</button>
         <button class="pn-item" data-view="complaint">投诉中心</button>
@@ -931,7 +1839,6 @@
     </header>
 
     <main class="portal-main">
-      <!-- 首页 -->
       <div class="portal-view active" data-view="home">
         <div class="portal-hero">
           <div class="ph-tag">//首页</div>
@@ -951,49 +1858,40 @@
             <div class="ec-desc">查看当前可领取的除灵任务。</div>
             <div class="ec-foot"><span>按等级领取</span><span>▸</span></div>
           </button>
-          <button class="entry-card" data-target="service"><div class="ec-title">个人办事</div><div class="ec-desc">执照年审、任务申请、武器申领。</div><div class="ec-foot"><span>5 项在线服务</span><span>▸</span></div></button>
           <button class="entry-card" data-target="department"><div class="ec-title">部门服务入口</div><div class="ec-desc">六个部门直连通道。</div><div class="ec-foot"><span>6 个部门</span><span>▸</span></div></button>
           <button class="entry-card" data-target="mobile"><div class="ec-title">移动服务</div><div class="ec-desc">下载移动端，接收任务与预警。</div><div class="ec-foot"><span>APP v3.2.1</span><span>▸</span></div></button>
           <button class="entry-card" data-target="complaint"><div class="ec-title">投诉中心</div><div class="ec-desc">提交投诉与建议。</div><div class="ec-foot"><span>7 日答复</span><span>▸</span></div></button>
         </div>
         <div class="portal-notice">
-          <div class="pn-head">// 公告与预警</div>
+          <div class="pn-head">// 公告</div>
           <div class="pn-rows" id="noticeRows">
             <div class="pn-row"><span>[公告]</span>关于开展 2026 年度除灵师执照年审的通知</div>
-            <div class="pn-row"><span>[预警]</span>城西医院住院区灵体活动频繁，请途经人员注意</div>
+            <div class="pn-row"><span>[公告]</span>城西医院住院区灵体活动频繁，请途经人员注意</div>
             <div class="pn-row"><span>[公告]</span>技术研发中心新一批武器已开放领取名额</div>
           </div>
         </div>
       </div>
 
-      <!-- 除灵师档案 -->
-      <div class="portal-view" data-view="archive">
+       <div class="portal-view" data-view="archive">
         <div class="view-head">
-          <div><div class="vh-tag">// PERSONNEL ARCHIVE</div><h3>除灵师档案</h3><p>填写姓名、工龄、等级、除灵方式、所属部门与当前状态，可上传一张头像。数据保存在当前浏览器本地，刷新不丢失。点表格任意一行可在右侧查看详情。</p></div>
-          <button class="back-btn" data-back>◂ 返回首页</button>
+          <div><div class="vh-tag">// PERSONNEL ARCHIVE</div><h3>除灵师档案</h3><p>填写姓名、工龄、等级、除灵方式、所属部门与当前状态，可上传一张头像。数据保存在当前浏览器本地，刷新不丢失。点卡片可在右侧查看详情。</p></div>
+          <div class="head-actions">
+            <button class="search-mode-btn" id="searchModeBtn" title="查询模式">
+              <svg viewBox="0 0 24 24">
+                <circle cx="10.5" cy="10.5" r="6.5"/>
+                <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+              </svg>
+            </button>
+            <button class="back-btn" data-back>◂ 返回首页</button>
+          </div>
         </div>
-        <div class="data-table" id="archiveTable">
-          <div class="dt-row dt-head"><span>头像</span><span>姓名</span><span>工龄</span><span>等级</span><span>除灵方式</span><span>所属部门</span><span>当前状态</span><span></span></div>
+        
+        <div class="archive-card-grid" id="archiveCardGrid">
           <div class="af-empty" id="archiveEmpty">暂未录入持证除灵师记录。</div>
         </div>
-        <div class="sync-note"><b>// 同步信息占位</b><br>{{此处用于展示其他除灵师同步到本终端的档案信息。当前为本地档案，仅当前浏览器可见。}}</div>
-        <form class="archive-form" id="archiveForm" autocomplete="off">
-          <div class="af-title">// 新增档案</div>
-          <div class="af-grid">
-            <div class="af-row"><label>姓名</label><input type="text" name="name" placeholder="姓名"></div>
-            <div class="af-row"><label>工龄</label><input type="text" name="experience" placeholder="例如 3 年"></div>
-            <div class="af-row"><label>等级</label><select name="grade"><option value="特级">特级</option><option value="高级">高级</option><option value="中级">中级</option><option value="初级">初级</option></select></div>
-            <div class="af-row"><label>除灵方式</label><input type="text" name="school" placeholder="武器 / 符箓 / 特殊手段"></div>
-            <div class="af-row"><label>所属部门</label><input type="text" name="district" placeholder="例如 2019-07"></div>
-            <div class="af-row"><label>当前状态</label><select name="status"><option value="在岗">在岗</option><option value="派遣中">派遣中</option><option value="值守中">值守中</option><option value="监控中">监控中</option><option value="休整中">休整中</option></select></div>
-            <div class="af-row"><label>头像（可选）</label><input type="file" name="photo" accept="image/*"><img class="af-preview" id="afPreview" alt=""></div>
-          </div>
-          <button type="submit" class="af-submit">录入档案</button>
-          <div class="af-hint">图片会压缩到长边 800px、JPEG 质量 0.9 后存入浏览器本地，建议单张小于 1MB。</div>
-        </form>
-      </div>
 
-      <!-- 任务板 -->
+        <div class="sync-note"><b>// 同步信息占位</b><br>{{此处用于展示其他除灵师同步到本终端的档案信息。当前为本地档案，仅当前浏览器可见。}}</div>
+      </div>
       <div class="portal-view" data-view="tasks">
         <div class="view-head">
           <div><div class="vh-tag">// TASK BOARD</div><h3>长江滚滚东逝水</h3><p>长江滚滚东逝水。当前档案等级为：<b id="myGradeLabel">长江滚滚东逝水</b></p></div>
@@ -1006,24 +1904,10 @@
         <div class="task-list" id="taskList"></div>
         <div class="sync-note"><b>// 长江滚滚东逝水</b><br>长江滚滚东逝水。长江滚滚东逝水，长江滚滚东逝水。</div>
       </div>
-
-      <!-- 个人办事 -->
-      <div class="portal-view" data-view="service">
-        <div class="view-head"><div><div class="vh-tag">// PERSONAL SERVICE</div><h3>个人办事</h3><p>请选择需要办理的业务。部分业务需持证除灵师身份验证。</p></div><button class="back-btn" data-back>◂ 返回首页</button></div>
-        <div class="service-list">
-          <div class="sv-row"><div><b>执照年审</b><span>2026 年度执业资格复核  截止 12 月 31 日</span></div><button class="sv-btn">办理</button></div>
-          <div class="sv-row"><div><b>任务申请</b><span>需等级匹配</span></div><button class="sv-btn">进入</button></div>
-          <div class="sv-row"><div><b>武器申领</b><span>消耗贡献点</span></div><button class="sv-btn">申领</button></div>
-          <div class="sv-row"><div><b>贡献点查询</b><span>当前余额 2,840 点  近 30 日变动记录</span></div><button class="sv-btn">查询</button></div>
-          <div class="sv-row"><div><b>等级考核</b><span>初级 → 中级考核  下一场次 11 月 08 日</span></div><button class="sv-btn">报名</button></div>
-        </div>
-      </div>
-
-      <!-- 部门服务 -->
       <div class="portal-view" data-view="department">
-        <div class="view-head"><div><div class="vh-tag">// DEPARTMENT ACCESS</div><h3>部门服务入口</h3><p>三司四局直连通道，按职能划分。悬停查看通道状态。</p></div><button class="back-btn" data-back>◂ 返回首页</button></div>
+        <div class="view-head"><div><div class="vh-tag">// DEPARTMENT ACCESS</div><h3>部门服务入口</h3><p>各部门按职能划分。悬停即可查看通道状态。</p></div><button class="back-btn" data-back>◂ 返回首页</button></div>
         <div class="dept-grid">
-          <div class="dept-card"><div class="dept-preview">CHANNEL 01 · <b>ACTIVE</b><br>QUEUE 0 · OPS 12<br>LAST SYNC 00:08 AGO</div><div class="dc-name">特殊任务行动局</div><div class="dc-desc">高难度任务执行、突发事件应对、高危目标追捕。</div><div class="dc-foot">外勤部门 · 24 小时待命</div></div>
+          <div class="dept-card"><div class="dept-preview">CHANNEL 01 · <b>ACTIVE</b><br>QUEUE 0 · OPS 12<br>LAST SYNC 00:08 AGO</div><div class="dc-name">特殊任务行动局</div><div class="dc-desc">外勤任务执行、解决突发事件、高危目标追捕。</div><div class="dc-foot">外勤部门 · 24 小时待命</div></div>
           <div class="dept-card"><div class="dept-preview">CHANNEL 02 · <b>SYNCING</b><br>ARCHIVE ROWS 47K<br>INDEX REBUILD 92%</div><div class="dc-name">情报与数据管理局</div><div class="dc-desc">情报收集、灵异事件数据库、邪祟图鉴维护。</div><div class="dc-foot">内勤部门 · 数据同步中</div></div>
           <div class="dept-card"><div class="dept-preview">CHANNEL 03 · <b>R&amp;D</b><br>PROTOTYPE 07 · SEALED<br>CLEARANCE L3</div><div class="dc-name">技术研发中心</div><div class="dc-desc">武器与符箓研发、制造、统一调配发放。</div><div class="dc-foot">内勤部门 · 研发中</div></div>
           <div class="dept-card"><div class="dept-preview">CHANNEL 04 · <b>STABLE</b><br>REGIONS 34 · LIAISONS 68<br>INCIDENT RATE 0.3</div><div class="dc-name">综合保障部</div><div class="dc-desc">培训考核、舆情处置、地方机构联络协调。</div><div class="dc-foot">内勤部门 · 工作中</div></div>
@@ -1032,12 +1916,11 @@
         </div>
       </div>
 
-      <!-- 移动服务 -->
       <div class="portal-view" data-view="mobile">
-        <div class="view-head"><div><div class="vh-tag">// MOBILE ACCESS</div><h3>移动服务</h3><p>扫描下方二维码，下载 SALS 移动端，实时接收任务与预警。</p></div><button class="back-btn" data-back>◂ 返回首页</button></div>
+        <div class="view-head"><div><div class="vh-tag">// MOBILE ACCESS</div><h3>移动服务</h3><p>扫描下方二维码，下载 SALS 的移动端，即可实时接收任务与公告。</p></div><button class="back-btn" data-back>◂ 返回首页</button></div>
         <div class="mobile-wrap">
           <div class="qr-box">
-            <img class="qr-img" src="qr.png" alt="SALS MOBILE QR">
+            <img class="qr-img" src="qr.png" alt="SALS MOBILE QR" onerror="this.style.display='none'; this.parentNode.insertAdjacentHTML('beforeend','<div style=&quot;width:170px;height:170px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border:1px dashed var(--line-2);color:var(--dim);font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;&quot;>QR / 占位</div>');">
             <div class="qr-label">SALS MOBILE v3.2.1</div>
           </div>
           <div class="mobile-features">
@@ -1049,7 +1932,6 @@
         </div>
       </div>
 
-      <!-- 投诉中心 -->
       <div class="portal-view" data-view="complaint">
         <div class="view-head"><div><div class="vh-tag">// COMPLAINT CENTER</div><h3>投诉中心</h3><p>所有投诉由内部督查处受理，7 个工作日内答复。</p></div><button class="back-btn" data-back>◂ 返回首页</button></div>
         <div class="complaint-wrap">
@@ -1095,8 +1977,6 @@
   </div>
 
   <div class="toast-stack" id="toastStack"></div>
-  <div class="cursor-reticle" id="cursorReticle"><span class="ring"></span></div>
-  <div class="mouse-glow" id="mouseGlow"></div>
 
   <script>
     function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -1135,7 +2015,6 @@
 
     const liveSignals = new Set();
     let currentContained = 7;
-    let mouseX = -9999, mouseY = -9999;
     const signalLayer = document.getElementById("signalLayer");
     function targetCount() { return Math.round(2 + (Math.min(100, Math.max(1, currentContained)) / 100) * 12); }
     function baseScale() { return 0.6 + (Math.min(100, Math.max(1, currentContained)) / 100) * 1.8; }
@@ -1298,7 +2177,7 @@
       contained = Math.max(1, Math.min(100, contained));
       let anomaly = Math.round(contained * 0.42 + randInt(-8, 12)); anomaly = Math.max(0, Math.min(50, anomaly));
       let safety = (100 - anomaly * 1.55 + (Math.random() * 3 - 1.5)).toFixed(1);
-      safety = Math.max(20, Math.min(99.9, safety));
+      safety = Math.max(45, Math.min(98, safety));
       currentContained = contained;
       document.getElementById("top-dispatch").textContent = dispatch;
       document.getElementById("top-contained").textContent = contained;
@@ -1311,7 +2190,6 @@
         const phD = document.getElementById("phDispatch"); const phA = document.getElementById("phAnomaly");
         if (phD) phD.textContent = dispatch; if (phA) phA.textContent = anomaly;
       }
-      document.querySelectorAll(".bg-yao").forEach(el => { el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 400); });
       syncSignals();
     }
     updateMetrics();
@@ -1336,10 +2214,17 @@
       const terminalEl = document.querySelector(".terminal");
       if (terminalEl) { terminalEl.classList.add("surging"); setTimeout(() => terminalEl.classList.remove("surging"), 900); }
       clearTimeout(accessTimer);
-      accessTimer = setTimeout(() => { openBtn.textContent = "验证通过"; syncPortalMetrics(); portal.classList.add("open"); }, 1400);
+      accessTimer = setTimeout(() => { 
+        openBtn.textContent = "验证通过"; 
+        syncPortalMetrics(); 
+        portal.classList.add("open"); 
+        localStorage.setItem("sals_logged_in", "true"); 
+      }, 1400);
     });
+    
     portalExit.addEventListener("click", () => {
       clearTimeout(accessTimer); portal.classList.remove("open");
+      localStorage.removeItem("sals_logged_in"); 
       setTimeout(() => { openBtn.classList.remove("active"); openBtn.textContent = "接入终端"; applyView("home"); }, 300);
     });
 
@@ -1367,6 +2252,23 @@
     navItems.forEach(btn => btn.addEventListener("click", () => switchView(btn.dataset.view)));
     entryCards.forEach(card => card.addEventListener("click", () => switchView(card.dataset.target)));
     backBtns.forEach(btn => btn.addEventListener("click", () => switchView("home")));
+
+    (function checkLoginStatus() {
+      if (localStorage.getItem("sals_logged_in") === "true") {
+        if (openBtn && portal) {
+          openBtn.classList.add("active");
+          openBtn.textContent = "验证通过";
+          portal.classList.add("open");
+          if (typeof syncPortalMetrics === "function") syncPortalMetrics();
+          
+          const hash = (location.hash || "").replace("#", "");
+          const validViews = ["home", "archive", "tasks", "service", "department", "mobile", "complaint"];
+          if (validViews.includes(hash) && typeof applyView === "function") {
+            applyView(hash);
+          }
+        }
+      }
+    })();
 
     (function () {
       const nav = document.querySelector(".portal-nav");
@@ -1406,19 +2308,138 @@
       const wikiNavBtn = document.getElementById("wikiNavBtn");
       const wikiExit = document.getElementById("wikiExit");
       if (!wikiScreen) return;
+
       function openWiki() {
-        wikiScreen.classList.add("open");
-        wikiScreen.animate(
-          [
-            { transform: "translate(0,0)", filter: "none" },
-            { transform: "translate(-3px,0)", filter: "drop-shadow(2px 0 0 rgba(255,45,85,0.45)) drop-shadow(-2px 0 0 rgba(26,159,255,0.35))", offset: 0.15 },
-            { transform: "translate(2px,0)", filter: "drop-shadow(-2px 0 0 rgba(255,45,85,0.35)) drop-shadow(2px 0 0 rgba(26,159,255,0.3))", offset: 0.3 },
-            { transform: "translate(-1px,0)", filter: "none", offset: 0.45 },
-            { transform: "translate(0,0)", filter: "none" }
-          ],
-          { duration: 420, easing: "steps(1, end)" }
-        );
+        if (wikiScreen.classList.contains("open")) return;
+        const loader = document.getElementById("wikiLoader");
+        if (!loader) return;
+
+        const chars = "▩▨▧▦";
+        let glitchSession = "session ";
+        for (let i = 0; i < 8; i++) {
+            glitchSession += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        const sessionEl = loader.querySelector(".wl-session-id");
+        if (sessionEl) sessionEl.textContent = glitchSession;
+
+        loader.classList.add("show");
+        const lines = loader.querySelectorAll(".wl-typing");
+        lines.forEach(l => l.textContent = "");
+        loader.querySelectorAll('.wl-error, .wl-access-denied, .wl-access-denied-en').forEach(el => {
+            el.classList.remove('glitch-effect', 'show', 'glitch-text');
+        });
+        const barAnim = loader.querySelector('.wl-bar-anim');
+        if (barAnim) barAnim.classList.remove('error');
+
+        let lineIndex = 0;
+        
+        function typeLine() {
+          if (lineIndex >= lines.length) {
+            setTimeout(triggerError, 800);
+            return;
+          }
+          
+          const el = lines[lineIndex];
+          const text = el.dataset.text;
+          let charIndex = 0;
+          
+          if (el.closest('.wl-error') && charIndex === 0) {
+            const parent = el.closest('.wl-error');
+            parent.classList.add('glitch-effect');
+            setTimeout(() => parent.classList.remove('glitch-effect'), 300);
+          }
+
+          function typeChar() {
+            if (charIndex < text.length) {
+              el.textContent += text.charAt(charIndex);
+              charIndex++;
+              setTimeout(typeChar, Math.random() * 60 + 60);
+            } else {
+              lineIndex++;
+              setTimeout(typeLine, 600);
+            }
+          }
+          typeChar();
+        }
+
+        function triggerError() {
+          const denied1 = document.getElementById('wlDenied1');
+          const denied2 = document.getElementById('wlDenied2');
+          
+          if (barAnim) barAnim.classList.add('error');
+          
+          setTimeout(() => { 
+            if(denied1) {
+              denied1.classList.add('show', 'glitch-text');
+              denied1.textContent = "▩▨▧"; 
+            }
+          }, 600);
+          
+          setTimeout(() => { 
+            if(denied2) {
+              denied2.classList.add('show', 'glitch-text');
+              denied2.textContent = "▩▨▧"; 
+            }
+          }, 1200);
+          
+          setTimeout(() => {
+            let glitchCount = 0;
+            const glitchChars = "▩▨▧";
+            const glitchInterval = setInterval(() => {
+              const bodyLines = loader.querySelectorAll('.wl-body .wl-line');
+              bodyLines.forEach(line => {
+                if (line.dataset.originalText === undefined) {
+                  line.dataset.originalText = line.textContent;
+                }
+                if (Math.random() > 0.4) {
+                  const text = line.dataset.originalText;
+                  let garbled = "";
+                  for(let i=0; i<text.length; i++){
+                      garbled += glitchChars.charAt(Math.floor(Math.random() * glitchChars.length));
+                  }
+                  line.textContent = garbled;
+                  line.style.color = "#ff2d55";
+                } else {
+                  line.textContent = line.dataset.originalText;
+                  line.style.color = "";
+                }
+              });
+              glitchCount++;
+              if (glitchCount > 8) {
+                clearInterval(glitchInterval);
+                bodyLines.forEach(line => {
+                  if (line.dataset.originalText) {
+                    line.textContent = line.dataset.originalText;
+                    line.style.color = "";
+                  }
+                });
+                
+                // === 黑屏 -> 花屏 -> 进入 Wiki ===
+                loader.classList.remove("show");
+                
+                setTimeout(() => {
+                  const tv = document.createElement("div");
+                  tv.className = "tv-static play";
+                  document.body.appendChild(tv);
+                  
+                  setTimeout(() => {
+                    wikiScreen.classList.add("open");
+                  }, 600);
+                  
+                  setTimeout(() => {
+                    tv.remove();
+                  }, 1200);
+                  
+                }, 2000);
+              }
+            }, 100);
+          }, 1500);
+        }
+
+        setTimeout(typeLine, 500);
       }
+      
+      window.openWikiScreen = openWiki;
       if (wikiNavBtn) wikiNavBtn.addEventListener("click", openWiki);
       if (wikiExit) wikiExit.addEventListener("click", () => wikiScreen.classList.remove("open"));
     })();
@@ -1429,29 +2450,29 @@
       if (!side || !content) return;
       const wikiData = [
         { group: "灵体分级", items: [
-          { id: "grade-s", title: "S 级 · 禁忌", sub: "FORBIDDEN", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "grade-a", title: "A 级 · 天灾", sub: "CALAMITY", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "grade-b", title: "B 级 · 凶煞", sub: "MALEVOLENT", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "grade-c", title: "C 级 · 怨灵", sub: "SPECTER", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "grade-d", title: "D 级 · 地缚灵 / 寄生灵", sub: "BOUND", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "grade-e", title: "E 级 · 精怪", sub: "SPIRIT", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "grade-f", title: "F 级 · 普通游魂", sub: "WANDERER", body: `<p>长江滚滚东逝水。</p>` }
+          { id: "grade-s", title: "S 级 禁忌", sub: "FORBIDDEN", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "grade-a", title: "A 级 天灾", sub: "CALAMITY", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "grade-b", title: "B 级 凶煞", sub: "MALEVOLENT", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "grade-c", title: "C 级 怨灵", sub: "SPECTER", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "grade-d", title: "D 级 地缚灵 / 寄生灵", sub: "BOUND", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "grade-e", title: "E 级 精怪", sub: "SPIRIT", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "grade-f", title: "F 级 普通游魂", sub: "WANDERER", body: `<p>长江滚滚东逝水。</p>` }
         ]},
-        { group: "除灵流派", items: [
-          { id: "school-traditional", title: "传统派", sub: "TRADITIONAL", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "school-modern", title: "现代派", sub: "MODERN", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "school-special", title: "特殊职业", sub: "SPECIAL", body: `<p>长江滚滚东逝水。</p>` }
+        { group: "除灵方式", items: [
+          { id: "school-traditional", title: "传统武器", sub: "TRADITIONAL", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "school-modern", title: "现代武器", sub: "MODERN", body: `<p>长江滚滚东逝水。</p>` },
+          { id: "school-special", title: "特殊方式", sub: "SPECIAL", body: `<p>长江滚滚东逝水。</p>` }
         ]},
-        { group: "组织架构", items: [
+        { group: "部门结构", items: [
           { id: "org-top", title: "最高层", sub: "LEADERSHIP", body: `<p>长江滚滚东逝水。</p>` },
           { id: "org-front", title: "外勤部门", sub: "FRONTLINE", body: `<p>长江滚滚东逝水。</p>` },
           { id: "org-back", title: "内勤部门", sub: "BACKLINE", body: `<p>长江滚滚东逝水。</p>` }
         ]},
-        { group: "术语与规则", items: [
-          { id: "term-abyss", title: "渊", sub: "THE ABYSS", body: `<p>长江滚滚东逝水。</p>` },
+        { group: "术语", items: [
+          { id: "term-abyss", title: "灵力", sub: "THE ABYSS", body: `<p>长江滚滚东逝水。</p>` },
           { id: "term-domain", title: "鬼域", sub: "DOMAIN", body: `<p>长江滚滚东逝水。</p>` },
           { id: "term-anchor", title: "执念载体", sub: "ANCHOR", body: `<p>长江滚滚东逝水。</p>` },
-          { id: "term-yin", title: "阴气", sub: "YIN", body: `<p>长江滚滚东逝水。</p>` }
+          { id: "term-yin", title: "渊", sub: "YIN", body: `<p>长江滚滚东逝水。</p>` }
         ]}
       ];
       let currentId = wikiData[0].items[0].id;
@@ -1462,6 +2483,7 @@
         side.innerHTML = "";
         const search = document.createElement("input");
         search.className = "ws-search"; search.placeholder = "SEARCH / 检索";
+        search.setAttribute("aria-label", "检索世界观条目");
         search.addEventListener("input", () => { keyword = search.value; renderSide(); });
         side.appendChild(search);
         listWrap = document.createElement("div"); listWrap.id = "wikiSideList"; side.appendChild(listWrap);
@@ -1537,112 +2559,196 @@
       }
     }
 
-    (function () {
-      const STORAGE_KEY = "sals_archive_v2";
-      const table = document.getElementById("archiveTable");
-      const emptyHint = document.getElementById("archiveEmpty");
-      const form = document.getElementById("archiveForm");
-      const preview = document.getElementById("afPreview");
-      let pendingPhoto = "";
-      function loadData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch (e) { return []; } }
-      function saveData(list) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch (e) { alert("本地存储已满，图片过大可能无法保存。"); } }
-      function gradeClass(g) { if (g === "特级") return "tag-a"; if (g === "高级" || g === "中级") return "tag-b"; return "tag-c"; }
-      function statusClass(s) { if (s === "在岗" || s === "值守中") return "tag-ok"; if (s === "监控中" || s === "休整中") return "tag-warn"; return ""; }
-      function render() {
-        const list = loadData();
-        table.querySelectorAll(".dt-row:not(.dt-head)").forEach(r => r.remove());
-        if (list.length === 0) { emptyHint.style.display = "block"; return; }
-        emptyHint.style.display = "none";
-        list.forEach((item, i) => {
-          const row = document.createElement("div"); row.className = "dt-row";
-          row.innerHTML = `
-            ${item.photo ? `<img class="dt-photo" src="${item.photo}" alt="">` : `<span class="dt-photo empty">无</span>`}
-            <span>${escapeHtml(item.name || "—")}</span>
-            <span>${escapeHtml(item.experience || "—")}</span>
-            <span class="${gradeClass(item.grade)}">${escapeHtml(item.grade || "—")}</span>
-            <span>${escapeHtml(item.school || "—")}</span>
-            <span>${escapeHtml(item.district || "—")}</span>
-            <span class="${statusClass(item.status)}">${escapeHtml(item.status || "—")}</span>
-            <button class="dt-del" data-i="${i}" title="删除">×</button>`;
-          row.addEventListener("click", (e) => { if (e.target.classList.contains("dt-del")) return; showPersonCard(item); });
-          table.appendChild(row);
+  (function () {
+    const grid = document.getElementById("archiveCardGrid");
+    const emptyHint = document.getElementById("archiveEmpty");
+    if (!grid) return;
+
+    function gradeClass(g) { if (g === "特级") return "tag-a"; if (g === "高级" || g === "中级") return "tag-b"; return "tag-c"; }
+    function statusClass(s) { if (s === "在岗" || s === "值守中") return "tag-ok"; if (s === "监控中" || s === "休整中") return "tag-warn"; return ""; }
+
+    async function fetchArchives() {
+      if (!db) { grid.innerHTML = `<div class="af-empty">数据库未连接。</div>`; return; }
+      
+      const { data, error } = await db.from("archives").select("*").order('created_at', { ascending: false });
+      if (error) {
+          grid.innerHTML = `<div class="af-empty">加载档案失败：${escapeHtml(error.message)}</div>`;
+          return;
+      }
+      render(data || []);
+    }
+
+    function render(data) {
+      grid.querySelectorAll(".archive-card").forEach(el => el.remove());
+      
+      if (data.length === 0) { 
+          if (emptyHint) emptyHint.style.display = "block"; 
+          return; 
+      }
+      if (emptyHint) emptyHint.style.display = "none";
+      
+      data.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "archive-card";
+        
+        card.innerHTML = `
+          <div class="ac-image-wrap">
+            ${item.photo ? `<img src="${item.photo}" alt="">` : `<div class="no-img">NO IMAGE</div>`}
+            <div class="ac-badge ${gradeClass(item.grade)}">${escapeHtml(item.grade || "—")}</div>
+            <button class="dt-del" data-id="${item.id}" title="删除">×</button>
+          </div>
+          <div class="ac-info">
+            <div class="ac-name">${escapeHtml(item.name || "—")}</div>
+            <div class="ac-sub">
+              <span class="${statusClass(item.status)}">${escapeHtml(item.status || "—")}</span>
+              <span>${escapeHtml(item.experience || "—")}</span>
+            </div>
+          </div>
+        `;
+
+        const delBtn = card.querySelector(".dt-del");
+        delBtn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          if (!db) return;
+          const pwd = prompt("⚠ 内部督查处限制：请输入管理员清除权限密码");
+          if (pwd === null) return;
+          if (pwd !== "sals0601") { 
+            toast("⚠ 权限不足：内部督查处已驳回您的操作", "warn");
+            return;
+          }
+          const { error } = await db.from("archives").delete().eq("id", item.id);
+          if (error) { toast("删除失败：" + error.message, "warn"); return; }
+          toast("档案已从云端抹除");
+          card.style.opacity = "0";
+          setTimeout(() => { card.remove(); fetchArchives(); }, 300);
         });
-        table.querySelectorAll(".dt-del").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const list = loadData(); list.splice(Number(btn.dataset.i), 1); saveData(list); render();
+
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = (e.clientX - cx) / (rect.width / 2);
+          const dy = (e.clientY - cy) / (rect.height / 2);
+          const rotY = Math.max(-15, Math.min(15, dx * 15));
+          const rotX = Math.max(-15, Math.min(15, -dy * 15));
+          card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+          card.style.transition = "transform 0.4s ease-out";
+          setTimeout(() => card.style.transition = "transform 0.1s ease-out", 400);
+        });
+        card.addEventListener("mouseenter", () => {
+          card.style.transition = "transform 0.1s ease-out";
+        });
+
+        card.addEventListener("click", (e) => {
+          if (e.target.closest(".dt-del")) return;
+          openDetailDrawer(item);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    function processFile(file, cb) {
+      if (!file) { cb(""); return; }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const max = 1200;
+          const scale = Math.min(1, max / Math.max(img.width, img.height));
+          const cw = Math.round(img.width * scale); const ch = Math.round(img.height * scale);
+          const canvas = document.createElement("canvas"); canvas.width = cw; canvas.height = ch;
+          canvas.getContext("2d").drawImage(img, 0, 0, cw, ch);
+          cb(canvas.toDataURL("image/jpeg", 0.8));
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    const dropZone = document.getElementById("dropZone");
+    let dragCounter = 0;
+    document.addEventListener("dragenter", (e) => { e.preventDefault(); dragCounter++; if (dropZone) dropZone.classList.add("active"); });
+    document.addEventListener("dragover", (e) => { e.preventDefault(); });
+    document.addEventListener("dragleave", (e) => { e.preventDefault(); dragCounter--; if (dragCounter <= 0) { dragCounter = 0; if (dropZone) dropZone.classList.remove("active"); } });
+    document.addEventListener("drop", (e) => {
+      e.preventDefault(); dragCounter = 0;
+      if (dropZone) dropZone.classList.remove("active");
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!file || !file.type.startsWith("image/")) return;
+      toast("请在表单内选择图片上传，暂不支持拖拽修改云端档案", "warn");
+    });
+
+    const pc = document.getElementById("personCard");
+    const pcBody = document.getElementById("pcBody");
+    const pcClose = document.getElementById("pcClose");
+
+    if (pcClose) {
+      pcClose.addEventListener("click", () => pc.classList.remove("open"));
+    }
+
+    function openDetailDrawer(item) {
+      if (!pc || !pcBody) return;
+      pc.classList.add("open");
+
+      pcBody.innerHTML = `
+        <div class="pc-image-upload-wrap" id="pcImageUpload" title="点击上传不大于 20MB 的图像">
+          ${item.photo ? `<img src="${item.photo}" alt="">` : `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;">点击上传图像</div>`}
+          <div class="upload-hint">点击上传图像 (≤ 20MB)</div>
+          <input type="file" id="pcFileInput" accept="image/*" style="display:none;">
+        </div>
+        <div class="pc-name">${escapeHtml(item.name || "—")}</div>
+        <div class="pc-id">SALS / PERSONNEL RECORD</div>
+        <div class="pc-row"><span>工龄</span><b>${escapeHtml(item.experience || "—")}</b></div>
+        <div class="pc-row"><span>等级</span><b>${escapeHtml(item.grade || "—")}</b></div>
+        <div class="pc-row"><span>除灵方式</span><b>${escapeHtml(item.school || "—")}</b></div>
+        <div class="pc-row"><span>所属部门</span><b>${escapeHtml(item.district || "—")}</b></div>
+        <div class="pc-row"><span>当前状态</span><b>${escapeHtml(item.status || "—")}</b></div>
+      `;
+
+      const uploadWrap = document.getElementById("pcImageUpload");
+      const fileInput = document.getElementById("pcFileInput");
+
+      if (uploadWrap && fileInput) {
+        uploadWrap.addEventListener("click", () => fileInput.click());
+
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+
+          if (file.size > 20 * 1024 * 1024) {
+            toast("文件过大，请选择小于 20MB 的图像。", "warn");
+            return;
+          }
+
+          const originalHtml = uploadWrap.innerHTML;
+          uploadWrap.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:12px;">处理中...</div>`;
+
+          processFile(file, async (base64) => {
+            if (!db) { toast("数据库未连接", "warn"); uploadWrap.innerHTML = originalHtml; return; }
+            
+            const { error } = await db.from("archives").update({ photo: base64 }).eq("id", item.id);
+            if (error) {
+              toast("上传失败：" + error.message, "warn");
+              uploadWrap.innerHTML = originalHtml;
+              return;
+            }
+            toast("图像已更新");
+            item.photo = base64;
+            fetchArchives();
+            openDetailDrawer(item);
           });
         });
       }
-      function processFile(file, cb) {
-        if (!file) { cb(""); return; }
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          const img = new Image();
-          img.onload = () => {
-            const max = 800;
-            const scale = Math.min(1, max / Math.max(img.width, img.height));
-            const cw = Math.round(img.width * scale); const ch = Math.round(img.height * scale);
-            const canvas = document.createElement("canvas"); canvas.width = cw; canvas.height = ch;
-            canvas.getContext("2d").drawImage(img, 0, 0, cw, ch);
-            cb(canvas.toDataURL("image/jpeg", 0.82));
-          };
-          img.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-      form.querySelector('input[name="photo"]').addEventListener("change", (e) => {
-        const file = e.target.files && e.target.files[0];
-        pendingPhoto = ""; preview.classList.remove("show");
-        if (!file) return;
-        processFile(file, (data) => { pendingPhoto = data; preview.src = data; preview.classList.add("show"); });
-      });
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const fd = new FormData(form);
-        const item = {
-          name: (fd.get("name") || "").toString().trim(),
-          experience: (fd.get("experience") || "").toString().trim(),
-          grade: fd.get("grade") || "",
-          school: (fd.get("school") || "").toString().trim(),
-          district: (fd.get("district") || "").toString().trim(),
-          status: fd.get("status") || "",
-          photo: pendingPhoto
-        };
-        if (!item.name) { toast("至少填写姓名。", "warn"); return; }
-        const list = loadData(); list.push(item); saveData(list);
-        form.reset(); pendingPhoto = ""; preview.classList.remove("show"); preview.removeAttribute("src");
-        render(); toast("档案已录入 · " + item.name);
-      });
-      render();
-      window.__reloadArchive = render;
-      const dropZone = document.getElementById("dropZone");
-      let dragCounter = 0;
-      document.addEventListener("dragenter", (e) => { e.preventDefault(); dragCounter++; if (dropZone) dropZone.classList.add("active"); });
-      document.addEventListener("dragover", (e) => { e.preventDefault(); });
-      document.addEventListener("dragleave", (e) => { e.preventDefault(); dragCounter--; if (dragCounter <= 0) { dragCounter = 0; if (dropZone) dropZone.classList.remove("active"); } });
-      document.addEventListener("drop", (e) => {
-        e.preventDefault(); dragCounter = 0;
-        if (dropZone) dropZone.classList.remove("active");
-        const file = e.dataTransfer.files && e.dataTransfer.files[0];
-        if (!file || !file.type.startsWith("image/")) return;
-        processFile(file, (data) => {
-          const list = loadData();
-          if (!list.length) { toast("请先录入一条档案，再拖入影像。", "warn"); return; }
-          list[list.length - 1].photo = data;
-          saveData(list); render();
-          toast("影像已挂载至最新档案。");
-        });
-      });
-      const pcClose = document.getElementById("pcClose");
-      if (pcClose) pcClose.addEventListener("click", () => {
-        document.getElementById("personCard").classList.remove("open");
-        if (pcTiltHandler) {
-          const body = document.getElementById("pcBody");
-          if (body) { body.removeEventListener("mousemove", pcTiltHandler); body.removeEventListener("mouseleave", pcTiltHandler._leave); }
-          pcTiltHandler = null;
-        }
-      });
-    })();
+    }
+
+    fetchArchives();
+    setInterval(fetchArchives, 15000);
+    window.__reloadArchive = fetchArchives;
+  })();
 
     (function () {
       const listEl = document.getElementById("taskList");
@@ -1724,32 +2830,49 @@
         updateDoneBadge(currentData.filter(t => statusOf(t) === "done" && isMine(t)).length);
       }
       async function takeTask(code, btn) {
+        if (!db) { toast("任务数据源未连接。", "warn"); if (btn) btn.disabled = false; return false; }
         const rowData = currentData.find(t => t.code === code);
-        if (!rowData || statusOf(rowData) !== "open") return;
+        if (!rowData || statusOf(rowData) !== "open") return false;
         const me = currentMaxGrade();
-        if (me.order < (GRADE_ORDER[rowData.min_grade] || 0)) return;
-        btn.disabled = true; btn.textContent = "处理中…";
+        if (me.order < (GRADE_ORDER[rowData.min_grade] || 0)) return false;
+        if (btn) { btn.disabled = true; btn.textContent = "处理中…"; }
         await sleep(180);
         const { data: updated, error } = await db.from("tasks")
           .update({ taken: true, status: "taken", taken_at: new Date().toISOString(), taken_by: FP })
           .eq("code", code).eq("taken", false).select();
-        if (error) { toast("领取失败：" + error.message, "warn"); btn.disabled = false; btn.textContent = PHRASE; return; }
-        if (!updated || updated.length === 0) { toast("该任务已被抢先领取，正在刷新。", "warn"); lastSnapshot = null; await fetchAndRender(true); return; }
-        toast("任务已领取 · " + code); lastSnapshot = null; await fetchAndRender(true);
+        if (error) { toast("领取失败：" + error.message, "warn"); if (btn) { btn.disabled = false; btn.textContent = PHRASE; } return false; }
+        if (!updated || updated.length === 0) { toast("该任务已被抢先领取，正在刷新。", "warn"); lastSnapshot = null; await fetchAndRender(true); return false; }
+        toast("任务已领取 · " + code); lastSnapshot = null; await fetchAndRender(true); return true;
       }
       async function completeTask(code) {
+        if (!db) { toast("任务数据源未连接。", "warn"); return false; }
         const { data: updated, error } = await db.from("tasks")
           .update({ status: "done", done_at: new Date().toISOString(), done_by: FP })
-          .eq("code", code).select();
+          .eq("code", code).eq("taken_by", FP).select();
         if (error) { toast("操作失败：" + error.message, "warn"); return false; }
-        if (!updated || updated.length === 0) { toast("该任务不存在。", "warn"); return false; }
+        if (!updated || updated.length === 0) { toast("无法完成：任务不存在或不属于你。", "warn"); return false; }
         toast("任务已完成 · " + code); lastSnapshot = null; await fetchAndRender(true); return true;
       }
+      
       listEl.addEventListener("click", (e) => {
         const btn = e.target.closest(".task-btn");
         if (!btn || btn.disabled) return;
+        
+        if (Math.random() < 0.15) {
+          const fails = [
+            "该任务已被抢先领取。",
+            "信号无法解析。",
+            "档案记录不存在。",
+            "除灵师等级不足。",
+            "任务已过期。",
+          ];
+          toast(fails[randInt(0, fails.length - 1)], "warn");
+          return; 
+        }
+
         takeTask(btn.dataset.code, btn);
       });
+      
       if (refreshBtn) {
         refreshBtn.addEventListener("click", async () => {
           refreshBtn.classList.add("spinning"); refreshBtn.disabled = true; lastSnapshot = null;
@@ -1858,7 +2981,7 @@
             <div class="dm-tag">// DEPARTMENT DETAIL</div>
             <div class="dm-name">${escapeHtml(name)}</div>
             <div class="dm-desc">${escapeHtml(desc)}</div>
-            <div class="dm-row"><span>所属层级</span><b>${escapeHtml(foot)}</b></div>
+            <div class="dm-row"><span>所属部门</span><b>${escapeHtml(foot)}</b></div>
             <div class="dm-row"><span>通道状态</span><b>正常</b></div>
             <div class="dm-row"><span>最近同步</span><b>刚刚</b></div>
             <div class="dm-foot"><button class="back-btn" data-close>关闭</button></div>
@@ -1877,13 +3000,72 @@
     })();
 
     (function () {
+      const portalMain = document.querySelector(".portal-main");
+      if (!portalMain) return;
+
+      const handUrl = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cg fill='none' stroke='%23a8323a' stroke-width='2.5' stroke-linecap='round'%3E%3Cellipse cx='50' cy='78' rx='22' ry='24'/%3E%3Cpath d='M30 62 Q28 32 32 24 Q34 20 37 24 L38 58'/%3E%3Cpath d='M42 58 Q40 27 44 18 Q46 14 49 18 L50 58'/%3E%3Cpath d='M53 58 Q52 24 56 17 Q58 13 61 17 L61 58'/%3E%3Cpath d='M64 62 Q64 32 68 26 Q70 23 72 26 L70 62'/%3E%3C/g%3E%3C/svg%3E";
+
+      let lastDrop = 0;
+      let count = 0;
+
+      portalMain.addEventListener("mousemove", (e) => {
+        if (!document.getElementById("portal").classList.contains("open")) return;
+        const now = performance.now();
+        if (now - lastDrop < 2000) return;
+        lastDrop = now;
+        if (count >= 6) return;
+
+        const h = document.createElement("div");
+        const rot = (Math.random() - 0.5) * 30;
+        h.style.cssText = `
+          position: fixed;
+          left: ${e.clientX - 24}px;
+          top: ${e.clientY - 28}px;
+          width: 48px; height: 56px;
+          background-image: url("${handUrl}");
+          background-size: contain; background-repeat: no-repeat;
+          opacity: 0; pointer-events: none; z-index: 1;
+          transform: rotate(${rot}deg);
+          transition: opacity 0.6s ease-out;
+        `;
+        document.body.appendChild(h);
+        count++;
+        requestAnimationFrame(() => { h.style.opacity = "0.09"; });
+        setTimeout(() => {
+          h.style.opacity = "0";
+          setTimeout(() => { h.remove(); count--; }, 600);
+        }, 1500);
+      });
+
+      setInterval(() => {
+        const p = document.getElementById("portal");
+        if (!p || !p.classList.contains("open")) return;
+        if (Math.random() > 0.5) return;
+
+        const drop = document.createElement("div");
+        const fromLeft = Math.random() > 0.5;
+        drop.style.cssText = `
+          position: fixed;
+          ${fromLeft ? `left: ${Math.random() * 120}px` : `right: ${Math.random() * 120}px`};
+          top: -10px;
+          width: 3px; height: 12px;
+          background: radial-gradient(ellipse at 50% 100%, var(--vermilion) 0%, var(--vermilion) 40%, transparent 70%);
+          border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+          pointer-events: none; z-index: 3;
+          animation: drop-fall 2s ease-in forwards;
+        `;
+        p.appendChild(drop);
+        setTimeout(() => drop.remove(), 2200);
+      }, 15000);
+    })();
+
+    (function () {
       let cmdEl = null, cmdInput = null, cmdListEl = null;
       let cmdOpen = false, cmdIndex = 0, cmdFiltered = [];
       const commands = [
         { id: "home", label: "首页", en: "HOME", key: "1" },
         { id: "archive", label: "除灵师档案", en: "ARCHIVE", key: "2" },
         { id: "tasks", label: "任务板", en: "TASKS", key: "3" },
-        { id: "service", label: "个人办事", en: "SERVICE", key: "4" },
         { id: "department", label: "部门服务", en: "DEPARTMENT", key: "5" },
         { id: "mobile", label: "移动服务", en: "MOBILE", key: "6" },
         { id: "complaint", label: "投诉中心", en: "COMPLAINT", key: "7" },
@@ -1921,7 +3103,7 @@
       }
       function run() {
         const c = cmdFiltered[cmdIndex]; if (!c) return; close();
-        if (c.id === "wiki") { wikiScreen.classList.add("open"); return; }
+        if (c.id === "wiki") { if(window.openWikiScreen) window.openWikiScreen(); return; }
         if (c.id === "exit") { if (portal.classList.contains("open")) portalExit.click(); return; }
         if (!portal.classList.contains("open")) openPortalImmediately();
         switchView(c.id);
@@ -1931,7 +3113,7 @@
 
     (function () {
       function isTyping(e) { const t = e.target; return t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable); }
-      const viewOrder = ["home", "archive", "tasks", "service", "department", "mobile", "complaint"];
+      const viewOrder = ["home", "archive", "tasks", "department", "mobile", "complaint"];
       document.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); window.__cmd.toggle(); return; }
         if (window.__cmd.isOpen()) {
@@ -1948,7 +3130,8 @@
         if (e.key === "?" && !isTyping(e)) { toast("快捷键：Ctrl+K 命令面板 · 1-8 切换视图 · Esc 返回"); return; }
         if (portal.classList.contains("open") && !isTyping(e) && /^[1-8]$/.test(e.key)) {
           const idx = parseInt(e.key, 10) - 1;
-          if (idx < viewOrder.length) switchView(viewOrder[idx]); else wikiScreen.classList.add("open");
+          if (idx < viewOrder.length) switchView(viewOrder[idx]); 
+          else if (window.openWikiScreen) window.openWikiScreen();
         }
       });
     })();
@@ -1969,11 +3152,223 @@
             const idx = Math.min(logs.length - 1, Math.floor(v / 20));
             if (idx !== i) { i = idx; log.textContent = logs[i]; }
           } else { if (v < 100) log.textContent = "等待系统响应…"; }
-          if (v >= 100) { log.textContent = "接入完成"; pct.textContent = "100%"; setTimeout(() => { boot.classList.add("done"); startLog(); }, 400); }
+                   if (v >= 100) { 
+            log.textContent = "接入完成"; 
+            pct.textContent = "100%"; 
+            setTimeout(() => { 
+              boot.classList.add("done"); 
+              startLog(); 
+              setTimeout(() => {
+                const ls = document.getElementById("loginScreen");
+                if (ls) ls.classList.add("open");
+              }, 500);
+            }, 400); 
+          }
           else step();
         }, delay);
       }
       step();
+    })();
+
+    function showLoginScreen() {
+      const loginScreen = document.getElementById("loginScreen");
+      if (loginScreen) {
+        loginScreen.classList.add("open");
+      }
+    }
+
+    // 登录界面交互
+    (function () {
+      const loginScreen = document.getElementById("loginScreen");
+      const loginSubmit = document.getElementById("loginSubmit");
+      const loginUser = document.getElementById("loginUser");
+      const loginPass = document.getElementById("loginPass");
+      const postLoginModal = document.getElementById("postLoginModal");
+      const plmClose = document.getElementById("plmClose");
+      if (!loginScreen || !loginSubmit) return;
+
+      let hasLoggedIn = false;
+
+            function doLogin() {
+        if (hasLoggedIn) return;
+        // 首次登录自动生成密钥
+        let savedKey = localStorage.getItem("sals_access_key");
+        if (!savedKey) {
+          savedKey = "SALS-" + Math.random().toString(36).slice(2, 10).toUpperCase();
+          localStorage.setItem("sals_access_key", savedKey);
+          toast("首次登录，已为您生成访问密钥：" + savedKey, "warn");
+        }
+        // 如果密钥框为空，自动填入
+        if (loginPass && !loginPass.value.trim()) loginPass.value = savedKey;
+        hasLoggedIn = true;
+        loginSubmit.textContent = "验证中…";
+        loginSubmit.disabled = true;
+        setTimeout(() => {
+          loginScreen.classList.remove("open");
+          // 先检查是否已有档案记录，有则直接进入终端
+          const hasArchive = localStorage.getItem("sals_has_archive") === "true";
+          if (hasArchive) {
+            // 已有档案，直接进入
+            if (openBtn && portal) {
+              openBtn.classList.add("active");
+              openBtn.textContent = "验证通过";
+              portal.classList.add("open");
+              if (typeof syncPortalMetrics === "function") syncPortalMetrics();
+              applyView("home");
+              localStorage.setItem("sals_logged_in", "true");
+            }
+          } else {
+            // 新登录，显示档案弹窗，填完才能进
+            if (postLoginModal) postLoginModal.classList.add("open");
+          }
+        }, 1200);
+      }
+
+      loginSubmit.addEventListener("click", doLogin);
+      // 回车提交
+      [loginUser, loginPass].forEach(inp => {
+        if (inp) inp.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") { e.preventDefault(); doLogin(); }
+        });
+      });
+
+      if (plmClose) plmClose.addEventListener("click", () => {
+        // 未填档案不允许关闭跳过
+        if (localStorage.getItem("sals_has_archive") !== "true") {
+          toast("请先完成档案登记，才能接入终端。", "warn");
+          return;
+        }
+        postLoginModal.classList.remove("open");
+      });
+
+      // 登录后档案弹窗的表单处理
+      const postLoginForm = document.getElementById("postLoginForm");
+      const plmPreview = document.getElementById("plmPreview");
+      let pendingPlmPhoto = "";
+
+      function processFile(file, cb) {
+        if (!file) { cb(""); return; }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const max = 800;
+            const scale = Math.min(1, max / Math.max(img.width, img.height));
+            const cw = Math.round(img.width * scale); const ch = Math.round(img.height * scale);
+            const canvas = document.createElement("canvas"); canvas.width = cw; canvas.height = ch;
+            canvas.getContext("2d").drawImage(img, 0, 0, cw, ch);
+            cb(canvas.toDataURL("image/jpeg", 0.7));
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      if (postLoginForm) {
+        const photoInput = postLoginForm.querySelector('input[name="photo"]');
+        if (photoInput) {
+          photoInput.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            pendingPlmPhoto = ""; if (plmPreview) plmPreview.classList.remove("show");
+            if (!file) return;
+            processFile(file, (data) => { pendingPlmPhoto = data; if (plmPreview) { plmPreview.src = data; plmPreview.classList.add("show"); } });
+          });
+        }
+
+        postLoginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!db) { toast("数据库未连接，无法上传。", "warn"); return; }
+          const fd = new FormData(postLoginForm);
+          const item = {
+            name: (fd.get("name") || "").toString().trim(),
+            experience: (fd.get("experience") || "").toString().trim(),
+            grade: fd.get("grade") || "",
+            school: (fd.get("school") || "").toString().trim(),
+            district: (fd.get("district") || "").toString().trim(),
+            status: fd.get("status") || "",
+            photo: pendingPlmPhoto
+          };
+          if (!item.name) { toast("至少填写姓名。", "warn"); return; }
+          const submitBtn = postLoginForm.querySelector('.plm-submit');
+          const oldText = submitBtn.textContent;
+          submitBtn.textContent = "上传中…";
+          submitBtn.disabled = true;
+          const { error } = await db.from("archives").insert([item]);
+          submitBtn.textContent = oldText;
+          submitBtn.disabled = false;
+          if (error) {
+            toast("录入失败：" + error.message, "warn");
+            return;
+          }
+          postLoginForm.reset();
+          pendingPlmPhoto = "";
+          if (plmPreview) { plmPreview.classList.remove("show"); plmPreview.removeAttribute("src"); }
+          toast("档案已成功录入云端 · " + item.name);
+          localStorage.setItem("sals_has_archive", "true");
+          postLoginModal.classList.remove("open");
+          if (window.__reloadArchive) window.__reloadArchive();
+          // 档案填完，进入终端
+          if (openBtn && portal) {
+            openBtn.classList.add("active");
+            openBtn.textContent = "验证通过";
+            portal.classList.add("open");
+            if (typeof syncPortalMetrics === "function") syncPortalMetrics();
+            applyView("home");
+            localStorage.setItem("sals_logged_in", "true");
+          }
+        });
+      }
+    })();
+
+    // 查询模式按钮（适配新版卡片）
+    (function () {
+      const btn = document.getElementById("searchModeBtn");
+      if (!btn) return;
+      let searchActive = false;
+      btn.addEventListener("click", () => {
+        searchActive = !searchActive;
+        if (searchActive) {
+          btn.style.color = "var(--blue)";
+          btn.style.borderColor = "var(--blue)";
+          btn.style.background = "rgba(26,159,255,0.08)";
+          
+          let searchInput = document.getElementById("archiveSearchInput");
+          if (!searchInput) {
+            searchInput = document.createElement("input");
+            searchInput.id = "archiveSearchInput";
+            searchInput.type = "text";
+            searchInput.placeholder = "输入关键词查询档案…";
+            searchInput.style.cssText = "width:100%;background:transparent;border:1px solid var(--line-2);color:var(--text);padding:10px 14px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.06em;outline:none;margin-bottom:12px;border-radius:0;";
+            searchInput.addEventListener("input", () => {
+              const kw = searchInput.value.trim().toLowerCase();
+              // 改为监听 .archive-card
+              const cards = document.querySelectorAll("#archiveCardGrid .archive-card");
+              cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = (!kw || text.includes(kw)) ? "" : "none";
+              });
+            });
+            const grid = document.getElementById("archiveCardGrid");
+            if (grid && grid.parentNode) {
+              grid.parentNode.insertBefore(searchInput, grid);
+            }
+          } else {
+            searchInput.style.display = "";
+          }
+          searchInput.focus();
+        } else {
+          btn.style.color = "";
+          btn.style.borderColor = "";
+          btn.style.background = "";
+          const searchInput = document.getElementById("archiveSearchInput");
+          if (searchInput) {
+            searchInput.style.display = "none";
+            searchInput.value = "";
+            // 恢复所有卡片
+            document.querySelectorAll("#archiveCardGrid .archive-card").forEach(card => { card.style.display = ""; });
+          }
+        }
+      });
     })();
 
     (function () {
@@ -1989,52 +3384,6 @@
         requestAnimationFrame(() => mark.classList.add("show"));
         setTimeout(() => { mark.classList.remove("show"); setTimeout(() => { mark.remove(); active--; }, 300); }, 400);
       });
-    })();
-
-    (function () {
-      const glow = document.getElementById("mouseGlow");
-      const gridField = document.getElementById("gridField");
-      const reticle = document.getElementById("cursorReticle");
-      if (!glow || !gridField || !reticle) return;
-      const LIT_RADIUS = 120, LOCK_RADIUS = 70;
-      let ticking = false, nearSignal = false;
-      function applyFrame() {
-        const gx = (mouseX / window.innerWidth) * 100; const gy = (mouseY / window.innerHeight) * 100;
-        glow.style.setProperty("--gx", gx + "%"); glow.style.setProperty("--gy", gy + "%");
-        gridField.style.setProperty("--gx", gx + "%"); gridField.style.setProperty("--gy", gy + "%");
-        let closest = Infinity;
-        liveSignals.forEach(el => {
-          if (el._removing) return;
-          const r = el.getBoundingClientRect(); const cx = r.left + r.width / 2; const cy = r.top + r.height / 2;
-          const d = Math.hypot(mouseX - cx, mouseY - cy); if (d < closest) closest = d;
-          el.style.setProperty("--lit", Math.max(0, 1 - d / LIT_RADIUS).toFixed(2));
-          if (d < LIT_RADIUS) {
-            const pull = (1 - d / LIT_RADIUS) * 0.35;
-            el.style.setProperty("--jx", ((mouseX - cx) * pull).toFixed(1) + "px");
-            el.style.setProperty("--jy", ((mouseY - cy) * pull).toFixed(1) + "px");
-          } else { el.style.setProperty("--jx", "0px"); el.style.setProperty("--jy", "0px"); }
-        });
-        const nowNear = closest < LOCK_RADIUS;
-        if (nowNear !== nearSignal) { nearSignal = nowNear; reticle.classList.toggle("near-signal", nearSignal); }
-        ticking = false;
-      }
-      window.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        if (!ticking) { ticking = true; requestAnimationFrame(applyFrame); }
-        glow.classList.add("active"); reticle.classList.add("active");
-      });
-      document.addEventListener("mouseleave", () => {
-        glow.classList.remove("active"); reticle.classList.remove("active");
-        gridField.style.setProperty("--gx", "-300px"); gridField.style.setProperty("--gy", "-300px");
-        liveSignals.forEach(el => { el.style.setProperty("--lit", "0"); el.style.setProperty("--jx", "0px"); el.style.setProperty("--jy", "0px"); });
-      });
-      let rx = -100, ry = -100;
-      function reticleLoop() {
-        rx += (mouseX - rx) * 0.18; ry += (mouseY - ry) * 0.18;
-        reticle.style.transform = `translate(${rx.toFixed(1)}px, ${ry.toFixed(1)}px)`;
-        requestAnimationFrame(reticleLoop);
-      }
-      reticleLoop();
     })();
 
     (function () {
@@ -2131,6 +3480,182 @@
       const h = (location.hash || "").replace("#", "");
       if (valid.includes(h)) setTimeout(() => applyView(h), 80);
     })();
+
+    (function () {
+      if (!signalLayer) return;
+      setInterval(() => {
+        const alive = Array.from(liveSignals).filter(el => !el._removing);
+        if (alive.length === 0) return;
+        const randomSig = alive[randInt(0, alive.length - 1)];
+        randomSig.classList.add("flash");
+        setTimeout(() => randomSig.classList.remove("flash"), 520);
+      }, 1800);
+    })();
+
+    (function () {
+      const listEl = document.getElementById("taskList");
+      if (!listEl) return;
+      listEl.addEventListener("mousemove", (e) => {
+        const row = e.target.closest(".task-row");
+        if (!row) return;
+        const rect = row.getBoundingClientRect();
+        row.style.setProperty("--mx", ((e.clientX - rect.left) / rect.width * 100).toFixed(1) + "%");
+        row.style.setProperty("--my", ((e.clientY - rect.top) / rect.height * 100).toFixed(1) + "%");
+      });
+    })();
+
+    (function () {
+      const side = document.getElementById("wikiSide");
+      if (!side) return;
+      side.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        const rect = btn.getBoundingClientRect();
+        const rip = document.createElement("div");
+        rip.className = "paper-rip";
+        rip.style.left = (rect.right - 30) + "px";
+        rip.style.top = (rect.top + rect.height / 2 - 20) + "px";
+        document.body.appendChild(rip);
+        setTimeout(() => rip.remove(), 600);
+      });
+    })();
+
+ (function () {
+      const wrap = document.querySelector(".complaint-wrap");
+      if (!wrap) return;
+      const ta = wrap.querySelector("textarea");
+      if (!ta) return;
+      
+      const taint = document.createElement("div");
+      taint.className = "taint-text";
+      taint.textContent = "……祂在看你";
+      ta.parentNode.appendChild(taint);
+      
+      taint.classList.remove("show");
+
+      ta.addEventListener("input", () => {
+        if (ta.value.length >= 50) {
+          taint.classList.add("show");
+        } else {
+          taint.classList.remove("show");
+        }
+      });
+    })();
+
+
+    (function () {
+      let hiddenAt = 0;
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          hiddenAt = Date.now();
+        } else if (hiddenAt) {
+          const away = Math.round((Date.now() - hiddenAt) / 1000);
+          hiddenAt = 0;
+          if (away < 3) return;
+          const logTextEl = document.getElementById("logText");
+          const logTimeEl = document.getElementById("logTime");
+          if (logTextEl && logTimeEl) {
+            const now = new Date();
+            const p = n => String(n).padStart(2, "0");
+            logTimeEl.textContent = `[${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}]`;
+            logTextEl.textContent = `你离开的这段时间，有人查看了你的档案。`;
+          }
+        }
+      });
+    })();
+
+      (function () {
+      const pendingTasks = new Map();
+      
+      function checkLongTermLostSignal() {
+        if (sessionStorage.getItem("sals_lost_signal_shown")) return;
+
+        const now = Date.now();
+        const lastShown = localStorage.getItem("sals_lost_signal_time");
+        
+        const minDays = 2;
+        const maxDays = 30;
+        const randomDays = minDays + Math.random() * (maxDays - minDays);
+        const interval = randomDays * 24 * 60 * 60 * 1000;
+
+        if (!lastShown) {
+          localStorage.setItem("sals_lost_signal_time", now.toString());
+        } else {
+          if (now - parseInt(lastShown, 10) > interval) {
+            setTimeout(() => {
+              toast(`信号中断 · 长江滚滚东逝水 已脱离监控`, "warn");
+              sessionStorage.setItem("sals_lost_signal_shown", "true");
+            }, 5000);
+            localStorage.setItem("sals_lost_signal_time", now.toString());
+          }
+        }
+      }
+
+      function scheduleTimeout(code) {
+        if (pendingTasks.has(code)) return;
+        const t = setTimeout(() => {
+          pendingTasks.delete(code);
+          toast(`信号中断 · ${code} 已脱离监控`, "warn");
+          const btn = document.querySelector(`.task-btn[data-code="${code}"]`);
+          if (btn) { btn.disabled = true; btn.textContent = "信号中断"; }
+        }, 120000);
+        pendingTasks.set(code, t);
+      }
+      
+      const observer = new MutationObserver(() => {
+        document.querySelectorAll(".task-row.task-taken .task-btn").forEach(btn => {
+          const code = btn.dataset.code;
+          if (code && !pendingTasks.has(code)) scheduleTimeout(code);
+        });
+      });
+      
+      const taskList = document.getElementById("taskList");
+      if (taskList) observer.observe(taskList, { childList: true, subtree: true, attributes: true });
+      
+      checkLongTermLostSignal();
+    })();
+      // 右上角头像：同步最新档案 + 个人办事
+  (function () {
+    const avatar = document.getElementById("hudAvatar");
+    const fallback = document.getElementById("hudAvatarFallback");
+    const card = document.getElementById("avatarCard");
+    if (!avatar || !card) return;
+
+    function renderAvatarCard() {
+      if (!db) return;
+      db.from("archives").select("*").order("created_at", { ascending: false }).limit(1).then(({ data, error }) => {
+        if (error || !data || !data.length) return;
+        const item = data[0];
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v || "—"; };
+        set("acName", item.name);
+        set("acExp", item.experience);
+        set("acGrade", item.grade);
+        set("acSchool", item.school);
+        set("acDistrict", item.district);
+        set("acStatus", item.status);
+        if (item.photo) {
+          let img = avatar.querySelector("img");
+          if (!img) {
+            img = document.createElement("img");
+            avatar.insertBefore(img, card);
+          }
+          img.src = item.photo;
+          if (fallback) fallback.style.display = "none";
+        }
+      });
+    }
+    renderAvatarCard();
+    setInterval(renderAvatarCard, 15000);
+
+    card.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-svc]");
+      if (!btn) return;
+      e.stopPropagation();
+      const name = btn.dataset.svc;
+      const id = "SVC-" + String(Date.now()).slice(-4);
+      toast("已受理 · " + name + " · 回执号 " + id);
+    });
+  })();
   </script>
 </body>
 </html>
