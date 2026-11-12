@@ -905,7 +905,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 }
 .radar-field, .signal-layer { display: none !important; }
 
-.halftone-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+#webgl-asciify-wrapper {overflow: hidden;}
 .brutalist-decor { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 
 .shape-blue-bar { display: none; }
@@ -1089,7 +1089,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 }}
 
 .terminal { background: linear-gradient(180deg, #111315 0%, #111315 34%, #292a2b 100%); border-color: transparent; }
-.halftone-canvas { opacity: 0.14; }
+#asciify-output {mix-blend-mode: screen;}
 .shape-top-right { display: none; }
 .hud-top::before, .hud-top::after { display: none; }
 .hud-bottom::before, .hud-bottom::after { display: none !important; }.hud-bottom {
@@ -1341,7 +1341,189 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
   display: none;
   mix-blend-mode: screen; 
 }
+/* =========================================
+   终极手机端适配 (屏幕宽度 < 700px)
+   ========================================= */
+@media (max-width: 700px) {
+  /* 1. 取消外边距，让内容占满屏幕 */
+  body { overflow-x: hidden; }
+  .terminal {
+    margin: 0;
+    padding: 16px 12px;
+    min-height: 100dvh;
+    border: none;
+  }
 
+  /* 2. 重置顶部状态栏，防止遮挡 */
+  .hud-top {
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .hud-top .brand {
+    left: 0;
+    top: 0;
+    padding: 0;
+  }
+  .hud-top .brand::before { display: none; }
+  .hud-top .status { margin-left: 0; width: 100%; justify-content: flex-start; }
+
+  /* 3. 重写核心标题区域（消除导致越界的负边距） */
+  .hero { padding: 10px 0; }
+  .hero .kicker { transform: translateY(0); margin-bottom: 16px; font-size: 10px; }
+  .hero-title-wrap {
+    margin: 0 0 24px 0; /* 去除原来的 -34px 边距 */
+    width: 100%;
+    max-width: 100%;
+  }
+  .title-box {
+    padding: 12px 16px;
+    max-width: 100%;
+    background-color: transparent; /* 手机上去掉底色块更清爽 */
+  }
+  .title-text {
+    font-size: clamp(32px, 8vw, 42px); /* 字体自适应 */
+    white-space: normal; /* 允许换行 */
+    line-height: 1.2;
+  }
+  .hero-title-wrap .en {
+    padding-left: 0;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    margin-top: 8px;
+  }
+  .hero-title-wrap .mission {
+    margin: 20px 0 0 0; /* 去除左侧边距 */
+    width: 100%;
+    font-size: 12.5px;
+    line-height: 1.8;
+  }
+  .hero-title-wrap .pink-block { margin-left: 0; }
+  .gray-bar-thin, .gray-bar-thick { display: none; }
+
+  /* 4. 隐藏那些占用空间和导致卡顿的巨型装饰 */
+  .panel-frame, 
+  .right-circle-zone, 
+  .brutalist-decor,
+  .deco-sq-solid,
+  .my-custom-rect,
+  .shape-bottom-right {
+    display: none !important;
+  }
+
+  /* 5. 按钮调整 */
+  .access {
+    margin-top: 20px;
+    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .btn-access {
+    padding: 12px 24px;
+    font-size: 13px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* 6. 把实时动态日志放回正常文档流，防止遮挡内容 */
+  .terminal > .live-log {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: auto;
+    margin: 20px 0 0 0;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+    transform: none;
+  }
+  .terminal > .live-log::after { display: none; }
+
+  /* 7. 调整底部的统计信息排布 */
+  .hud-bottom {
+    justify-content: flex-start;
+    gap: 12px 20px;
+    padding-top: 20px;
+  }
+  .hud-bottom .metric.static {
+    position: static;
+    text-align: left;
+    min-width: auto;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  /* 8. 弹窗类组件全屏化 */
+  .dept-modal-panel, .login-box, .post-login-modal {
+    width: 100vw !important;
+    max-height: 100dvh !important;
+    border-radius: 0;
+    border: none !important;
+  }
+  .login-screen { padding: 0; }
+  .login-box { padding: 30px 20px; height: 100dvh; display: flex; flex-direction: column; justify-content: center; }
+}
+/* 1. 隐藏导航栏在手机端的丑陋滚动条 */
+.pn-menu::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+.pn-menu {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+/* 2. 专门针对手机端的导航栏优化 */
+@media (max-width: 700px) {
+  .portal-nav {
+    padding: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+    height: auto;
+    background: rgba(6, 6, 7, 0.95);
+  }
+  
+  /* Logo区域占满第一行 */
+  .pn-brand {
+    width: 100%;
+    margin-bottom: 4px;
+    background-image: none; /* 去掉手机端复杂的渐变背景 */
+    border: none;
+    padding-left: 0;
+    height: 24px;
+  }
+  
+  /* 状态栏和管理员标志放在第二行 */
+  .pn-status {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  #adminNavBtn {
+    margin-left: auto; /* 把管理员标志推到最右侧 */
+    font-size: 11px;
+  }
+
+  /* 滑动菜单放在第三行 */
+  .pn-menu {
+    order: 3;
+    width: 100%;
+    height: 40px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding-top: 4px;
+    margin-left: 0;
+    scroll-behavior: smooth;
+  }
+
+  .pn-item {
+    padding: 0 16px;
+    font-size: 13px;
+  }
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 </head>
@@ -1408,7 +1590,11 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 <div class="signal-layer" id="signalLayer"></div>
 <canvas id="salsAmbientCanvas" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; opacity: 0; transition: opacity 1s ease;"></canvas>
 <div class="terminal">
-  <canvas class="halftone-canvas" id="halftoneCanvas"></canvas>
+   <div id="webgl-asciify-wrapper" style="position: absolute; inset: 0; z-index: 0; pointer-events: none;">
+    <canvas id="asciify-source" style="display: none;"></canvas>
+    <div id="asciify-content" style="position: absolute; inset: 0; overflow: hidden;"></div>
+    <canvas id="asciify-output" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+  </div>
 
   <div class="brutalist-decor">
     <div class="shape-blue-bar"></div>
@@ -1583,7 +1769,6 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       <button class="pn-item" data-view="bounty">悬赏榜</button>
       <button class="pn-item" data-view="service">综合服务</button>
       <button class="pn-item" id="wikiNavBtn">世界观</button>
-      <span class="pn-item" id="adminNavBtn" style="display:none; color:var(--pink); font-weight:700; letter-spacing:0.1em;">管理员已登录</span>
     </nav>
     <div class="pn-status">
       <span><i class="dot"></i>已授权</span><span id="portalClock">--:--:--</span>
@@ -1609,6 +1794,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
           </div>
         </div>
       </div>
+      <span class="pn-item" id="adminNavBtn" style="display:none; color:var(--pink); font-weight:700; letter-spacing:0.1em;">管理员已登录</span>
       <button class="pn-exit" id="portalExit">退出</button>
     </div>
   </header>
@@ -6838,145 +7024,416 @@ if (document.getElementById("cancelReportWall")) {
     }
     setTimeout(advance, 140);
   })();
-  (function initAsciiLensBg() {
-  const canvas = document.getElementById('halftoneCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let width = 0, height = 0;
-  
-  // 鼠标位置（目标位置与缓动位置）
-  let mouseX = -1000, mouseY = -1000;
-  let targetX = -1000, targetY = -1000;
-  let isHovering = false;
+ /* =========================================================
+   WebGL Asciify Effect (Final Blue Version)
+   ========================================================= */
+(function initWebGLAsciify() {
+  const wrapper = document.getElementById("webgl-asciify-wrapper");
+  if (!wrapper) return;
+  const source = document.getElementById("asciify-source");
+  const content = document.getElementById("asciify-content");
+  const output = document.getElementById("asciify-output");
 
-  // 字符集：包含英文、数字和特殊符号
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+-<>¦'.split('');
-  const fontSize = 11;
-  const cellSize = 12;
-
-  function resize() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.max(1, Math.round(rect.width * dpr));
-    canvas.height = Math.max(1, Math.round(rect.height * dpr));
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    width = rect.width;
-    height = rect.height;
+  function getCanvasPixelRatio(element, context) {
+    const scale = window.visualViewport?.scale || 1;
+    const requested = Math.min(window.devicePixelRatio || 1, 2) * scale;
+    const width = Math.max(element.clientWidth, 1);
+    const height = Math.max(element.clientHeight, 1);
+    let maxDimension = 8192;
+    if (context) {
+      maxDimension = Math.min(maxDimension, context.getParameter(context.MAX_TEXTURE_SIZE));
+    }
+    return Math.min(requested, maxDimension / Math.max(width, height), Math.sqrt(16777216 / (width * height)));
   }
 
-  if (window.ResizeObserver && canvas.parentElement) {
-    new ResizeObserver(resize).observe(canvas.parentElement);
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  window.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mouseX = e.clientX - rect.left;
-    mouseY = e.clientY - rect.top;
-    isHovering = true;
-    if (targetX === -1000) { targetX = mouseX; targetY = mouseY; }
-  });
+  const CHARSETS = {
+    ascii: [0, 128, 131200, 14336, 459200, 469440, 4357252, 18157905, 11512810, 15724526],
+  };
+  const MAX_GLYPHS = 16;
   
-  document.addEventListener('mouseleave', () => { isHovering = false; });
+  const VERT = `#version 300 es
+  precision highp float;
+  layout(location = 0) in vec2 aPos;
+  out vec2 vUv;
+  void main () {
+    vUv = aPos * 0.5 + 0.5;
+    gl_Position = vec4(aPos, 0.0, 1.0);
+  }`;
 
-  let time = 0;
+  const FRAG = `#version 300 es
+  precision highp float;
+  in vec2 vUv;
+  out vec4 outColor;
+  uniform sampler2D uContent;
+  uniform vec2 uContentOffset;
+  uniform vec2 uResolution;
+  uniform float uGlyphPx;
+  uniform float uSpacing;
+  uniform uint uGlyphs[${MAX_GLYPHS}];
+  uniform int uGlyphCount;
+  uniform float uRadius;
+  uniform float uSoftness;
+  uniform vec2 uPointer;
+  uniform float uActive;
+  uniform vec3 uBg;
+  uniform float uBackingLum;
+  uniform float uBgOpacity;
+  uniform float uLod;
+  uniform float uContrast;
+  uniform float uBrightness;
+  uniform float uInvert;
+  uniform float uStrength;
+  uniform float uBase;
+  uniform float uMaxX;
+  uniform sampler2D uTextMask;
+  uniform float uDotPx;
+  uniform float uDotLod;
+  uniform float uGlowAmt;
+  uniform float uAberration;
 
-  function draw() {
-    if (!width || !height) { requestAnimationFrame(draw); return; }
+  #define S(a, b, t) smoothstep(a, b, t)
+
+  float glyphBit (int index, ivec2 p) {
+    if (p.x < 0 || p.x > 4 || p.y < 0 || p.y > 4) return 0.0;
+    uint bits = uGlyphs[index];
+    return float((bits >> uint((4 - p.x) + 5 * p.y)) & 1u);
+  }
+  float hash21 (vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  vec4 sampleFringe (vec2 uv, float lod, vec2 off) {
+    vec4 c = textureLod(uContent, uv, lod);
+    c.r = textureLod(uContent, uv + off, lod).r;
+    c.b = textureLod(uContent, uv - off, lod).b;
+    return c;
+  }
+
+  void main () {
+    vec2 uv = vUv;
+    if (uv.x > uMaxX) { outColor = vec4(0.0); return; }
+    float cellPx = (5.0 + 2.0 * uSpacing) * uGlyphPx;
+    vec2 frag = uv * uResolution;
+    vec2 cell = floor(frag / cellPx);
+    vec2 cellUv = (cell + 0.5) * cellPx / uResolution;
+    float aspect = uResolution.x / uResolution.y;
+    float dist = length((cellUv - uPointer) * vec2(aspect, 1.0));
+    float radius = max(uRadius * uActive, 1e-4);
+    float inner = radius * (1.0 - clamp(uSoftness, 0.0, 1.0));
+    float lens = (1.0 - S(inner, radius, dist)) * uActive;
     
-    // 鼠标缓动跟随（产生丝滑的镜头延迟感）
-    targetX += (mouseX - targetX) * 0.15;
-    targetY += (mouseY - targetY) * 0.15;
-
-    ctx.clearRect(0, 0, width, height);
-    time += 0.05;
-
-    // 1. 绘制全局极度微弱的点阵（保留原本的质感）
-    ctx.fillStyle = 'rgba(26, 159, 255, 0.03)';
-    const baseSpacing = 24;
-    for (let x = baseSpacing / 2; x < width; x += baseSpacing) {
-      for (let y = baseSpacing / 2; y < height; y += baseSpacing) {
-        const dx = x - targetX;
-        const dy = y - targetY;
-        // 鼠标附近的点阵让位给文字
-        if (Math.sqrt(dx * dx + dy * dy) < 200 && isHovering) continue;
-        
-        ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    // 关键点：如果不在透镜范围内，直接透明，完全不影响原背景
+    float mask = clamp(max(lens, clamp(uBase, 0.0, 1.0)), 0.0, 1.0) * clamp(uStrength, 0.0, 1.0);
+    float apply = mask < 0.003 ? 0.0 : step(hash21(cell), mask);
+    if (apply < 0.5) { outColor = vec4(0.0); return; }
+    
+    vec2 textureUv = vec2(cellUv.x, 1.0 - cellUv.y) + uContentOffset;
+    if (textureUv.x < 0.001 || textureUv.x > uMaxX - 0.002 || textureUv.y < 0.001 || textureUv.y > 0.999) { outColor = vec4(0.0); return; }
+    vec2 lensDir = (cellUv - uPointer) * vec2(aspect, 1.0);
+    float fringeAmp = max(uActive, S(0.0, 0.25, uBase));
+    vec2 fringe = normalize(lensDir + 1e-5) * clamp(uAberration, 0.0, 1.0) * 0.005 * S(uRadius * 0.15, uRadius, dist) * fringeAmp;
+    fringe = vec2(fringe.x / aspect, -fringe.y);
+    float textness = texture(uTextMask, vec2(cellUv.x, 1.0 - cellUv.y)).r;
+    
+    if (textness > 0.4) {
+      vec2 dotIdx = floor(frag / uDotPx);
+      vec2 dotUv = (dotIdx + 0.5) * uDotPx / uResolution;
+      vec2 flippedUv = clamp(vec2(dotUv.x, 1.0 - dotUv.y) + uContentOffset, vec2(0.001), vec2(uMaxX - 0.002, 0.999));
+      vec4 ink = sampleFringe(flippedUv, uDotLod, fringe);
+      float inkLum = dot(ink.rgb, vec3(0.299, 0.587, 0.114));
+      float density = abs(inkLum - uBackingLum);
+      density = clamp((density - 0.5) * uContrast + 0.5 + uBrightness, 0.0, 1.0);
+      density = mix(density, 1.0 - density, clamp(uInvert, 0.0, 1.0));
+      float d = length(frag - (dotIdx + 0.5) * uDotPx) / (uDotPx * 0.5);
+      float reach = sqrt(density);
+      float on = (1.0 - S(reach - 0.3, reach + 0.2, d)) * step(0.03, density);
+      vec3 inkColor = clamp(uBg + (ink.rgb - uBg) / max(abs(inkLum - uBackingLum), 0.2), 0.0, 1.0);
+      vec4 soft = sampleFringe(flippedUv, uDotLod + 2.5, fringe);
+      float softLum = dot(soft.rgb, vec3(0.299, 0.587, 0.114));
+      float halo = clamp(abs(softLum - uBackingLum) * 2.2, 0.0, 1.0) * clamp(uGlowAmt, 0.0, 1.0) * 0.55;
+      vec3 haloColor = clamp(uBg + (soft.rgb - uBg) / max(abs(softLum - uBackingLum), 0.2), 0.0, 1.0);
+      vec3 col = mix(haloColor, inkColor, on);
+      float alpha = ink.a * max(mix(clamp(uBgOpacity, 0.0, 1.0), 1.0, on), halo * (1.0 - on));
+      outColor = vec4(col * alpha, alpha);
+      return;
     }
+    
+    vec4 pixel = sampleFringe(textureUv, uLod, fringe);
+    float lum = dot(pixel.rgb, vec3(0.299, 0.587, 0.114));
+    float amount = abs(lum - uBackingLum);
+    amount = clamp((amount - 0.5) * uContrast + 0.5 + uBrightness, 0.0, 1.0);
+    amount = mix(amount, 1.0 - amount, clamp(uInvert, 0.0, 1.0));
+    int index = min(int(amount * float(uGlyphCount)), uGlyphCount - 1);
+    ivec2 local = ivec2(floor((frag - cell * cellPx) / uGlyphPx));
+    int pad = int(uSpacing);
+    float on = glyphBit(index, ivec2(local.x - pad, local.y - pad));
+    vec3 glyphColor = clamp(uBg + (pixel.rgb - uBg) / max(abs(lum - uBackingLum), 0.2), 0.0, 1.0);
+    vec3 col = mix(uBg, glyphColor, on);
+    float alpha = pixel.a * mix(clamp(uBgOpacity, 0.0, 1.0), 1.0, on);
+    outColor = vec4(col * alpha, alpha);
+  }`;
 
-    // 2. 绘制鼠标周围的 ASCII 透镜
-    if (isHovering && targetX > 0 && targetY > 0) {
-      const radius = 180; // 透镜半径，越大覆盖面越广
+  function init() {
+    // 如果是手机端（屏幕宽度小于768或判断为移动设备），直接隐藏不加载
+    if (window.innerWidth <= 768 || /Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+        if (wrapper) wrapper.style.display = 'none';
+        return;
+    }
+    const gl = output.getContext("webgl2", { alpha: true, depth: false, stencil: false, antialias: false, premultipliedAlpha: true });
+    if (!gl) return;
 
-      ctx.save();
-      // 创建圆形裁剪区域
-      ctx.beginPath();
-      ctx.arc(targetX, targetY, radius, 0, Math.PI * 2);
-      ctx.clip();
-
-      ctx.font = `bold ${fontSize}px "JetBrains Mono", monospace`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      const startX = Math.max(0, Math.floor((targetX - radius) / cellSize) * cellSize);
-      const endX = Math.min(width, Math.ceil((targetX + radius) / cellSize) * cellSize);
-      const startY = Math.max(0, Math.floor((targetY - radius) / cellSize) * cellSize);
-      const endY = Math.min(height, Math.ceil((targetY + radius) / cellSize) * cellSize);
-
-      for (let x = startX; x < endX; x += cellSize) {
-        for (let y = startY; y < endY; y += cellSize) {
-          const dx = x - targetX;
-          const dy = y - targetY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
-          if (dist > radius) continue;
-
-          // 根据距离计算透明度，形成光晕
-          const factor = 1 - (dist / radius);
-          const alpha = Math.pow(factor, 1.5);
-          
-          // 加上一点波动效果
-          const wave = Math.sin(time + x * 0.08 + y * 0.08) * 0.5 + 0.5;
-
-          // 随机选取字符（每帧会有跳动的故障感）
-          const char = chars[Math.floor(Math.random() * chars.length)];
-          
-          // 边缘产生粉色，中心为亮蓝色
-          if (dist > radius * 0.8) {
-             ctx.fillStyle = `rgba(255, 45, 85, ${alpha * wave * 0.8})`;
-          } else {
-             ctx.fillStyle = `rgba(26, 159, 255, ${alpha * wave})`;
-          }
-
-          ctx.fillText(char, x, y);
+    const sourceCtx = source.getContext("2d");
+    let contentDirty = true;
+    let fallbackSource = null;
+    
+    // 生成高密度、小体积的字符底图（隐藏在底层，只做原料）
+    const paintFallbackSnapshot = () => {
+        const dpr = getCanvasPixelRatio(output, gl);
+        const bounds = output.getBoundingClientRect();
+        const width = Math.max(1, Math.round(bounds.width * dpr));
+        const height = Math.max(1, Math.round(bounds.height * dpr));
+        if (source.width !== width || source.height !== height) {
+            source.width = width; source.height = height;
         }
-      }
-      ctx.restore();
+        sourceCtx.resetTransform();
+        sourceCtx.clearRect(0, 0, width, height);
+        sourceCtx.scale(dpr, dpr);
+        
+        sourceCtx.fillStyle = '#050505';
+        sourceCtx.fillRect(0, 0, bounds.width, bounds.height);
 
-      // 3. 绘制透镜的扫描边缘
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(targetX, targetY, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(26, 159, 255, 0.2)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      
-      // 内圈粉红点缀
-      ctx.beginPath();
-      ctx.arc(targetX, targetY, radius * 0.7, Math.PI, Math.PI * 1.5);
-      ctx.strokeStyle = 'rgba(255, 45, 85, 0.4)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.restore();
+        // 网格极其密集，让字符很小
+        const cellWidth = 6; 
+        const cellHeight = 10;
+        const cols = Math.floor(bounds.width / cellWidth);
+        const rows = Math.floor(bounds.height / cellHeight);
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if (Math.random() > 0.5) {
+                    sourceCtx.font = 'bold 8px monospace';
+                    // 纯蓝色
+                    sourceCtx.fillStyle = '#1a9fff';
+                    sourceCtx.globalAlpha = 0.1 + Math.random() * 0.8;
+                    const text = Math.random() > 0.5 ? '1' : '0';
+                    sourceCtx.fillText(text, c * cellWidth, r * cellHeight);
+                }
+            }
+        }
+        sourceCtx.globalAlpha = 1.0;
+        
+        fallbackSource = source;
+        contentDirty = true;
+        start();
+    };
+
+    function compile(type, text) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, text);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) { throw new Error(gl.getShaderInfoLog(shader)); }
+      return shader;
     }
 
-    requestAnimationFrame(draw);
+    const vertexShader = compile(gl.VERTEX_SHADER, VERT);
+    const fragmentShader = compile(gl.FRAGMENT_SHADER, FRAG);
+    const program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { throw new Error(gl.getProgramInfoLog(program)); }
+
+    const uniforms = {};
+    const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+    for (let i = 0; i < uniformCount; i++) {
+      const info = gl.getActiveUniform(program, i);
+      uniforms[info.name] = gl.getUniformLocation(program, info.name);
+    }
+
+    const quad = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+    const contentTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, contentTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,0,0]));
+
+    let contentMaxX = 1;
+    
+    const textMaskTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, textMaskTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,0,0]));
+
+    const maskCanvas = document.createElement("canvas");
+    const maskCtx = maskCanvas.getContext("2d");
+    let maskDirty = false;
+
+    const buildTextMask = () => {
+        if (!maskCtx) return;
+        const bounds = output.getBoundingClientRect();
+        const w = Math.max(1, Math.round(bounds.width * 0.25));
+        const h = Math.max(1, Math.round(bounds.height * 0.25));
+        maskCanvas.width = w; maskCanvas.height = h;
+        maskCtx.clearRect(0, 0, w, h);
+        maskCtx.fillStyle = "#fff";
+        maskCtx.fillRect(10, 10, w - 20, h - 20);
+        maskDirty = true;
+    };
+
+    const syncCanvasSize = () => {
+        const dpr = getCanvasPixelRatio(output, gl);
+        const width = Math.max(1, Math.round(output.clientWidth * dpr));
+        const height = Math.max(1, Math.round(output.clientHeight * dpr));
+        if (output.width !== width || output.height !== height) {
+            output.width = width; output.height = height;
+        }
+        contentMaxX = Math.min(1, Math.max(0.05, output.clientWidth / Math.max(output.clientWidth, 1)));
+        return true;
+    };
+
+    syncCanvasSize();
+    buildTextMask();
+
+    let backingRgb = [0.05, 0.05, 0.05];
+    let backingLum = 0.05;
+
+    const pointer = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, active: 0, target: 0 };
+    const glyphData = new Uint32Array(MAX_GLYPHS);
+    
+    const config = {
+      radius: 0.35, softness: 1, scale: 2, spacing: 1, // 变小变密
+      charset: "ascii", background: [0.05, 0.05, 0.05],
+      backgroundOpacity: 0, contrast: 1.5, brightness: 0,
+      invert: 0, strength: 1, baseStrength: 0, followSpeed: 3, // baseStrength: 0 保证平时全透明
+      glow: 0.6, aberration: 0.5
+    };
+
+    const uploadContent = () => {
+        if (!fallbackSource || !contentDirty) return;
+        contentDirty = false;
+        gl.bindTexture(gl.TEXTURE_2D, contentTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, fallbackSource);
+        gl.generateMipmap(gl.TEXTURE_2D);
+    };
+
+    const uploadMask = () => {
+        if (!maskDirty) return;
+        maskDirty = false;
+        gl.bindTexture(gl.TEXTURE_2D, textMaskTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, maskCanvas);
+    };
+
+    const render = () => {
+        uploadContent();
+        uploadMask();
+        gl.useProgram(program);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, contentTexture);
+        gl.uniform1i(uniforms.uContent, 0);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, textMaskTexture);
+        gl.uniform1i(uniforms.uTextMask, 1);
+        gl.uniform2f(uniforms.uContentOffset, 0, 0);
+        gl.uniform2f(uniforms.uResolution, output.width, output.height);
+        
+        const dpr = output.width / Math.max(output.clientWidth, 1);
+        const glyphCss = Math.max(config.scale, 0.5);
+        const dotCss = Math.max(1.25, glyphCss * 0.75);
+        gl.uniform1f(uniforms.uDotPx, dotCss * dpr);
+        gl.uniform1f(uniforms.uDotLod, Math.max(0, Math.log2((dotCss * dpr) / dpr) - 1));
+        gl.uniform1f(uniforms.uGlowAmt, config.glow);
+        gl.uniform1f(uniforms.uAberration, config.aberration);
+        const spacing = Math.round(Math.min(Math.max(config.spacing, 0), 3));
+        gl.uniform1f(uniforms.uGlyphPx, glyphCss * dpr);
+        gl.uniform1f(uniforms.uSpacing, spacing);
+        gl.uniform1f(uniforms.uLod, Math.max(0, Math.log2((5 + 2 * spacing) * glyphCss) - 1));
+        
+        const ramp = CHARSETS[config.charset];
+        const count = Math.min(ramp.length, MAX_GLYPHS);
+        glyphData.fill(0);
+        for (let i = 0; i < count; i++) glyphData[i] = ramp[i] >>> 0;
+        gl.uniform1uiv(uniforms["uGlyphs[0]"], glyphData);
+        gl.uniform1i(uniforms.uGlyphCount, count);
+        
+        gl.uniform1f(uniforms.uRadius, config.radius);
+        gl.uniform1f(uniforms.uSoftness, config.softness);
+        gl.uniform2f(uniforms.uPointer, pointer.x, pointer.y);
+        gl.uniform1f(uniforms.uActive, pointer.active);
+        gl.uniform3f(uniforms.uBg, config.background[0], config.background[1], config.background[2]);
+        gl.uniform1f(uniforms.uBackingLum, backingLum);
+        gl.uniform1f(uniforms.uBgOpacity, config.backgroundOpacity);
+        gl.uniform1f(uniforms.uContrast, config.contrast);
+        gl.uniform1f(uniforms.uBrightness, config.brightness);
+        gl.uniform1f(uniforms.uInvert, config.invert);
+        gl.uniform1f(uniforms.uStrength, config.strength);
+        gl.uniform1f(uniforms.uBase, config.baseStrength);
+        gl.uniform1f(uniforms.uMaxX, contentMaxX);
+        
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, output.width, output.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+
+    let running = false;
+    let raf = 0;
+    let lastTime = performance.now();
+
+    const frame = (now) => {
+        if (!running) return;
+        const delta = Math.min((now - lastTime) / 1000, 1 / 30);
+        lastTime = now;
+        const ease = 1 - Math.exp(-delta * config.followSpeed);
+        pointer.x += (pointer.tx - pointer.x) * ease;
+        pointer.y += (pointer.ty - pointer.y) * ease;
+        pointer.active += (pointer.target - pointer.active) * ease;
+        
+        render();
+        
+        if (Math.abs(pointer.tx - pointer.x) < 5e-4 && Math.abs(pointer.target - pointer.active) < 1e-3 && !contentDirty) {
+            running = false;
+            return;
+        }
+        raf = requestAnimationFrame(frame);
+    };
+
+    const start = () => {
+        if (running) return;
+        running = true;
+        lastTime = performance.now();
+        raf = requestAnimationFrame(frame);
+    };
+
+    setTimeout(paintFallbackSnapshot, 100);
+    setTimeout(start, 200);
+
+    const listenTarget = wrapper.parentElement || wrapper;
+    listenTarget.addEventListener("pointermove", (e) => {
+        const rect = output.getBoundingClientRect();
+        pointer.tx = (e.clientX - rect.left) / Math.max(rect.width, 1);
+        pointer.ty = 1 - (e.clientY - rect.top) / Math.max(rect.height, 1);
+        pointer.target = 0.4; // 【关键】0.4代表 40% 透明度，淡淡的
+        start();
+    });
+    listenTarget.addEventListener("pointerleave", () => {
+        pointer.target = 0;
+        start();
+    });
+
+    window.addEventListener("resize", () => {
+        syncCanvasSize();
+        paintFallbackSnapshot();
+        buildTextMask();
+    });
   }
-  draw();
+
+  init();
 })();
 
   document.addEventListener("DOMContentLoaded", () => {
