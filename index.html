@@ -3105,13 +3105,13 @@ function switchView(name) {
           if (gradeValue === "内勤") {
             if (!/^(Intel|Tech|Supply|Admin)/.test(code)) return false;
           } else {
-            const matchesGrade = gradeValue === "初级"
+            const matchesGrade = (gradeValue === "初级"
               ? /^(Basics|Beginner|Assault)/.test(code)
               : gradeValue === "中级"
                 ? /^Intermediate/.test(code)
                 : gradeValue === "高级"
                   ? /^Advanced/.test(code)
-                  : false;
+                  : false) || t.min_grade === gradeValue;
             if (!matchesGrade) return false;
           }
         }
@@ -3236,7 +3236,11 @@ function switchView(name) {
           lockedByGrade = !gate.gradeOk;
           lockedByDept = !gate.deptOk;
           lockedByStats = !gate.statOk;
-          gradeText = gate.req.grade === "内勤" ? "内勤" : (gate.req.grade || gradeText);
+          if (/^(Intel|Tech|Supply|Admin)/.test(String(t.code || ""))) {
+            gradeText = (gate.req.grade && gate.req.grade !== "内勤" && gate.req.grade !== "不限") ? "内勤·" + gate.req.grade : "内勤";
+          } else {
+            gradeText = gate.req.grade || gradeText;
+          }
           reqText = gate.reqText;
         }
         const locked = lockedByGrade || lockedByDept || lockedByStats;
@@ -10729,9 +10733,8 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   var LABEL = { atk: "攻击", con: "体能", will: "意志", spr: "灵力", per: "感知", rec: "恢复" };
   var STAT_COLOR = { atk: "#ff2d55", con: "#ffad00", will: "#8717dd", spr: "#1a9fff", per: "#00d9b8", rec: "#e8c46a" };
   var GRADE_CAP = { "初级": 20, "中级": 35, "高级": 50, "特级": 80 };
-  var GRADE_TOTAL = { "初级":80, "中级":150, "高级":250, "特级":400 };
-  var INITIAL_FREE = { "初级": 20, "中级": 35, "高级": 50, "特级": 80 };
-  var GRADE_POWER = { "初级":20, "中级":45, "高级":65, "特级":100, "内勤":25, "不限":20 };
+  var GRADE_BASE = { "初级": 5, "中级": 10, "高级": 16, "特级": 26 };
+  var GRADE_ORDER = { "初级": 1, "中级": 2, "高级": 3, "特级": 4 };
   var OUTDOOR = ["特殊任务行动局", "突击行动处", "常规执行处"];
 
   RPG.KEYS = KEYS; RPG.LABEL = LABEL; RPG.GRADE_CAP = GRADE_CAP;
@@ -11055,7 +11058,8 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   RPG.checkTask = checkTask;
   RPG.requirementSummary = function (t) {
     var r = taskRequirement(t), parts = [];
-    if (r.grade && r.grade !== "不限") parts.push(r.grade);
+    var internal = /^(Intel|Tech|Supply|Admin)/.test(String((t && t.code) || ""));
+    if (r.grade && r.grade !== "不限") parts.push(internal && r.grade !== "内勤" ? "内勤·" + r.grade : r.grade);
     if (r.dept) parts.push(r.dept);
     Object.keys(r.stats).forEach(function (k) { parts.push(LABEL[k] + " " + r.stats[k]); });
     return parts.length ? parts.join(" · ") : "无硬性门槛";
@@ -12476,14 +12480,6 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
 
   
   function addSquadEntries() {
-    var menu = el("pnMenu");
-    if (menu && !menu.querySelector('[data-view="squad"]')) {
-      var b = document.createElement("button");
-      b.className = "pn-item"; b.dataset.view = "squad"; b.textContent = "组队招募";
-      var wiki = el("wikiNavBtn");
-      menu.insertBefore(b, wiki || null);
-      b.addEventListener("click", openSquadHall);
-    }
     var tb = document.querySelector('.portal-view[data-view="tasks"] .task-toolbar');
     if (tb && !el("btnPublishTask")) {
       var pb = document.createElement("button");
