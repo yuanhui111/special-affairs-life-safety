@@ -10779,7 +10779,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   function weeklyWeapons() {
     var rnd = mulberry32(weekIndex() * 7919 + 13);
     var pool = WEAPON_POOL.slice(); var out = [];
-    for (var i = 0; i < 6 && pool.length; i++) out.push(pool.splice(Math.floor(rnd()*pool.length),1)[0]);
+    for (var i = 0; i < 2 && pool.length; i++) out.push(pool.splice(Math.floor(rnd()*pool.length),1)[0]);
     return out;
   }
   function renderWeeklyWeapons() {
@@ -12425,15 +12425,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
 
   
   function addSquadEntries() {
-    var menu = el("pnMenu");
-    if (menu && !menu.querySelector('[data-view="squad"]')) {
-      var b = document.createElement("button");
-      b.className = "pn-item"; b.dataset.view = "squad"; b.textContent = "组队招募";
-      var wiki = el("wikiNavBtn");
-      menu.insertBefore(b, wiki || null);
-      b.addEventListener("click", openSquadHall);
-    }
-    var tb = document.querySelector('.portal-view[data-view="tasks"] .task-toolbar');
+   var tb = document.querySelector('.portal-view[data-view="tasks"] .task-toolbar');
     if (tb && !el("btnPublishTask")) {
       var pb = document.createElement("button");
       pb.type = "button"; pb.className = "task-refresh"; pb.id = "btnPublishTask";
