@@ -10729,8 +10729,9 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   var LABEL = { atk: "攻击", con: "体能", will: "意志", spr: "灵力", per: "感知", rec: "恢复" };
   var STAT_COLOR = { atk: "#ff2d55", con: "#ffad00", will: "#8717dd", spr: "#1a9fff", per: "#00d9b8", rec: "#e8c46a" };
   var GRADE_CAP = { "初级": 20, "中级": 35, "高级": 50, "特级": 80 };
-  var GRADE_BASE = { "初级": 5, "中级": 10, "高级": 16, "特级": 26 };
-  var GRADE_ORDER = { "初级": 1, "中级": 2, "高级": 3, "特级": 4 };
+  var GRADE_TOTAL = { "初级":80, "中级":150, "高级":250, "特级":400 };
+  var INITIAL_FREE = { "初级": 20, "中级": 35, "高级": 50, "特级": 80 };
+  var GRADE_POWER = { "初级":20, "中级":45, "高级":65, "特级":100, "内勤":25, "不限":20 };
   var OUTDOOR = ["特殊任务行动局", "突击行动处", "常规执行处"];
 
   RPG.KEYS = KEYS; RPG.LABEL = LABEL; RPG.GRADE_CAP = GRADE_CAP;
