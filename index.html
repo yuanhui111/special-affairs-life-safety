@@ -1791,7 +1791,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
     <div class="plm-sub">SALS / PERSONNEL ENROLLMENT</div>
     <form class="plm-form" id="postLoginForm" autocomplete="off">
       <div class="af-row"><label>姓名</label><input type="text" name="name" placeholder="姓名"></div>
-      <div class="af-row"><label>工龄</label><input type="text" name="experience" placeholder="例如 3 年"></div>
+      <div class="af-row"><label>工龄</label><input type="text" name="experience" placeholder=" 请在此填写整数，后缀 年 "></div>
       <div class="af-row">
         <label>等级</label>
         <select name="grade">
@@ -1802,13 +1802,14 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
         </select>
       </div>      <div class="af-row">
         <label>除灵方式</label>
-        <input type="text" name="school" placeholder="请填写您最常用的除灵方式">
+        <input type="text" name="school" placeholder="请填写您最常用的除灵方式/武器名字">
         <div style="font-family: var(--font-mono); font-size: 10px; color: var(--pink); margin-top: 6px; line-height: 1.5; opacity: 0.8;">
-          * 非常规除灵方式请去内部督查处做好备案，在此填写该招式的全名。
+          * 非常规除灵方式请在此处填写已报备的名字，并加前缀【非常规】。
+           * 除灵方式/武器名字任意填一个就好，如果实在没有常用武器，请填写 官方提供武器 。
         </div>
       </div>      <div class="af-row"><label>所属部门</label><select name="district">
-        <option value="" selected disabled hidden>请选择您的部门</option><option value="特殊任务行动局">特殊任务行动局（外勤 · 推荐新人）</option>
-        <option value="突击行动处">突击行动处（外勤）</option><option value="常规执行处">常规执行处（外勤 · 推荐新人）</option>
+        <option value="" selected disabled hidden>请选择您的部门</option><option value="特殊任务行动局">特殊任务行动局（非管理不要选）</option>
+        <option value="突击行动处">突击行动处（外勤）</option><option value="常规执行处">常规执行处（外勤）</option>
         <option value="情报管理局">情报管理局（内勤）</option><option value="技术研发院">技术研发院（内勤）</option>
         <option value="综合保障部">综合保障部（内勤）</option><option value="内部督查处" data-admin-only="true" hidden disabled>内部督查处（管理）</option>
       </select>
@@ -1816,7 +1817,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>
       <div class="af-row"><label>当前状态</label><select name="status"><option value="在岗">在岗</option><option value="派遣中">派遣中</option><option value="值守中">值守中</option><option value="监控中">监控中</option><option value="休整中">休整中</option></select></div>
       <div class="af-row"><label>头像（可选）</label><input type="file" name="photo" accept="image/*"><img class="af-preview" id="plmPreview" alt=""></div>
-      <div class="stat-generation-note" style="margin: 0 0 14px; font-family: var(--font-mono); font-size: 10px; color: var(--dim); line-height: 1.7;">初始六维为 0，进入后在首页点击头像，即可在个人档案修改数值。</div>
+      <div class="stat-generation-note" style="margin: 0 0 14px; font-family: var(--font-mono); font-size: 10px; color: var(--dim); line-height: 1.7;">初始六维为 0，按等级发放初始自由点数（初级20 · 中级35 · 高级50 · 特级80），此后通过完成任务获取点数（每次 1–2 点）。加点只增不减，保存后不可重置。单项与总值受等级上限约束（初级20/80 · 中级35/150 · 高级50/250 · 特级80/400）。</div>
       <div class="plm-actions">
         <button type="submit" class="plm-submit">录入档案</button>
         <div class="plm-hint">图片会压缩到长边 800px、JPEG 质量 0.7 后存入云端，建议单张小于 1MB。</div>
@@ -2186,7 +2187,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
         <button class="ds-btn" id="btnHealHp">医疗救助</button>
         <button class="ds-btn" id="btnHealSpirit">灵力恢复</button>
         <button class="ds-btn" id="btnOpenPreference">武器报备</button>
-        <button class="ds-btn" id="btnBindCrossDevice">绑定跨设备密钥</button>
+        <button class="ds-btn" id="btnBindCrossDevice">绑定密钥</button>
         <button class="ds-btn" id="dossierBackHome">返回主页</button>
       </div>
        <div class="ds-radar-box">
@@ -7362,7 +7363,7 @@ if (document.getElementById("cancelReportWall")) {
               if (typeof window.executeTaskSubmit === "function") {
                   await window.executeTaskSubmit(currentSubmitTaskCode);
               } else {
-                  toast("系统错误：找不到结算函数", "warn");
+                  toast("系统错误", "warn");
               }
           } finally {
               submitInFlight = false;
@@ -11098,16 +11099,16 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     else add("ok", "队伍人数 " + n + " / 4。");
     if (n > 4) add("bad", "小队上限 4 人，请移出多余成员。");
     if (n >= 2) {
-      if (counts.out === n) add("bad", "全员输出，缺少支援职能，无法通过编成审核。");
+      if (counts.out === n) add("bad", "全员输出，缺少支援职能，请调整成员。");
       else add("ok", "存在非输出职能，具备基础互补。");
     }
     if (n >= 3) {
-      if (counts.sup === 0) add("bad", "3 人以上必须配置至少 1 名辅助（灵力 / 结界 / 医疗）。");
-      else add("ok", "已配置 " + counts.sup + " 名辅助。");
+      if (counts.sup === 0) add("bad", "3 人以上必须配置至少 1 名支援职能成员。");
+      else add("ok", "已配置 " + counts.sup + " 名支援职能成员。");
     }
     if (n >= 4) {
-      if (counts.int + counts.log === 0) add("bad", "满编队伍需要至少 1 名情报或后勤，保证情报与补给链路。");
-      else add("ok", "情报 / 后勤链路完整。");
+      if (counts.int + counts.log === 0) add("bad", "满编队伍需要至少 1 名情报或后勤，请调整成员。");
+      else add("ok", "队伍完整。");
     }
     var maxOut = Math.max(1, Math.floor(n * 0.6));
     if (n >= 2) {
@@ -11118,14 +11119,14 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var mx = Math.max.apply(null, powers), mn = Math.max(1, Math.min.apply(null, powers));
       var ratio = mx / mn;
       if (ratio > 2.6) add("bad", "战力断层严重（" + mx + " / " + mn + " ≈ " + ratio.toFixed(1) + "倍），请调整成员。");
-      else if (ratio > 2.0) add("warn", "战力差距偏大（≈" + ratio.toFixed(1) + "倍），低战力成员需靠后站位。");
+      else if (ratio > 2.0) add("warn", "战力差距偏大（≈" + ratio.toFixed(1) + "倍），请调整成员。");
       else add("ok", "战力分布均衡（≈" + ratio.toFixed(1) + "倍）。");
     }
     var depts = {};
     members.forEach(function (m) { depts[m.district || "未分配"] = 1; });
     var hasOut = members.some(function (m) { return OUTDOOR.indexOf(m.district) >= 0; });
     var hasIn = members.some(function (m) { return m.district && OUTDOOR.indexOf(m.district) < 0; });
-    if (hasOut && hasIn) add("ok", "外勤 + 内勤混编，允许且推荐。");
+    if (hasOut && hasIn) add("ok", "外勤 + 内勤，允许且推荐。");
     var hardFail = checks.some(function (c) { return c.state === "bad"; });
     return { ok: !hardFail, counts: counts, checks: checks, total: n, power: powers.reduce(function (a, b) { return a + b; }, 0) };
   }
@@ -11178,7 +11179,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
           stat_spr: d.spr, stat_per: d.per, stat_rec: d.rec,
           free_stat_points: myProfile.free_stat_points
         });
-        say("检测到历史遗留的空数值，已按等级基准重建，可自由加点。");
+        say("检测到历史遗留的空数值，已修改，可自由加点。");
       }
       
       
@@ -11192,11 +11193,11 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
         if (rawFree > initGrant + 10) {
           myProfile.free_stat_points = initGrant;
           saveFields("archives", myProfile.id, { free_stat_points: initGrant });
-          say("检测到旧版规则发放的超额自由点数（" + rawFree + " 点），已按新规则收敛为 " + myProfile.grade + " 初始点数 " + initGrant + " 点。", "warn");
+          say("检测到旧版规则发放的超额自由点数（" + rawFree + " 点），已修改为 " + myProfile.grade + " 初始点数 " + initGrant + " 点。", "warn");
         } else {
           myProfile.free_stat_points = rawFree + initGrant;
           saveFields("archives", myProfile.id, { free_stat_points: rawFree + initGrant });
-          say("已按新规则补发 " + myProfile.grade + " 初始自由点数 " + initGrant + " 点。");
+          say("已补发 " + myProfile.grade + " 初始自由点数 " + initGrant + " 点。");
         }
       }
       sheetState = {
@@ -11727,7 +11728,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var f1 = document.createElement("div");
       var l1 = document.createElement("label"); l1.textContent = "队伍名称";
       var i1 = document.createElement("input"); i1.type = "text"; i1.maxLength = 24;
-      i1.placeholder = squadTab === "long" ? "例如：城西常驻第一班" : "例如：医院夜间突入组";
+      i1.placeholder = squadTab === "long" ? "例如：这是一个小队名字" : "例如：Intermediate Task-318任务小队";
       f1.appendChild(l1); f1.appendChild(i1);
       form.appendChild(f1);
       var taskSel = null;
@@ -12048,13 +12049,13 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       return i;
     }
     var code = inp("text", "例如：Intermediate Task-501");
-    var title = inp("text", "例如：城西医院夜间灵体清剿");
+    var title = inp("text", "例如：这是一个任务标题");
     var g1 = document.createElement("div"); g1.className = "pub-grid";
     g1.appendChild(field("任务编号 *", code));
     g1.appendChild(field("任务标题 *", title));
     form.appendChild(g1);
 
-    var loc = inp("text", "例如：城西医院 住院区 B 栋");
+    var loc = inp("text", "例如：这是一个任务地点");
     var gradeSel = document.createElement("select");
     ["不限", "初级", "中级", "高级", "特级", "内勤"].forEach(function (g) {
       var o = document.createElement("option"); o.value = g; o.textContent = g; gradeSel.appendChild(o);
@@ -12089,12 +12090,12 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     form.appendChild(field("情报引言", intro));
     form.appendChild(field("处置目标", objective));
 
-    var reward = inp("text", "例如：贡献点 120 · 自由属性点 1");
+    var reward = inp("text", "例如：这里是任务奖励发放");
     form.appendChild(field("奖励说明", reward));
 
     var imgWrap = document.createElement("div");
     imgWrap.className = "pub-field";
-    var imgLabel = document.createElement("label"); imgLabel.textContent = "任务图片（管理员可上传现场照片 / 示意图）";
+    var imgLabel = document.createElement("label"); imgLabel.textContent = "任务图片（管理员可上传灵体示意图/场地图片）";
     var drop = document.createElement("div");
     drop.className = "pub-imgdrop";
     var ph = document.createElement("div"); ph.className = "ph";
