@@ -1816,7 +1816,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>
       <div class="af-row"><label>当前状态</label><select name="status"><option value="在岗">在岗</option><option value="派遣中">派遣中</option><option value="值守中">值守中</option><option value="监控中">监控中</option><option value="休整中">休整中</option></select></div>
       <div class="af-row"><label>头像（可选）</label><input type="file" name="photo" accept="image/*"><img class="af-preview" id="plmPreview" alt=""></div>
-      <div class="stat-generation-note" style="margin: 0 0 14px; font-family: var(--font-mono); font-size: 10px; color: var(--dim); line-height: 1.7;">初始六维为 0，按等级发放初始自由点数（初级20 · 中级35 · 高级50 · 特级80），此后通过完成任务获取点数（每次 1–2 点）。加点只增不减，保存后不可重置。单项与总值受等级上限约束（初级20/80 · 中级35/150 · 高级50/250 · 特级80/400）。</div>
+      <div class="stat-generation-note" style="margin: 0 0 14px; font-family: var(--font-mono); font-size: 10px; color: var(--dim); line-height: 1.7;">初始六维为 0，进入后在首页点击头像，即可在个人档案修改数值。</div>
       <div class="plm-actions">
         <button type="submit" class="plm-submit">录入档案</button>
         <div class="plm-hint">图片会压缩到长边 800px、JPEG 质量 0.7 后存入云端，建议单张小于 1MB。</div>
@@ -1833,7 +1833,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
     <nav class="pn-menu" id="pnMenu">
       <button class="pn-item active" data-view="home">首页</button>
       <button class="pn-item" data-view="archive">除灵师档案</button>
-      <button class="pn-item" data-view="tasks">任务板</button>
+      <button class="pn-item" data-view="tasks">任务接取</button>
       <button class="pn-item" data-view="bounty">悬赏榜</button>
       <button class="pn-item" data-view="service">综合服务</button>
       <button class="pn-item" id="wikiNavBtn">世界观</button>
@@ -1852,11 +1852,9 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
           <div class="ac-row"><span>除灵方式</span><b class="acSchool">—</b></div>
           <div class="ac-row"><span>所属部门</span><b class="acDistrict">—</b></div>
           <div class="ac-row"><span>当前状态</span><b class="acStatus">—</b></div>
-          <div class="ac-service-title">// 快捷服务</div>
+          <div class="ac-service-title">快捷服务</div>
           <div class="ac-service">
             <button data-svc="执照年审">执照年审<span>办理</span></button>
-            <button data-svc="任务申请">任务申请<span>进入</span></button>
-            <button data-svc="武器申领">武器申领<span>申领</span></button>
             <button data-svc="贡献点查询">贡献点查询<span>查询</span></button>
             <button data-svc="等级考核">等级考核<span>报名</span></button>
           </div>
@@ -1873,7 +1871,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
           <div class="ph-tag">// SALS SERVICE CENTER</div>
           <h2>灵异事件处置与除灵师服务中心</h2>
           <div class="department-role-tag" id="homeDepartmentRole" hidden></div>
-          <p>本平台面向持证除灵师、各大门派以及合作伙伴开放。可查询除灵师执业档案、领取任务、办理个人事务、接入各部门服务系统，或提交灵异事件线索与投诉建议。</p>
+          <p>本平台面向持证除灵师和各大合作伙伴开放。可查询除灵师执业档案、领取任务、申领武器与提交投诉建议。</p>
           <div class="ph-status" style="margin-top: auto;">
             <div><span>系统状态</span><b>正常</b></div>
             <div><span>在线除灵师</span><b id="phDispatch">—</b></div>
@@ -1923,8 +1921,8 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>
       <div class="entry-grid">
         <button class="entry-card" data-target="archive"><div class="ec-title">除灵师档案</div><div class="ec-desc">录入并查询持证除灵师资料。</div><div class="ec-foot"><span>个人信息</span><span>▸</span></div></button>
-        <button class="entry-card" data-target="tasks"><div class="ec-title">任务板 <span class="done-badge" id="doneBadge"></span></div><div class="ec-desc">查看当前可领取的除灵任务。</div><div class="ec-foot"><span>按等级领取</span><span>▸</span></div></button>
-        <button class="entry-card" data-target="bounty"><div class="ec-title">任务悬赏</div><div class="ec-desc">接取路人发布的灵异委托，或发布私人悬赏。</div><div class="ec-foot"><span>任务悬赏</span><span>▸</span></div></button>
+        <button class="entry-card" data-target="tasks"><div class="ec-title">任务接取 <span class="done-badge" id="doneBadge"></span></div><div class="ec-desc">查看当前可领取的除灵任务。</div><div class="ec-foot"><span>按等级领取</span><span>▸</span></div></button>
+        <button class="entry-card" data-target="bounty"><div class="ec-title">悬赏栏</div><div class="ec-desc">接取路人发布的灵异委托，或发布私人悬赏。</div><div class="ec-foot"><span>任务悬赏</span><span>▸</span></div></button>
         <button class="entry-card" data-target="service"><div class="ec-title">综合服务</div><div class="ec-desc">移动端下载与投诉建议受理中心。</div><div class="ec-foot"><span>移动服务 · 投诉</span><span>▸</span></div></button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
@@ -1979,7 +1977,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 
     <div class="portal-view" data-view="tasks">
       <div class="view-head">
-        <div><div class="vh-tag">// TASK BOARD</div><h3>任务板</h3><p>按等级与部门领取除灵任务。接取后请按要求完成处置并提交行动报告。</p></div>
+        <div><div class="vh-tag">// TASK BOARD</div><h3>任务接取</h3><p>按等级与部门领取除灵任务。接取后请按要求完成处置并提交行动报告。</p></div>
         <button class="back-btn" data-back>◂ 返回首页</button>
       </div>
       <div class="task-toolbar">
@@ -2009,7 +2007,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
           <div style="color: var(--dim); font-size: 12px;">暂无行动报告</div>
         </div>
       </div>
-      <div class="sync-note"><b>提示：</b>任务数据实时同步云端，点击任务行可查看卷宗详情。</div>
+      <div class="sync-note"><b>提示：</b>任务数据实时同步云端，点击即可查看任务详情。</div>
     </div>
 
     
@@ -2018,9 +2016,9 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
         <div>
           <div class="vh-tag" style="color: #ffad00;">// LIMITED EVENTS</div>
           <h3>限时活动中心</h3>
-          <p>参与特殊事件，获取丰厚报酬。活动期间所有人均可查看并报名；截止时间由系统校验，结束后自动下架。</p>
+          <p>参与特殊事件，获取丰厚报酬。活动期间所有人均可查看并报名，请注意截止时间。</p>
         </div>
-        <button class="back-btn" id="btnBackFromEvents">◂ 返回任务板</button>
+        <button class="back-btn" id="btnBackFromEvents">◂ 返回任务接取</button>
       </div>
       
       <div style="width: 100%; height: 220px; background: rgba(10, 10, 12, 0.8); border: 1px solid #ffad00; border-radius: 4px; margin-bottom: 24px; display: flex; align-items: flex-end; padding: 20px; position: relative; overflow: hidden;">
@@ -2038,7 +2036,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 
     <div class="portal-view" data-view="bounty">
       <div class="view-head">
-        <div><div class="vh-tag">// BOUNTY BOARD</div><h3>任务悬赏</h3><p>接取其他居民或除灵师发布的灵异委托，完成后上传行动报告领取报酬；也可发布私人悬赏。</p></div>
+        <div><div class="vh-tag">// BOUNTY BOARD</div><h3>悬赏栏</h3><p>接取其他居民或除灵师发布的灵异委托，完成后上传行动报告领取报酬。</p></div>
         <div style="display: flex; gap: 10px;">
           <button class="back-btn publish-bounty-btn" id="btnOpenPublish" style="border-color: var(--pink); color: var(--pink);">发布新悬赏</button>
           <button class="back-btn" data-back>◂ 返回首页</button>
@@ -2049,11 +2047,11 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>
       <div class="sync-note layered-panel report-panel" data-layered-panel style="margin-top: 30px; border-left-color: var(--blue);">
         <div class="pn-head layered-piece" data-depth="2" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--blue);">
-          <span>// 悬赏行动报告墙</span>
+          <span>// 悬赏行动报告</span>
           <button class="back-btn" id="openReportWall" type="button" disabled>大屏播放</button>
         </div>
         <div id="reportWall" class="layered-piece" data-depth="1" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 15px;"></div>
-        <div class="report-wall-overlay" id="reportWallOverlay" role="dialog" aria-modal="true" aria-label="悬赏报告大屏展示" hidden>
+        <div class="report-wall-overlay" id="reportWallOverlay" role="dialog" aria-modal="true" aria-label="报告展示" hidden>
           <div class="report-wall-overlay-head">
             <span class="report-wall-overlay-title">// BOUNTY REPORT WALL</span>
             <button class="back-btn" id="cancelReportWall" type="button">关闭 ×</button>
@@ -2064,7 +2062,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
         </div>
       </div>
       <div class="sync-note layered-panel ranking-panel" data-layered-panel style="margin-top: 30px; border-left-color: var(--pink);">
-        <div class="pn-head layered-piece" data-depth="2" style="color: var(--pink);">// 悬赏贡献榜</div>
+        <div class="pn-head layered-piece" data-depth="2" style="color: var(--pink);">// 贡献榜</div>
         <div id="bountyRanking" class="layered-piece" data-depth="1" style="font-size: 13px; line-height: 2; color: var(--text);"></div>
       </div>
     </div>
@@ -2089,11 +2087,11 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>
       <section class="weapon-proposal-panel" id="weaponProposalBoard">
         <div class="vh-tag" style="color:#00b89c; margin-bottom:8px;">// TECHNICAL RESEARCH INSTITUTE</div>
-        <h4 style="color:#fff; font-size:17px; margin-bottom:6px;">技术研发院 · 武器提案</h4>
-        <p class="dm-desc">研发院成员可提交武器设计与申请资金。技术研发院管理员或内部督查处审核通过后，提案武器进入武器申领终端，申请金额记入独立的部门资金账本。</p>
+        <h4 style="color:#fff; font-size:17px; margin-bottom:6px;">技术研究院专属</h4>
+        <p class="dm-desc">研究院成员可提交武器设计，通过审核后即可获得武器研究专项资金。</p>
         <div class="weapon-proposal-auth" style="margin-top:16px;">
           <div class="vh-tag" style="margin-bottom:6px;">// 审核人员登录</div>
-          <p class="dm-desc">审核人员使用邮箱接收一次性登录链接；无需在网页填写 Supabase 控制台密码。</p>
+          <p class="dm-desc">审核人员使用邮箱即可登陆。</p>
           <div class="weapon-proposal-auth-row">
             <input id="weaponReviewerEmail" type="email" autocomplete="email" placeholder="审核人员邮箱" aria-label="审核人员邮箱">
             <button class="back-btn" id="weaponReviewerSignIn" type="button">发送登录链接</button>
@@ -2101,13 +2099,13 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
           </div>
           <div class="weapon-proposal-status" id="weaponProposalAuthStatus" role="status" aria-live="polite"></div>
         </div>
-        <div class="weapon-proposal-fund">技术研发院部门资金余额 <b id="weaponDepartmentFund">读取中…</b></div>
+        <div class="weapon-proposal-fund">技术研究院部门资金余额 <b id="weaponDepartmentFund">读取中…</b></div>
         <div id="weaponProposalAccessNote" class="weapon-proposal-status" role="status" aria-live="polite"></div>
         <form class="weapon-proposal-form" id="weaponProposalForm" hidden>
           <div class="cf-row"><label for="weaponProposalName">武器名称</label><input id="weaponProposalName" type="text" maxlength="100" required></div>
           <div class="cf-row"><label for="weaponProposalDescription">设计说明</label><textarea id="weaponProposalDescription" maxlength="3000" required></textarea></div>
-          <div class="cf-row"><label for="weaponProposalFunds">申请部门资金</label><input id="weaponProposalFunds" type="number" min="1" step="1" required></div>
-          <div class="cf-row"><label for="weaponProposalCost">武器申领贡献点</label><input id="weaponProposalCost" type="number" min="0" step="1" required><div class="dm-desc">审核通过后按此价格在武器申领终端开放；填写 0 表示免费申领。</div></div>
+          <div class="cf-row"><label for="weaponProposalFunds">申请资金</label><input id="weaponProposalFunds" type="number" min="1" step="1" required></div>
+          <div class="cf-row"><label for="weaponProposalCost">贡献点</label><input id="weaponProposalCost" type="number" min="0" step="1" required><div class="dm-desc">审核通过后按此价格在武器申领终端开放；填写 0 表示免费申领。</div></div>
           <button class="cf-submit" id="weaponProposalSubmit" type="submit">提交提案</button>
         </form>
         <div class="vh-tag" style="margin-top:20px;">// 提案记录</div>
@@ -2185,9 +2183,9 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
        <div class="ds-btn-grid" style="grid-template-rows: repeat(4, 1fr);">
         <button class="ds-btn">个人属性</button>
         <button class="ds-btn">历史任务</button>
-        <button class="ds-btn" id="btnHealHp">医疗恢复 (HP)</button>
-        <button class="ds-btn" id="btnHealSpirit">灵力补给 (MP)</button>
-        <button class="ds-btn" id="btnOpenPreference">武器偏好</button>
+        <button class="ds-btn" id="btnHealHp">医疗救助</button>
+        <button class="ds-btn" id="btnHealSpirit">灵力恢复</button>
+        <button class="ds-btn" id="btnOpenPreference">武器报备</button>
         <button class="ds-btn" id="btnBindCrossDevice">绑定跨设备密钥</button>
         <button class="ds-btn" id="dossierBackHome">返回主页</button>
       </div>
@@ -2219,13 +2217,13 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       <div class="ds-bar-row">
         <div class="ds-bar-label" id="staminaLabel"><span>STA</span>体力值</div>
         <div class="ds-bar-track">
-          <div class="ds-bar-fill" id="dsStaminaBar" style="background: #efb946; width: 100%;"></div>
+          <div class="ds-bar-fill" id="dsStaminaBar" style="background: #e11d68; width: 100%;"></div>
         </div>
       </div>
       <div class="ds-bar-row">
-        <div class="ds-bar-label"><span>PER</span>灵力感知</div>
+        <div class="ds-bar-label"><span>PER</span>感知</div>
         <div class="ds-bar-track">
-          <div class="ds-bar-fill" id="dsPerceptionBar" style="background: #06d4b2; width: 0%;"></div>
+          <div class="ds-bar-fill" id="dsPerceptionBar" style="background: #46dbef; width: 0%;"></div>
         </div>
       </div>
     </div>
@@ -2239,7 +2237,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       <div class="ds-bar-row">
         <div class="ds-bar-label"><span>MP</span>灵力值</div>
         <div class="ds-bar-track">
-          <div class="ds-bar-fill" id="dsSpiritBar" style="background: var(--blue); width: 100%;"></div>
+          <div class="ds-bar-fill" id="dsSpiritBar" style="background: #46dbef; width: 100%;"></div>
         </div>
       </div>
     </div>
@@ -2249,7 +2247,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
   <div class="dept-modal-panel">
     <div class="dm-tag">// PORTABLE IDENTITY</div>
     <div class="dm-name">绑定跨设备密钥</div>
-    <div class="dm-desc">绑定后，可在其他设备使用同一姓名与密钥找回这份档案。访问密钥只以加密摘要保存在服务端。</div>
+    <div class="dm-desc">绑定后，可在其他设备使用同一姓名与同一密钥找回该账号。</div>
 <div class="cf-row">
   <label for="portableIdentityKey">访问密钥（至少 8 位）</label>
   <input id="portableIdentityKey" type="password" minlength="8" maxlength="128" autocomplete="new-password">
@@ -2266,10 +2264,10 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 <div class="dept-modal" id="healModal">
   <div class="dept-modal-panel" style="width: 380px;">
     <div class="dm-tag">// MEDICAL RECOVERY</div>
-    <div class="dm-name" id="healTitle">医疗恢复</div>
-    <div class="dm-desc" id="healDesc" style="margin-bottom: 12px;">恢复 20 点属性，需要消耗 40 贡献点。</div>
+    <div class="dm-name" id="healTitle">医疗救助</div>
+    <div class="dm-desc" id="healDesc" style="margin-bottom: 12px;">恢复 10 点属性，需要消耗 100 资金。</div>
     <div class="dm-row"><span>当前属性</span><b id="healCurrent">0 / 100</b></div>
-    <div class="dm-row"><span>消耗贡献</span><b style="color:var(--pink);" id="healCost">40</b></div>
+    <div class="dm-row"><span>消耗资金</span><b style="color:var(--pink);" id="healCost">100</b></div>
     <div class="dm-foot">
       <button class="back-btn" id="cancelHeal" style="margin-right: 10px;">取消</button>
       <button class="cf-submit" id="confirmHeal" style="padding: 9px 20px;">确认恢复</button>
@@ -2280,24 +2278,24 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 <div class="dept-modal" id="weaponModal">
   <div class="dept-modal-panel" style="width: 500px;">
     <div class="dm-tag">// WEAPON ARMORY</div>
-    <div class="dm-name">武器申领终端</div>
-    <div class="dm-desc" style="margin-bottom: 12px;">贡献值越高，可解锁的武装级别越高。解锁后永久拥有。</div>
+    <div class="dm-name">武器申领</div>
+    <div class="dm-desc" style="margin-bottom: 12px;">贡献值越高，可解锁的武装级别越高。</div>
     <div class="weapon-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
       <div class="dept-card" style="display: flex; justify-content: space-between; align-items: center; padding: 12px;">
-        <div><b>护身符</b><br><span style="font-size:11px; color:var(--dim);">基础防身武器，需贡献 100</span></div>
-        <button class="task-btn weapon-btn" data-name="护身符" data-cost="100" onclick="claimWeapon(100, '护身符')">解锁申领</button>
+        <div><b>桃木剑</b><br><span style="font-size:11px; color:var(--dim);">基础武装，需贡献 100</span></div>
+        <button class="task-btn weapon-btn" data-name="桃木剑" data-cost="100" onclick="claimWeapon(100, '桃木剑')">解锁申领</button>
       </div>
       <div class="dept-card" style="display: flex; justify-content: space-between; align-items: center; padding: 12px;">
-        <div><b>消音手枪</b><br><span style="font-size:11px; color:var(--dim);">中阶除灵武装，需贡献 500</span></div>
-        <button class="task-btn weapon-btn" data-name="消音手枪" data-cost="500" onclick="claimWeapon(500, '消音手枪')">解锁申领</button>
+        <div><b>爆破符</b><br><span style="font-size:11px; color:var(--dim);">中阶武装，需贡献 500</span></div>
+        <button class="task-btn weapon-btn" data-name="爆破符" data-cost="500" onclick="claimWeapon(500, '爆破符')">解锁申领</button>
       </div>
       <div class="dept-card" style="display: flex; justify-content: space-between; align-items: center; padding: 12px;">
-        <div><b>爆破符*100</b><br><span style="font-size:11px; color:var(--dim);">高阶武装，需贡献 1500</span></div>
-        <button class="task-btn weapon-btn" data-name="爆破符*100" data-cost="1500" onclick="claimWeapon(1500, '爆破符*100')">解锁申领</button>
+        <div><b>消音手枪</b><br><span style="font-size:11px; color:var(--dim);">高阶武装，需贡献 1500</span></div>
+        <button class="task-btn weapon-btn" data-name="消音手枪" data-cost="1500" onclick="claimWeapon(1500, '消音手枪')">解锁申领</button>
       </div>
-      <div class="dm-tag" style="color:var(--blue);margin-top:6px;">// 研发提案武器</div>
+      <div class="dm-tag" style="color:var(--blue);margin-top:6px;">研发武器</div>
       <div id="approvedWeaponList" style="display:contents;"></div>
-      <div class="dm-tag" style="color:var(--rpg-log, #ffad00);margin-top:6px;">// 本周轮换武器</div>
+      <div class="dm-tag" style="color:var(--rpg-log, #46dbef);margin-top:6px;">本周轮换武器</div>
       <div id="weeklyWeaponList" style="display:contents;"></div>
     </div>
     <div class="dm-foot">
@@ -2310,7 +2308,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
   <div class="dept-modal-panel" style="width: 560px; border-left-color: var(--blue); max-height: 90vh; display: flex; flex-direction: column;">
     <div class="dm-tag">// WEAPON LOADOUT</div>
     <div class="dm-name">任务出击 · 武器选择</div>
-    <div class="dm-desc" id="taskWeaponSelectDesc">请选择本次任务携带的武器。你可以申领官方武器，或使用自己上传的冷兵器。</div>
+    <div class="dm-desc" id="taskWeaponSelectDesc">请选择本次任务携带的武器。请申领官方武器，或是携带已报备的自用冷兵器。</div>
     <div id="taskWeaponSelectList" style="display:flex;flex-direction:column;gap:10px;max-height:52vh;overflow-y:auto;margin:12px 0;"></div>
     <div class="dm-foot" style="justify-content:space-between; gap:10px; flex-wrap:wrap;">
       <button class="back-btn" id="cancelTaskWeaponSelect">取消接取</button>
@@ -2325,19 +2323,19 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 <div class="dept-modal" id="preferenceModal">
   <div class="dept-modal-panel" style="width: 520px; border-left-color: var(--vermilion); max-height: 90vh; overflow-y: auto;">
     <div class="dm-tag" style="color: var(--vermilion);">// WEAPON PREFERENCE</div>
-    <div class="dm-name">武装携带偏好</div>
-    <div class="dm-desc" style="margin-bottom: 12px;">展示你已永久解锁并携带的装备，以及你上传的自制冷兵器。</div>
+    <div class="dm-name">武器报备</div>
+    <div class="dm-desc" style="margin-bottom: 12px;">展示你已解锁并携带的装备，和你已报备的自用冷兵器。</div>
 
     <div style="font-family: var(--font-mono); font-size: 11px; color: var(--dim); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 12px;">
-      <span>已解锁官方武装：</span>
+      <span>已解锁：</span>
     </div>
     <div id="preferenceList" style="display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto;"></div>
 
     <div style="margin-top: 16px; border-top: 1px solid var(--line); padding-top: 14px;">
-      <div class="dm-tag" style="color: var(--vermilion); margin-bottom: 8px;">自制冷兵器</div>
+      <div class="dm-tag" style="color: var(--vermilion); margin-bottom: 8px;">自用冷兵器报备</div>
       <div class="dm-desc" style="margin-bottom: 8px;">上传你自己的武器（名称必填，图片可选）。接取任务时可以选择使用。</div>
-      <div class="cf-row"><label for="customWeaponName">武器名称</label><input id="customWeaponName" type="text" maxlength="60" placeholder="例如：家传唐刀"></div>
-      <div class="cf-row"><label for="customWeaponDesc">武器描述（可选）</label><input id="customWeaponDesc" type="text" maxlength="120" placeholder="材质、来历等"></div>
+      <div class="cf-row"><label for="customWeaponName">武器名称</label><input id="customWeaponName" type="text" maxlength="60" placeholder="例如：这是一个武器名字"></div>
+      <div class="cf-row"><label for="customWeaponDesc">武器描述（可选）</label><input id="customWeaponDesc" type="text" maxlength="120" placeholder="武器介绍"></div>
       <div class="cf-row">
         <label for="customWeaponImage">武器图片（可选）</label>
         <input id="customWeaponImage" type="file" accept="image/*">
@@ -2357,7 +2355,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
   <div class="dept-modal-panel" style="width: 480px;">
     <div class="dm-tag">// PUBLISH BOUNTY</div>
     <div class="dm-name">发布私人悬赏</div>
-    <div class="dm-desc">填写你的委托内容。发布后将扣除你账户上的同等贡献点作为担保。</div>
+    <div class="dm-desc">在此填写你的委托内容。发布后将同时扣除你账户上的同等贡献点作为担保。</div>
     <div class="cf-row"><label>悬赏标题</label><input type="text" id="bountyTitleInput" placeholder="请填写悬赏标题..."></div>
     <div class="cf-row"><label>悬赏要求</label><textarea id="bountyDescInput" placeholder="详细描述需要完成的任务..."></textarea></div>
     <div class="cf-row"><label>贡献点</label><input type="number" id="bountyCostInput" value="100" min="10"></div>
@@ -2390,7 +2388,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
   <div class="dept-modal-panel" style="width: 480px; border-left-color: var(--pink);">
     <div class="dm-tag">// EXECUTION REPORT</div>
     <div class="dm-name">上传行动报告</div>
-    <div class="dm-desc">请在此上传行动报告。审核通过后将发放贡献点。</div>
+    <div class="dm-desc">请在此上传行动报告的图片。</div>
     
     <div class="pc-image-upload-wrap" id="taskReportUploadWrap" style="min-height: 150px; margin-bottom: 15px;">
       <div style="color: var(--dim); font-size: 12px;" id="taskReportHint">点击上传现场图片</div>
@@ -2527,7 +2525,7 @@ function syncAdminUI() {
   const SUPABASE_URL = "https://ssefxnoqlmjvfoehwgis.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_iGpbrDavYlnddBHMT9zG0w_kKzrx7Dd";
   let db = null;
-  // 全局请求超时：避免网络不通时云端查询无限挂起，导致登录/档案加载卡在中间态
+  
   function fetchWithTimeout(url, opts) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 15000);
@@ -2689,14 +2687,14 @@ function syncAdminUI() {
         { tag: "[公告]", text: "技术研发中心新一批武器已开放领取名额" }
       ],
       [
-        { tag: "[公告]", text: "城南地铁 7 号线灵体残留浓度上升，夜间巡查加强" },
-        { tag: "[公告]", text: "内部督查处已完成第三季度纪律复核" },
+        { tag: "[公告]", text: "地铁 7 号线内部灵体残留浓度上升，需要假期夜间巡查力度" },
+        { tag: "[公告]", text: "内部督查处已完成本年度的纪律复核" },
         { tag: "[公告]", text: "城东旧公寓连续三日出现异常信号，已派员复检" }
       ],
       [
         { tag: "[公告]", text: "特殊任务行动局开放高级任务申请通道" },
         { tag: "[公告]", text: "情报局图鉴新增 12 条灵体记录，已同步至终端" },
-        { tag: "[公告]", text: "西郊废弃工厂封印松动，禁止单人前往" }
+        { tag: "[公告]", text: "西郊废弃工厂有大量灵力波动，禁止单人前往" }
       ]
     ];
     let idx = 0;
@@ -2955,10 +2953,10 @@ function switchView(name) {
 
   function openWikiGuarded() {
     if (typeof checkIsAdmin !== 'function' || !checkIsAdmin()) {
-      toast("暂时不可见，请等待开发时间", "warn");
+      toast("暂时不可见", "warn");
       return;
     }
-    toast("世界观模块已清空，等待后续重新开发。");
+    toast("请等待后续重新开发。");
   }
   
   window.openWikiScreen = openWikiGuarded;
@@ -3258,7 +3256,7 @@ function switchView(name) {
 
         row.innerHTML = `
           <span class="t-code">${escapeHtml(t.code)}</span>
-          <span class="t-desc">${escapeHtml(t.title || t.code)}<small>${escapeHtml(t.location || "")} · 点击查看卷宗详情</small></span>
+          <span class="t-desc">${escapeHtml(t.title || t.code)}<small>${escapeHtml(t.location || "")} · 点击查看任务详情</small></span>
           <span class="t-level">${gradeText}</span>
           <span class="t-req ${locked ? "locked" : ""}">${reqText}</span>
           ${statusHtml}
@@ -3465,7 +3463,7 @@ function switchView(name) {
       lastSnapshot = null;
       try {
         await fetchAndRender(true);
-        toast("任务池已同步最新数据。");
+        toast("已更新最新数据。");
       } catch (error) {
         const message = error && error.message ? error.message : String(error);
         toast(`任务刷新失败：${message}`, "warn");
@@ -3513,28 +3511,28 @@ function switchView(name) {
         taskGrade = "丁"; spiritGrade = "F 级"; recGrade = "初级"; risk = "低危";
         spiritDesc = "目标为游荡的普通灵体。请尽快清理。";
       } else if (/^Intermediate/.test(code)) {
-        taskGrade = "乙"; spiritGrade = "D / C 级"; recGrade = "中级 / 高级"; risk = "需警惕精神干扰";
+        taskGrade = "乙"; spiritGrade = "D / C 级"; recGrade = "中级 / 高级"; risk = "需警惕";
         spiritDesc = "目标为拥有极强执念的凶恶灵体。请保持精神集中。";
       } else if (/^Advanced/.test(code)) {
-        taskGrade = "甲"; spiritGrade = "A 级"; recGrade = "高级"; risk = "极高危！幻境压制！";
+        taskGrade = "甲"; spiritGrade = "A 级"; recGrade = "高级"; risk = "极高危";
         spiritDesc = "现场已被庞大幻境覆盖。务必组队镇压。";
       } else if (/^Assault/.test(code)) {
-        taskGrade = "丁"; spiritGrade = "低 / 中"; recGrade = "初级"; risk = "前线未知风险";
+        taskGrade = "丁"; spiritGrade = "低 / 中"; recGrade = "初级"; risk = "未知风险";
         spiritDesc = "【突击行动处】指派：进行现场勘察与风险预判。";
       } else if (/^Routine/.test(code)) {
-        taskGrade = "丙"; spiritGrade = "中 / 高"; recGrade = "中级"; risk = "火力输出要求";
+        taskGrade = "丙"; spiritGrade = "中 / 高"; recGrade = "中级"; risk = "输出要求";
         spiritDesc = "【常规执行处】指派：负责行动中后期的火力输出。";
       } else if (/^Intel/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "情报"; recGrade = "情报管理局"; risk = "信息污染风险";
+        taskGrade = "内勤"; spiritGrade = "情报"; recGrade = "情报管理局"; risk = "信息风险";
         spiritDesc = "【情报局】指派：负责收集灵体情报及数据库维护。";
       } else if (/^Tech/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "研发"; recGrade = "技术研发院"; risk = "设备失控风险";
+        taskGrade = "内勤"; spiritGrade = "研发"; recGrade = "技术研发院"; risk = "设备风险";
         spiritDesc = "【研发院】指派：负责内部办公系统安全或新武器测试。";
       } else if (/^Supply/.test(code)) {
         taskGrade = "内勤"; spiritGrade = "后勤"; recGrade = "综合保障部"; risk = "无";
         spiritDesc = "【保障部】指派：负责办公用品采购发放。";
       } else if (/^Admin/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "督查"; recGrade = "内部督查处"; risk = "内部审讯冲突";
+        taskGrade = "内勤"; spiritGrade = "督查"; recGrade = "内部督查处"; risk = "内部冲突";
         spiritDesc = "【督查处】指派：负责内部纪律监督与违规审查。";
       }
 
@@ -3580,7 +3578,7 @@ function switchView(name) {
                 : full
                   ? "该任务接取人数已达上限。"
                   : hasTaker(t)
-                    ? `已有 ${participantCount} 人接取；每位接取者可独立提交并领取奖励。`
+                    ? `已有 ${participantCount} 人接取该任务。`
                     : "该任务已结束。";
 
       card.innerHTML = `
@@ -3605,7 +3603,7 @@ function switchView(name) {
           ${taskImgHtml}
           <section class="tc-section">
             <div class="tc-section-title">
-            <div class="tc-section-content" style="font-size:12px;">等级与部门门槛之外的六维要求。判定使用「基础值 + 装备加成」的实战值，武器破损后加成会立即回落。</div>
+            <div class="tc-section-content" style="font-size:12px;">判定使用「基础值 + 装备加成」，武器破损后加成会失效。</div>
             ${reqCellsHtml}
           </section>
           <section class="tc-section tc-intelligence">
@@ -3614,7 +3612,7 @@ function switchView(name) {
           </section>
           <section class="tc-section">
             <div class="tc-section-title">
-            <div class="tc-section-content">${escapeHtml(t.objective || "处置目标：待签发单位补充。")}</div>
+            <div class="tc-section-content">${escapeHtml(t.objective || "待签发单位补充。")}</div>
             <div class="tc-section-content" style="margin-top:10px;">行动要求：${escapeHtml(actionLabel)}</div>
             <div class="tc-section-content" style="margin-top:10px;">报告要求：${escapeHtml(reportLabel)}</div>
             <div class="tc-section-content" style="margin-top:10px;">任务奖励：${escapeHtml(t.reward_description || "按现行任务结算规则发放。")}</div>
@@ -3688,7 +3686,7 @@ window.loadLimitedEvents = async function() {
     const list = document.getElementById("limitedEventList");
     if (!list) return;
     if (!db) {
-      list.textContent = "活动数据源未连接。";
+      list.textContent = "活动数据未连接。";
       return;
     }
     list.textContent = "正在读取限时活动…";
@@ -3790,7 +3788,7 @@ window.loadLimitedEvents = async function() {
         ${section("// 活动玩法", activity.play_info)}
         ${section("// 参加方式", activity.participation_info)}
         ${section("// 活动奖励", activity.reward_description)}
-        <div class="tc-foot"><span class="tc-operation-note">${alreadyJoined ? "当前档案已报名。活动截止时间由服务器校验。" : hasArchive ? "所有已接入除灵师均可报名；每份档案限参加一次。" : "请先接入终端并完成除灵师档案。"}</span><div class="tc-actions">
+        <div class="tc-foot"><span class="tc-operation-note">${alreadyJoined ? "当前档案已报名。活动截止时间由服务器校验。" : hasArchive ? "所有已接入除灵师均可报名；每位除灵师限参加一次。" : "请先接入终端并填写除灵师档案。"}</span><div class="tc-actions">
           <button class="tc-primary" type="button" data-join-event="${escapeHtml(activity.id)}" ${hasArchive && !alreadyJoined ? "" : "disabled"}>${alreadyJoined ? "已报名" : "报名参加"}</button>
           <button class="tc-close-foot back-btn" type="button">关闭</button>
         </div></div>
@@ -3814,7 +3812,7 @@ window.loadLimitedEvents = async function() {
           const joined = readJoinedLimitedEvents();
           joined.add(activity.id);
           localStorage.setItem(`sals_joined_limited_events:${getFingerprint()}`, JSON.stringify(Array.from(joined)));
-          toast("这份档案已经报名过该活动。", "warn");
+          toast("已报名过该活动。", "warn");
           button.textContent = "已报名";
           return;
         }
@@ -4649,7 +4647,7 @@ function bindArchiveCards(container, records) {
       openDossierScreen();
     });
   });
-  // 首次登录密钥持久弹窗：必须复制并确认后才继续，避免密钥一闪而过导致跨设备无法登录
+  
   function revealAccessKey(key) {
     return new Promise(function (resolve) {
       let m = document.getElementById("keyRevealModal");
@@ -4662,7 +4660,7 @@ function bindArchiveCards(container, records) {
           '<div class="dept-modal-panel" style="width:min(440px,92vw);border-left-color:var(--blue);">' +
             '<div class="dm-tag">// ACCESS KEY · 仅显示一次</div>' +
             '<div class="dm-name">请保存您的访问密钥</div>' +
-            '<div class="dm-desc">这是您跨设备登录的唯一凭证，关闭后不会再次完整显示。请立即复制并妥善保存；若丢失，需回到原设备在「个人档案中心 → 绑定跨设备密钥」找回。</div>' +
+            '<div class="dm-desc">这是您跨设备登录的唯一凭证，关闭后不会再次完整显示。请立即复制并妥善保存；若丢失，需回到原设备在「个人档案中心 → 绑定密钥」找回。</div>' +
             '<div id="keyRevealValue" style="font-family:var(--font-mono);font-size:20px;letter-spacing:0.12em;color:#fff;background:rgba(26,159,255,0.08);border:1px dashed var(--blue);padding:14px 12px;text-align:center;user-select:all;word-break:break-all;"></div>' +
             '<button type="button" class="cf-submit" id="keyRevealCopy" style="width:100%;margin-top:12px;padding:11px;">复制密钥</button>' +
             '<div class="dm-foot" style="margin-top:14px;"><button type="button" class="cf-submit" id="keyRevealConfirm" style="width:100%;border-color:var(--blue);color:var(--blue);">我已保存，继续接入 ▸</button></div>' +
@@ -4709,7 +4707,7 @@ function bindArchiveCards(container, records) {
 
     async function doLogin() {
       if (localStorage.getItem("sals_kicked") === "true") {
-        toast("设备被督查处接管中，请休息。", "warn");
+        toast("终端已被督查处接管，请休息。", "warn");
         return;
       }
       if (localStorage.getItem("sals_kicked") === "false") {
@@ -4761,7 +4759,7 @@ function bindArchiveCards(container, records) {
                 if (attemptId !== loginAttemptId) return;
                 if (error) throw error;
                 if (data && data.length) {
-                  failLogin("检测到该姓名已有档案。请输入已绑定的访问密钥；若尚未绑定，请回到仍能登录的设备，在个人档案中心绑定跨设备密钥。");
+                  failLogin("检测到该姓名已有档案。请输入已绑定的访问密钥；若尚未绑定，请回到仍能登录的设备，在个人档案中心绑定密钥。");
                   return;
                 }
               }
@@ -4816,12 +4814,12 @@ function bindArchiveCards(container, records) {
               if (legacyArchiveFp && existingProfiles.some(row => row.fp === legacyArchiveFp)) {
                 account.fp = legacyArchiveFp;
               } else if (rpcUnavailable) {
-                // 跨设备身份迁移未部署时，按姓名回退恢复已有档案身份，避免卡在登录界面。
-                // 注意：此回退不校验密钥，建议尽快部署身份绑定迁移以恢复密钥校验。
+                
+                
                 account.fp = existingProfiles[0].fp;
                 console.warn("[SALS] 身份绑定迁移未部署，已按姓名回退恢复档案身份。");
               } else {
-                failLogin("姓名或访问密钥不匹配。若档案尚未绑定密钥，请回到仍能登录的设备，在个人档案中心绑定跨设备密钥。");
+                failLogin("姓名或访问密钥不匹配。若该账号尚未绑定密钥，请回到仍能登录的设备，在个人档案中心绑定密钥。");
                 return;
               }
             } else if (legacyArchiveFp) {
@@ -4934,14 +4932,14 @@ function bindArchiveCards(container, records) {
     }
     configureDepartmentOption();
 
-    // 部门职能说明：选部门直接影响可接任务范围，向新人明示后果并推荐外勤
+    
     const DEPT_INFO = {
-      "特殊任务行动局": { tag: "外勤 · 推荐新人", desc: "外勤主力，可接全局各类除灵任务（含突击、常规任务），成长路径最宽。" },
+      "特殊任务行动局": { tag: "管理", desc: "负责发布各类除灵任务（仅管理员可选）。" },
       "突击行动处": { tag: "外勤", desc: "负责前线勘察与风险预判，与外勤三处任务互通。" },
-      "常规执行处": { tag: "外勤 · 推荐新人", desc: "负责行动中后期火力输出，与外勤三处任务互通，适合新手起步。" },
-      "情报管理局": { tag: "内勤", desc: "负责灵体情报收集与数据库维护，仅可接本部门情报任务。" },
+      "常规执行处": { tag: "外勤 ", desc: "负责行动中后期火力输出，。" },
+      "情报管理局": { tag: "内勤", desc: "负责灵体情报收集与数据库维护。" },
       "技术研发院": { tag: "内勤", desc: "负责武器研发与系统安全，仅可接本部门研发任务，可提交武器提案。" },
-      "综合保障部": { tag: "内勤", desc: "负责后勤补给与医疗，仅可接本部门后勤任务。" },
+      "综合保障部": { tag: "内勤", desc: "负责后勤补给与医疗" },
       "内部督查处": { tag: "管理", desc: "负责内部纪律监督与违规审查（仅管理员可选）。" }
     };
     function renderDeptHint() {
@@ -4949,7 +4947,7 @@ function bindArchiveCards(container, records) {
       if (!hint || !departmentSelect) return;
       const info = DEPT_INFO[departmentSelect.value];
       if (!info) {
-        hint.innerHTML = '<span style="color:var(--dim);">外勤三处（特殊任务行动局 / 突击行动处 / 常规执行处）任务互通，推荐新人首选；内勤部门仅能接本部门任务，选错会导致任务板大量「无法接取」。</span>';
+        hint.innerHTML = '<span style="color:var(--dim);">外勤任务互通；内勤部门仅能接本部门任务。</span>';
         return;
       }
       hint.innerHTML = '<b style="color:var(--blue);">' + info.tag + '</b> · ' + info.desc;
@@ -5010,8 +5008,8 @@ function bindArchiveCards(container, records) {
           const schoolRule = schoolChecks.find(rule => rule.keys.some(key => schoolValue.includes(key)));
           statsArr = [5, 5, 5, 5, 5, 5];
           if (schoolRule) statsArr[schoolRule.statIndex] = 11;
-          // 兜底分支与主规则一致：按等级发放初始点数
-          freePoints = ({ "初级": 20, "中级": 35, "高级": 50, "特级": 80 })[gradeValue] || 20;
+          
+          freePoints = ({ "初级": 20, "中级": 40, "高级": 80, "特级": 200 })[gradeValue] || 20;
         }
         
         const [sAtk, sCon, sWill, sSpr, sPer, sRec] = statsArr;
@@ -5074,7 +5072,7 @@ function bindArchiveCards(container, records) {
         submitBtn.disabled = false;
         
         if (error) {
-          const message = `录入失败：${error.message}（请确认数据库表结构与档案字段一致）。`;
+          const message = `录入失败：${error.message}（请确认是否一致）。`;
           if (plmHint) { plmHint.textContent = message; plmHint.style.color = "var(--pink)"; plmHint.style.opacity = "1"; }
           toast(message, "warn");
           return;
@@ -5093,7 +5091,7 @@ function bindArchiveCards(container, records) {
           } catch (bindError) {
             identityBindFailed = true;
             console.error("档案已录入，但跨设备身份自动绑定失败。", bindError);
-            const warning = "档案已录入，但跨设备密钥尚未绑定。请在个人档案中心完成绑定；若提示函数不存在，请先执行身份绑定数据库迁移。";
+            const warning = "档案已录入，但密钥尚未绑定。请在个人档案中心完成绑定。";
             if (plmHint) { plmHint.textContent = warning; plmHint.style.color = "var(--pink)"; plmHint.style.opacity = "1"; }
           }
         }
@@ -5101,13 +5099,13 @@ function bindArchiveCards(container, records) {
         postLoginForm.reset(); pendingPlmPhoto = "";
         if (plmPreview) { plmPreview.classList.remove("show"); plmPreview.removeAttribute("src"); }
         toast(identityBindFailed
-          ? "档案已录入云端，但跨设备密钥尚未绑定。"
+          ? "档案已录入云端，但密钥尚未绑定。"
           : "档案已成功录入云端 · " + item.name,
         identityBindFailed ? "warn" : undefined);
         fillDossierData(item);
 
         setCurrentArchive();
-        // 新档案录入时已按等级发放初始点数，写标记避免数值档案页重复补发
+        
         try { localStorage.setItem("sals_initial_grant_v3:" + item.fp, "1"); } catch (e) {}
         localStorage.setItem("sals_active_grade", item.grade || "初级");
         localStorage.setItem("sals_active_district", item.district || "未分配");
@@ -5142,7 +5140,7 @@ function bindArchiveCards(container, records) {
         btn.style.color = "var(--blue)"; btn.style.borderColor = "var(--blue)"; btn.style.background = "rgba(26,159,255,0.08)";
         let searchInput = document.getElementById("archiveSearchInput");
         if (!searchInput) {
-          searchInput = document.createElement("input"); searchInput.id = "archiveSearchInput"; searchInput.type = "text"; searchInput.placeholder = "输入关键词查询档案…";
+          searchInput = document.createElement("input"); searchInput.id = "archiveSearchInput"; searchInput.type = "text"; searchInput.placeholder = "输入关键词查询…";
           searchInput.style.cssText = "width:100%;background:transparent;border:1px solid var(--line-2);color:var(--text);padding:10px 14px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.06em;outline:none;margin-bottom:12px;border-radius:0;";
           searchInput.autocomplete = "off";
           searchInput.addEventListener("input", renderFilteredArchiveCards);
@@ -5403,7 +5401,7 @@ function bindArchiveCards(container, records) {
     const isAdmin = checkIsAdmin();
     if (isAdmin) {
       formArea.style.display = "none";
-      historyTitle.textContent = "// 待处理投诉与建议";
+      historyTitle.textContent = "待处理投诉";
       historyTitle.style.color = "var(--pink)";
     }
 
@@ -5888,7 +5886,7 @@ function bindArchiveCards(container, records) {
       if (!container || !db) return;
       const { data } = await db.from("activity_logs").select("*").order("created_at", { ascending: false }).limit(4);
       if (!data || data.length === 0) {
-        container.innerHTML = `<div class="lf-row" style="color:var(--dim);">// 暂无除灵师动态</div>`;
+        container.innerHTML = `<div class="lf-row" style="color:var(--dim);">暂无除灵师动态</div>`;
         return;
       }
       let html = "";
@@ -5961,13 +5959,13 @@ function bindArchiveCards(container, records) {
     
     if (type === 'hp') {
       var missingHp = 100 - val; var hpCost = missingHp * 100;
-      healTitle.textContent = "医疗康复中心 (HP)";
+      healTitle.textContent = "医疗救助";
       healDesc.textContent = `完全恢复生命值，需消耗 ${hpCost} 资金（每点 100）。`;
       healCurrent.textContent = `${val} / 100`;
       healCost.textContent = `${hpCost} (当前资金: ${formatWalletBalance(me.money)})`;
       healCost.style.color = "var(--blue)";
     } else {
-      healTitle.textContent = "灵力补给站 (MP)";
+      healTitle.textContent = "灵力恢复";
       healDesc.textContent = `恢复 20 点灵力值，需要消耗 40 贡献点。`;
       healCurrent.textContent = `${val} / 100`;
       healCost.textContent = `40 (当前贡献: ${formatWalletBalance(me.contribution)})`;
@@ -6005,7 +6003,7 @@ function bindArchiveCards(container, records) {
     const { error: updateError } = await db.from("archives").update(updates).eq("id", me.id);
     if (updateError) { toast("恢复失败：" + updateError.message, "warn"); return; }
     
-    toast(checkIsAdmin() ? "恢复成功！管理员额度无限。" : `恢复成功！已扣除 ${costText}。`);
+    toast(checkIsAdmin() ? "恢复成功！" : `恢复成功！已扣除 ${costText}。`);
     healModal.classList.remove("open");
     if (window.__reloadArchive) window.__reloadArchive();
     
@@ -6051,7 +6049,7 @@ function bindArchiveCards(container, records) {
     checkOwnedWeapons(); 
   };
   document.querySelectorAll(".ds-btn").forEach(btn => {
-    if (btn.textContent === "武器申领") {
+    if (btn.textContent === "武器报备") {
       btn.addEventListener("click", () => {
         document.getElementById("weaponModal").classList.add("open");
         checkOwnedWeapons();
@@ -6101,7 +6099,7 @@ function bindArchiveCards(container, records) {
       title.textContent = w.name;
       const sub = document.createElement("span");
       sub.style.cssText = "display:block;font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
-      sub.textContent = w.description || "自制冷兵器";
+      sub.textContent = w.description || "武器报备";
       info.append(title, sub);
       left.appendChild(info);
       const del = document.createElement("button");
@@ -6110,7 +6108,7 @@ function bindArchiveCards(container, records) {
       del.style.cssText = "padding:4px 10px;font-size:10px;border-color:var(--pink);color:var(--pink);flex-shrink:0;";
       del.textContent = "删除";
       del.addEventListener("click", () => {
-        if (!confirm(`确定删除自制武器【${w.name}】吗？`)) return;
+        if (!confirm(`确定删除武器【${w.name}】吗？`)) return;
         saveCustomWeapons(getCustomWeapons().filter(x => x.id !== w.id));
         renderCustomWeapons();
         toast("已删除。");
@@ -6138,12 +6136,12 @@ function bindArchiveCards(container, records) {
     const selected = new Set(Array.isArray(stored) ? stored.filter(name => owned.includes(name)) : []);
     preferenceList.replaceChildren();
     if (!owned.length) {
-      preferenceList.textContent = db ? "尚未解锁官方武器。" : "数据库未连接，暂不显示官方武器。";
+      preferenceList.textContent = db ? "尚未解锁官方武器。" : "数据库未连接。";
       return;
     }
     const hint = document.createElement("div");
     hint.className = "dm-desc";
-    hint.textContent = "点击已解锁武器，切换携带偏好。";
+    hint.textContent = "点击已解锁武器，即可切换。";
     preferenceList.appendChild(hint);
     owned.forEach(name => {
       const row = document.createElement("button");
@@ -6205,7 +6203,7 @@ function bindArchiveCards(container, records) {
     pendingCustomWeaponImage = "";
     if (customWeaponPreview) { customWeaponPreview.classList.remove("show"); customWeaponPreview.removeAttribute("src"); }
     if (customWeaponImageInput) customWeaponImageInput.value = "";
-    toast("自制冷兵器已保存。");
+    toast("武器已保存。");
     renderCustomWeapons();
   });
 
@@ -6331,12 +6329,12 @@ function bindArchiveCards(container, records) {
       const customGroup = document.createElement("div");
       customGroup.className = "dm-tag";
       customGroup.style.cssText = "color:var(--vermilion);margin-top:8px;";
-      customGroup.textContent = "// 自制冷兵器";
+      customGroup.textContent = "// 已报备自用武器";
       list.appendChild(customGroup);
       custom.forEach(w => list.appendChild(buildWeaponOption({
         type: "custom",
         name: w.name,
-        desc: w.description || "自制冷兵器",
+        desc: w.description || "已报备自用武器",
         image: w.image,
         id: w.id
       })));
@@ -6350,14 +6348,14 @@ function bindArchiveCards(container, records) {
     if (!modal || !confirmBtn) { onConfirm(null); return; }
     pendingTaskClaim = { code, onConfirm, onCancel };
     selectedTaskWeapon = { type: "none", name: "不携带武器" };
-    if (desc) desc.textContent = `任务 ${code}：请选择本次携带的武器。你可以申领官方武器，或使用自己上传的冷兵器。`;
+    if (desc) desc.textContent = `任务 ${code}：请选择本次携带的武器。你可以申领官方武器，或使用已报备自用武器。`;
     confirmBtn.disabled = true;
     modal.classList.add("open");
     try {
       await renderTaskWeaponSelectList();
     } catch (err) {
       console.warn("[SALS] 武器库读取异常：", err);
-      toast("武器库读取失败，可先不携带武器接取。", "warn");
+      toast("武器库读取失败。", "warn");
     } finally {
       confirmBtn.disabled = false;
     }
@@ -6418,7 +6416,7 @@ function bindArchiveCards(container, records) {
     function renderProposalRows(rows, canReview) {
       list.replaceChildren();
       if (!rows.length) {
-        list.textContent = "暂无提案记录。";
+        list.textContent = "暂无记录。";
         return;
       }
       rows.forEach(proposal => {
@@ -6533,7 +6531,7 @@ function bindArchiveCards(container, records) {
         console.error("[SALS] 加载武器提案板失败：", error);
         const message = error && error.message ? error.message : String(error);
         setStatus(accessNote, `提案板读取失败：${message}`, true);
-        list.textContent = "请确认已在 Supabase 执行武器提案数据库迁移，并检查表策略。";
+        list.textContent = "数据加载失败";
         fundValue.textContent = "—";
       }
     }
@@ -6559,7 +6557,7 @@ function bindArchiveCards(container, records) {
         });
         if (error) throw error;
         form.reset();
-        setStatus(accessNote, "提案已提交，等待技术研发院管理员或内部督查处审核。");
+        setStatus(accessNote, "提案已提交，等待审核。");
         await refreshBoard();
       } catch (error) {
         console.error("[SALS] 提交武器提案失败：", error);
@@ -6573,7 +6571,7 @@ function bindArchiveCards(container, records) {
       const button = event.target.closest("button[data-proposal-id][data-decision]");
       if (!button || button.disabled) return;
       const decision = button.dataset.decision;
-      const actionLabel = decision === "approved" ? "通过并将申请金额入账" : "驳回";
+      const actionLabel = decision === "approved" ? "通过" : "驳回";
       if (!confirm(`确定要${actionLabel}该武器提案吗？`)) return;
       button.disabled = true;
       try {
@@ -6582,7 +6580,7 @@ function bindArchiveCards(container, records) {
           p_decision: decision,
         });
         if (error) throw error;
-        setStatus(accessNote, decision === "approved" ? "提案已通过，申请金额已记入技术研发院部门资金。" : "提案已驳回。");
+        setStatus(accessNote, decision === "approved" ? "提案已通过。" : "提案已驳回。");
         await refreshBoard();
       } catch (error) {
         console.error("[SALS] 审核武器提案失败：", error);
@@ -6744,7 +6742,7 @@ function bindArchiveCards(container, records) {
                     const { data: archiveStatus } = await db.from("archives").select("status, money").eq("fp", myFp).single();
                     if (archiveStatus && archiveStatus.status !== "派遣中") {
                         await db.from("archives").update({ money: Math.max(0, (archiveStatus.money || 0) - 500) }).eq("fp", myFp);
-                        toast("⚠ 非任务期间违规使用热武器，扣除 500 资金！", "warn");
+                        toast("⚠ 非违规使用热武器，扣除 500 资金！", "warn");
                     }
                 }
             }
@@ -6944,7 +6942,7 @@ function bindArchiveCards(container, records) {
         </div>
         <section class="tc-section tc-intelligence"><div class="tc-section-title">
         <section class="tc-section"><div class="tc-section-title">
-        <div class="tc-foot"><span class="tc-operation-note">${claimedByMe ? "该委托已由你接取，可继续上传报告。" : "确认接取后，委托将暂时归你处理；完成后上传报告领取报酬。"}</span><div class="tc-actions">
+        <div class="tc-foot"><span class="tc-operation-note">${claimedByMe ? "该委托已由你接取，可继续上传报告。" : "确认接取后，委托将暂时归你处理；确认接取后，委托将暂时归你处理；完成后上传报告领取报酬。"}</span><div class="tc-actions">
           ${claimedByMe ? `<button class="tc-primary" type="button" data-bounty-report="${escapeHtml(bounty.id)}">上传报告</button>` : `<button class="tc-primary" type="button" data-bounty-accept="${escapeHtml(bounty.id)}">确认接下委托</button>`}
           <button class="tc-close-foot back-btn" type="button">关闭</button>
         </div></div>
@@ -8238,14 +8236,14 @@ if (document.getElementById("cancelReportWall")) {
         <div style="font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 8px;"> 年度特殊安全演习</div>
         <div style="font-size: 12px; color: var(--dim); line-height: 1.8;">
           活动时间：10月31日 00:00 - 23:59（仅限特殊日期）。<br>
-          活动内容：前往【任务板】完成任意任务，提交后贡献点获取翻倍。
+          活动内容：前往【任务接取】完成任意任务，提交后贡献点获取翻倍。
         </div>
       </div>
       <div style="display: flex; justify-content: space-between; color: var(--text); font-size: 13px; margin-bottom: 8px;">
         <span>当前活动增益：<b style="color:var(--blue);">贡献点 +100%</b></span>
         <span>剩余时间：<b>12 小时</b></span>
       </div>
-      <button class="task-btn" style="width: 100%; padding: 12px; color: var(--pink); border-color: var(--pink);" onclick="document.getElementById('examEventModal').classList.remove('open'); document.querySelector('[data-view=tasks]').click();">前往任务板</button>
+      <button class="task-btn" style="width: 100%; padding: 12px; color: var(--pink); border-color: var(--pink);" onclick="document.getElementById('examEventModal').classList.remove('open'); document.querySelector('[data-view=tasks]').click();">前往任务接取</button>
     </div>
     <div class="dm-foot">
       <button class="back-btn" id="closeExamEvent">关闭</button>
@@ -8511,7 +8509,7 @@ window.SalsGlyphRain = (function() {
     document.body.appendChild(popover);
   }
 
-  // 精确把目标滚进门户滚动容器的可视区（scrollIntoView 在固定布局里不可靠）
+  
   function scrollTourTarget(targetEl) {
     const host = document.querySelector('.portal-main');
     if (!host) { try { targetEl.scrollIntoView({ block: 'center' }); } catch (e) {} return; }
@@ -8521,13 +8519,13 @@ window.SalsGlyphRain = (function() {
     const elH = elRect.height;
     const hostH = host.clientHeight;
     const desired = (elH >= hostH - 32)
-      ? elTopInContent - 16                       // 目标比视口还高：顶对齐
-      : elTopInContent - (hostH - elH) / 2;       // 正常：垂直居中
+      ? elTopInContent - 16                       
+      : elTopInContent - (hostH - elH) / 2;       
     const max = Math.max(0, host.scrollHeight - hostH);
     host.scrollTop = Math.max(0, Math.min(max, desired));
   }
 
-  // 根据目标当前视口位置重算聚光灯与气泡（滚动/缩放时复用）
+  
   function positionTour() {
     if (!spotlight || !popover) return;
     const step = steps[currentStep];
@@ -8553,7 +8551,7 @@ window.SalsGlyphRain = (function() {
       top = rect.top + rect.height / 2 - pRect.height / 2;
       left = rect.left - padding - pRect.width - 16;
     }
-    // 若目标下方放不下气泡，改放上方，避免移动端气泡被挤出屏幕
+    
     if (step.position === 'bottom' && top + pRect.height > window.innerHeight - 16) {
       top = rect.top - padding - 12 - pRect.height;
     }
@@ -8596,7 +8594,7 @@ window.SalsGlyphRain = (function() {
       return;
     }
 
-    // 先把目标滚动进视口（移动端目标常在首屏以下），再测量定位
+    
     scrollTourTarget(targetEl);
 
     popover.innerHTML = `
@@ -8622,7 +8620,7 @@ window.SalsGlyphRain = (function() {
 
     popover.style.opacity = '0';
     popover.style.transform = 'translateY(10px)';
-    // 等滚动与布局稳定后再定位，避免拿到滚动前的旧坐标
+    
     requestAnimationFrame(() => requestAnimationFrame(() => {
       positionTour();
       popover.style.opacity = '1';
@@ -10040,7 +10038,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var me = res.data && res.data[0];
       if (!me) { say("未找到当前除灵师档案。", "warn"); return; }
       if (getWalletBalance(me.money) < cost) { say("资金不足！需要 " + cost + " 资金。", "warn"); return; }
-      if (!confirm("修理需要消耗 " + cost + " 资金，确认吗？")) return;
+      if (!confirm("修理需要消耗 " + cost + " 资金，请确认。")) return;
       if (!checkIsAdmin()) {
         var r1 = await db.from("archives").update({ money: (Number(me.money) || 0) - cost }).eq("fp", myFp);
         if (r1.error) { say("扣款失败：" + r1.error.message, "warn"); return; }
@@ -10728,7 +10726,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   RPG.KEYS = KEYS; RPG.LABEL = LABEL; RPG.GRADE_CAP = GRADE_CAP;
   function capOf(g) { return GRADE_CAP[g] || 20; }
   var GRADE_TOTAL = { "初级":80, "中级":150, "高级":250, "特级":400 };
-  // 按等级发放的初始自由点数（用户指定：初级20 / 中级35 / 高级50 / 特级80）
+  
   var INITIAL_FREE = { "初级": 20, "中级": 35, "高级": 50, "特级": 80 };
   RPG.INITIAL_FREE = INITIAL_FREE;
   var GRADE_POWER = { "初级":20, "中级":60, "高级":120, "特级":200, "内勤":30, "不限":20 };
@@ -11182,10 +11180,10 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
         });
         say("检测到历史遗留的空数值，已按等级基准重建，可自由加点。");
       }
-      // 初始点数一次性迁移（每个身份只执行一次）：
-      // 1) 旧版“重置”产生的超额点数池（超过本等级初始点数 + 10 点余量）→ 收敛为本等级初始点数；
-      // 2) 其余旧档案（按旧规则 0 点起步）→ 补发本等级初始点数；
-      // 3) 新登记档案在录入时已含初始点数并写入标记，这里直接跳过，不会重复发放。
+      
+      
+      
+      
       var rawFree = num(myProfile.free_stat_points);
       var initGrant = initialFree(myProfile.grade, myProfile.school);
       var grantKey = "sals_initial_grant_v3:" + fp();
@@ -11390,7 +11388,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var cp = document.createElement("span"); cp.className = "cap"; cp.textContent = " /" + cap;
       numD.appendChild(cp);
       var btns = document.createElement("div"); btns.className = "rpg-statbtns";
-      // 加点只增不减：不提供减点按钮，保存后的数值永久生效
+      
       var plus = document.createElement("button");
       plus.type = "button"; plus.className = "rpg-step"; plus.textContent = "+";
       plus.disabled = st.free <= 0 || st.base[k] >= cap || baseTotal >= tcap;
@@ -11439,7 +11437,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     fnote.className = "note";
     var dirty = KEYS.some(function (k) { return st.base[k] !== st.savedBase[k]; }) || st.free !== st.savedFree;
     fnote.textContent = dirty ? "有未保存的加点变更。保存后永久生效，请确认无误。" : "数值已同步。完成任务获得 1–2 点；加点只增不减，保存后不可重置。";
-    // 已移除“重置”入口：数值一经保存不可回退，只能继续追加
+    
     var bSave = document.createElement("button");
     bSave.type = "button"; bSave.className = "rpg-btn primary"; bSave.textContent = "保存加点";
     bSave.disabled = !dirty;
@@ -12013,7 +12011,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
         go.type = "button"; go.className = "rpg-btn gold"; go.textContent = "前往该任务";
         go.addEventListener("click", function () {
           if (typeof window.switchView === "function") window.switchView("tasks");
-          say("已跳转任务板，请找到 " + sq.task_code + " 并接取。");
+          say("已跳转任务接取，请找到 " + sq.task_code + " 并接取。");
         });
         acts.appendChild(go);
       }
@@ -12800,10 +12798,7 @@ img,svg,canvas,video{max-width:100%}
 </style>
 
 <style id="sals-bgm-style">
-/* ===== 音乐按钮位置（单独调这里）=====
-   right  = 距屏幕右边的距离，数值越大越往左；
-   bottom = 距屏幕底边的距离，数值越大越往上。
-   想靠上：把 bottom:12px 改成 top:12px；想靠左：把 right:12px 改成 left:12px。 */
+
 #salsBgmBtn{position:fixed;
   right:12px;
   bottom:12px;
@@ -12819,7 +12814,7 @@ img,svg,canvas,video{max-width:100%}
 #salsBgmBtn.on .eq i:nth-child(2){animation-delay:.2s}
 #salsBgmBtn.on .eq i:nth-child(3){animation-delay:.4s}
 @keyframes bgmEq{0%,100%{height:3px}50%{height:10px}}
-/* 手机端：同样在右下角，额外避开 iPhone 底部安全区。调位置改这里的 right / bottom 即可。 */
+
 @media (max-width:700px){#salsBgmBtn{top:auto;left:auto;bottom:calc(env(safe-area-inset-bottom) + 12px);right:12px}}
 </style>
 <script id="sals-bgm">
@@ -12850,8 +12845,8 @@ img,svg,canvas,video{max-width:100%}
   function forcePortal(){
     var portal=document.getElementById("portal"); if(!portal) return;
     document.body.classList.remove("sals-terminal-preview");
-    // 终极保险：若门户被带变换/位移的父层困住（DOM 错乱或预览容器包裹），强制挂回 body 直属，
-    // 使 position:fixed 相对视口生效，避免"开了却看不见"。
+    
+    
     if(portal.parentElement!==document.body){ document.body.appendChild(portal); }
     portal.classList.add("open");
     portal.style.setProperty("opacity","1","important");
@@ -12898,7 +12893,7 @@ img,svg,canvas,video{max-width:100%}
         var ls=document.getElementById("loginScreen");
         var portal=document.getElementById("portal");
         var post=document.getElementById("postLoginModal");
-        // 会话失效时，残留的门户打开状态视为过期，强制收起，避免界面卡在首页
+        
         if(portal&&portal.classList.contains("open")){ portal.classList.remove("open"); }
         document.body.classList.remove("sals-terminal-preview");
         var busy=(ls&&ls.classList.contains("open"))||(post&&post.classList.contains("open"));
