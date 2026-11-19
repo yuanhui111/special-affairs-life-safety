@@ -1791,7 +1791,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
     <div class="plm-sub">SALS / PERSONNEL ENROLLMENT</div>
     <form class="plm-form" id="postLoginForm" autocomplete="off">
       <div class="af-row"><label>姓名</label><input type="text" name="name" placeholder="姓名"></div>
-      <div class="af-row"><label>工龄</label><input type="text" name="experience" placeholder="例如 3 年"></div>
+      <div class="af-row"><label>工龄</label><input type="text" name="experience" placeholder="请填写整数，并在后方加入单位 年 "></div>
       <div class="af-row">
         <label>等级</label>
         <select name="grade">
@@ -1802,13 +1802,14 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
         </select>
       </div>      <div class="af-row">
         <label>除灵方式</label>
-        <input type="text" name="school" placeholder="请填写您最常用的除灵方式">
+        <input type="text" name="school" placeholder="请填写您最常用的除灵方式/常用武器">
         <div style="font-family: var(--font-mono); font-size: 10px; color: var(--pink); margin-top: 6px; line-height: 1.5; opacity: 0.8;">
-          * 非常规除灵方式请去内部督查处做好备案，在此填写该招式的全名。
+          * 非常规除灵方式请填写报备时的完整名称。
+          *如果您没有常用的除灵方式/常用武器，请填写“官方武器”
         </div>
       </div>      <div class="af-row"><label>所属部门</label><select name="district">
-        <option value="" selected disabled hidden>请选择您的部门</option><option value="特殊任务行动局">特殊任务行动局（外勤 · 推荐新人）</option>
-        <option value="突击行动处">突击行动处（外勤）</option><option value="常规执行处">常规执行处（外勤 · 推荐新人）</option>
+        <option value="" selected disabled hidden>请选择您的部门</option><option value="特殊任务行动局">特殊任务行动局（非管理不要选）</option>
+        <option value="突击行动处">突击行动处（外勤）</option><option value="常规执行处">常规执行处（外勤）</option>
         <option value="情报管理局">情报管理局（内勤）</option><option value="技术研发院">技术研发院（内勤）</option>
         <option value="综合保障部">综合保障部（内勤）</option><option value="内部督查处" data-admin-only="true" hidden disabled>内部督查处（管理）</option>
       </select>
@@ -1816,7 +1817,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>
       <div class="af-row"><label>当前状态</label><select name="status"><option value="在岗">在岗</option><option value="派遣中">派遣中</option><option value="值守中">值守中</option><option value="监控中">监控中</option><option value="休整中">休整中</option></select></div>
       <div class="af-row"><label>头像（可选）</label><input type="file" name="photo" accept="image/*"><img class="af-preview" id="plmPreview" alt=""></div>
-      <div class="stat-generation-note" style="margin: 0 0 14px; font-family: var(--font-mono); font-size: 10px; color: var(--dim); line-height: 1.7;">初始六维为 0，按等级发放初始自由点数（初级20 · 中级35 · 高级50 · 特级80），此后通过完成任务获取点数（每次 1–2 点）。加点只增不减，保存后不可重置。单项与总值受等级上限约束（初级20/80 · 中级35/150 · 高级50/250 · 特级80/400）。</div>
+      <div class="stat-generation-note" style="margin: 0 0 14px; font-family: var(--font-mono); font-size: 10px; color: var(--dim); line-height: 1.7;">初始六维为 0，进入终端后请在首页右上角头像处点击查看个人属性填写。</div>
       <div class="plm-actions">
         <button type="submit" class="plm-submit">录入档案</button>
         <div class="plm-hint">图片会压缩到长边 800px、JPEG 质量 0.7 后存入云端，建议单张小于 1MB。</div>
@@ -1834,7 +1835,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       <button class="pn-item active" data-view="home">首页</button>
       <button class="pn-item" data-view="archive">除灵师档案</button>
       <button class="pn-item" data-view="tasks">任务接取</button>
-      <button class="pn-item" data-view="bounty">悬赏榜</button>
+      <button class="pn-item" data-view="bounty">悬赏栏</button>
       <button class="pn-item" data-view="service">综合服务</button>
       <button class="pn-item" id="wikiNavBtn">世界观</button>
     </nav>
@@ -1923,7 +1924,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
         <button class="entry-card" data-target="archive"><div class="ec-title">除灵师档案</div><div class="ec-desc">录入并查询持证除灵师资料。</div><div class="ec-foot"><span>个人信息</span><span>▸</span></div></button>
         <button class="entry-card" data-target="tasks"><div class="ec-title">任务接取 <span class="done-badge" id="doneBadge"></span></div><div class="ec-desc">查看当前可领取的除灵任务。</div><div class="ec-foot"><span>按等级领取</span><span>▸</span></div></button>
         <button class="entry-card" data-target="bounty"><div class="ec-title">悬赏栏</div><div class="ec-desc">接取路人发布的灵异委托，或发布私人悬赏。</div><div class="ec-foot"><span>任务悬赏</span><span>▸</span></div></button>
-        <button class="entry-card" data-target="service"><div class="ec-title">综合服务</div><div class="ec-desc">移动端下载与投诉建议受理中心。</div><div class="ec-foot"><span>移动服务 · 投诉</span><span>▸</span></div></button>
+        <button class="entry-card" data-target="service"><div class="ec-title">综合服务</div><div class="ec-desc">移动端下载与投诉建议受理中心。</div><div class="ec-foot"><span>移动服务</span><span>▸</span></div></button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
         <div class="portal-notice" style="margin-top: 0; width: 100%;">
@@ -1948,7 +1949,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 
     <div class="portal-view" data-view="archive">
       <div class="view-head">
-        <div><div class="vh-tag">// PERSONNEL ARCHIVE</div><h3>除灵师档案</h3><p>查询持证除灵师的执业档案、等级、部门与当前状态。点击档案卡可查看详细信息。</p></div>
+        <div><div class="vh-tag">// PERSONNEL ARCHIVE</div><h3>除灵师档案</h3><p>查询持证除灵师的执业档案与当前状态。点击档案卡即可查看详细信息。</p></div>
         <div class="head-actions">
           <button class="search-mode-btn" id="searchModeBtn" title="查询模式">
             <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg>
@@ -2036,7 +2037,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
 
     <div class="portal-view" data-view="bounty">
       <div class="view-head">
-        <div><div class="vh-tag">// BOUNTY BOARD</div><h3>悬赏栏</h3><p>接取其他居民或除灵师发布的灵异委托，完成后上传行动报告领取报酬。</p></div>
+        <div><div class="vh-tag">// BOUNTY BOARD</div><h3>悬赏栏</h3><p>可以在此自由接取灵异委托，完成后上传行动报告后即可领取报酬。</p></div>
         <div style="display: flex; gap: 10px;">
           <button class="back-btn publish-bounty-btn" id="btnOpenPublish" style="border-color: var(--pink); color: var(--pink);">发布新悬赏</button>
           <button class="back-btn" data-back>◂ 返回首页</button>
@@ -2430,7 +2431,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
     ["潘万葵", { department: "突击行动处", title: "处长" }],
     ["夏星野", { department: "常规执行处", title: "处长" }],
     ["赵钥", { department: "情报管理局", title: "局长" }],
-    ["沈宴", { department: "技术研发院", title: "院长" }],
+    ["沈宴", { department: "技术研究院", title: "院长" }],
     ["李玄一", { department: "内部督查处", title: "纪委" }]
   ]);
   function getDepartmentHeadRole(name) {
@@ -2611,25 +2612,25 @@ function syncAdminUI() {
   }
   const logMessages = [
     "Advanced Task-11 已抵达城东旧公寓。",
-    "特殊行动局已派遣 3 名高级除灵师前往城南。",
-    "Medium Task-135 灵力异常。",
+    "特殊行动局已派遣 8 名高级除灵师前往城南。",
+    "Medium Task-135 出现灵力异常情况。",
     "居民安全指数已同步更新。",
-    "情报局已同步本日的灵体图鉴，共 47 条。",
-    "技术研发中心已完成新一批武器研发，请有序领取。",
+    "情报局已同步本日的灵体图鉴，共 647 条。",
+    "技术研究院已完成新一批武器研发，请有序领取。",
     "Medium Task-48 灵体残留清理完毕。",
     "西郊废弃工厂灵体已回收完毕。",
     "城南信号已成功恢复。",
-    "Beginner Task-591 数量异常，需增派 2 名初级除灵师。",
+    "Beginner Task-591 数量异常，需增派 10 名初级除灵师。",
     "城西医院住院区的温度目前正在急速下降，请快速将患者转移至安全区域。",
-    "Medium Task-318 该灵体攻击性被大幅度激发，需增派 1 名高级除灵师。",
+    "Medium Task-318 该灵体攻击性被大幅度激发，需增派 2 名高级除灵师。",
     "Beginner Task-440 灵体已超度。",
-    "Advanced Task-26 地下停车场信号中断，需增派 1 名灵视者。",
+    "Advanced Task-26 地下停车场信号中断，需增派 3 名灵视者。",
     "Medium Task-157 旧办公楼电子设备异常，全员撤退。",
     "第三人民医院夜间巡逻持续中。",
     "03训练室已满员，请排队等待。",
     "综合保障部提醒：请注意近期灵体活动频繁，务必保持警惕。",
     "Beginner Task-689 医院长廊游魂已引导离开。",
-    "Medium Task-233 城东旧公寓二次复检中。",
+    "Medium Task-233 城东旧公寓将在今日进行二次复检。",
     "食堂饭菜中毒事件已排查完毕。",
     "内部督查处提醒您，请不要在局里殴打同事。",
     "Advanced Task-42 收容单元 05 封印加固完成。",
@@ -2684,7 +2685,7 @@ function syncAdminUI() {
       [
         { tag: "[公告]", text: "关于开展 2026 年度除灵师执照年审的通知" },
         { tag: "[公告]", text: "城西医院住院区灵体活动频繁，请途经人员注意" },
-        { tag: "[公告]", text: "技术研发中心新一批武器已开放领取名额" }
+        { tag: "[公告]", text: "技术研究院新一批武器已开放领取名额" }
       ],
       [
         { tag: "[公告]", text: "地铁 7 号线内部灵体残留浓度上升，需要假期夜间巡查力度" },
@@ -3523,30 +3524,30 @@ function switchView(name) {
 
       if (/^(Basics|Beginner)/.test(code)) {
         taskGrade = "丁"; spiritGrade = "F 级"; recGrade = "初级"; risk = "低危";
-        spiritDesc = "目标为游荡的普通灵体。请尽快清理。";
+        spiritDesc = "目标为四处游荡的普通灵体。请尽快清理。";
       } else if (/^Intermediate/.test(code)) {
-        taskGrade = "乙"; spiritGrade = "D / C 级"; recGrade = "中级 / 高级"; risk = "需警惕";
+        taskGrade = "乙"; spiritGrade = "D / C 级"; recGrade = "中级 / 高级"; risk = "高危";
         spiritDesc = "目标为拥有极强执念的凶恶灵体。请保持精神集中。";
       } else if (/^Advanced/.test(code)) {
         taskGrade = "甲"; spiritGrade = "A 级"; recGrade = "高级"; risk = "极高危";
-        spiritDesc = "现场已被庞大幻境覆盖。务必组队镇压。";
+        spiritDesc = "现场出现幻境现象和群体癔症情况。请保持小心。";
       } else if (/^Assault/.test(code)) {
-        taskGrade = "丁"; spiritGrade = "低 / 中"; recGrade = "初级"; risk = "未知风险";
+        taskGrade = "丁"; spiritGrade = "低 / 中"; recGrade = "初级"; risk = "未知";
         spiritDesc = "【突击行动处】指派：进行现场勘察与风险预判。";
       } else if (/^Routine/.test(code)) {
-        taskGrade = "丙"; spiritGrade = "中 / 高"; recGrade = "中级"; risk = "输出要求";
+        taskGrade = "丙"; spiritGrade = "中 / 高"; recGrade = "中级"; risk = "输出";
         spiritDesc = "【常规执行处】指派：负责行动中后期的火力输出。";
       } else if (/^Intel/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "情报"; recGrade = "情报管理局"; risk = "信息风险";
+        taskGrade = "内勤"; spiritGrade = "情报"; recGrade = "情报管理局"; risk = "信息";
         spiritDesc = "【情报局】指派：负责收集灵体情报及数据库维护。";
       } else if (/^Tech/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "研发"; recGrade = "技术研发院"; risk = "设备风险";
-        spiritDesc = "【研发院】指派：负责内部办公系统安全或新武器测试。";
+        taskGrade = "内勤"; spiritGrade = "研究"; recGrade = "技术研究院"; risk = "设备";
+        spiritDesc = "【研究院】指派：负责新武器测试和研发。";
       } else if (/^Supply/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "后勤"; recGrade = "综合保障部"; risk = "无";
+        taskGrade = "内勤"; spiritGrade = "后勤"; recGrade = "综合保障部"; risk = "保障";
         spiritDesc = "【保障部】指派：负责办公用品采购发放。";
       } else if (/^Admin/.test(code)) {
-        taskGrade = "内勤"; spiritGrade = "督查"; recGrade = "内部督查处"; risk = "内部冲突";
+        taskGrade = "内勤"; spiritGrade = "督查"; recGrade = "内部督查处"; risk = "内部";
         spiritDesc = "【督查处】指派：负责内部纪律监督与违规审查。";
       }
 
@@ -3611,7 +3612,7 @@ function switchView(name) {
             <div class="tc-row"><span>主要负责人</span><b>${escapeHtml(t.lead_responsible || "待指派")}</b></div>
             <div class="tc-row"><span>接取人数</span><b>${participantCount} / 200</b></div>
             <div class="tc-row"><span>数值要求</span><b style="color:var(--pink);">${escapeHtml(riskLabel)}</b></div>
-            <div class="tc-row"><span>目标战力</span><b style="color:var(--blue);">${gate ? gate.req.power : "—"}（低于则失败扣半HP）</b></div>
+            <div class="tc-row"><span>目标战力</span><b style="color:var(--blue);">${gate ? gate.req.power : "—"}（低于则任务失败，扣半HP）</b></div>
             <div class="tc-row"><span>签发单位</span><b>${escapeHtml(issuerDept)}</b></div>
           </div>
           ${taskImgHtml}
@@ -4950,10 +4951,10 @@ function bindArchiveCards(container, records) {
     const DEPT_INFO = {
       "特殊任务行动局": { tag: "管理", desc: "负责发布各类除灵任务（仅管理员可选）。" },
       "突击行动处": { tag: "外勤", desc: "负责前线勘察与风险预判。" },
-      "常规执行处": { tag: "外勤 ", desc: "负责行动中后期火力输出，。" },
+      "常规执行处": { tag: "外勤 ", desc: "负责行动中后期火力输出。" },
       "情报管理局": { tag: "内勤", desc: "负责灵体情报收集与数据库维护。" },
-      "技术研发院": { tag: "内勤", desc: "负责武器研发与系统安全。" },
-      "综合保障部": { tag: "内勤", desc: "负责后勤补给与医疗" },
+      "技术研究院": { tag: "内勤", desc: "负责武器研发与系统安全。" },
+      "综合保障部": { tag: "内勤", desc: "负责后勤补给与医疗。" },
       "内部督查处": { tag: "管理", desc: "负责内部纪律监督与违规审查（仅管理员可选）。" }
     };
     function renderDeptHint() {
@@ -5114,7 +5115,7 @@ function bindArchiveCards(container, records) {
         if (plmPreview) { plmPreview.classList.remove("show"); plmPreview.removeAttribute("src"); }
         toast(identityBindFailed
           ? "档案已录入云端，但密钥尚未绑定。"
-          : "档案已成功录入云端 · " + item.name,
+          : "档案已成功录入" + item.name,
         identityBindFailed ? "warn" : undefined);
         fillDossierData(item);
 
@@ -6459,7 +6460,7 @@ function bindArchiveCards(container, records) {
             button.type = "button";
             button.dataset.proposalId = proposal.id;
             button.dataset.decision = decision;
-            button.textContent = decision === "approved" ? "通过并入账" : "驳回";
+            button.textContent = decision === "approved" ? "通过" : "驳回";
             actions.appendChild(button);
           });
           card.appendChild(actions);
@@ -6517,11 +6518,11 @@ function bindArchiveCards(container, records) {
         if (localStorage.getItem("sals_logged_in") === "true") {
           const { data: profile, error: profileError } = await db.from("archives").select("district").eq("fp", getFingerprint()).order("created_at", { ascending: false }).limit(1);
           if (profileError) throw profileError;
-          if (profile && profile.length && profile[0].district === "技术研发院") {
+          if (profile && profile.length && profile[0].district === "技术研究院") {
             form.hidden = false;
-            setStatus(accessNote, "已确认技术研发院档案。提案通过后，申请金额将计入本部门资金。");
+            setStatus(accessNote, "已确认技术研究院档案。提案通过后，申请金额将计入本部门资金。");
           } else {
-            setStatus(accessNote, "提案提交仅对所属部门为“技术研发院”的已接入档案开放。");
+            setStatus(accessNote, "提案提交仅对所属部门为“技术研究院”的已接入档案开放。");
           }
         } else {
           setStatus(accessNote, "请先接入终端并完成档案验证。");
@@ -6529,7 +6530,7 @@ function bindArchiveCards(container, records) {
 
         const [{ data: proposals, error: proposalError }, { data: ledger, error: ledgerError }] = await Promise.all([
           db.from("weapon_proposals").select("id, weapon_name, description, requested_funds, contribution_cost, status, created_by_name, created_at, reviewed_at").order("created_at", { ascending: false }).limit(100),
-          db.from("department_fund_ledger").select("amount").eq("department", "技术研发院")
+          db.from("department_fund_ledger").select("amount").eq("department", "技术研究院")
         ]);
         if (proposalError) throw proposalError;
         if (ledgerError) throw ledgerError;
@@ -9231,12 +9232,12 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     btnMotion.addEventListener("click", function () {
       var next = motion === "full" ? "calm" : (motion === "calm" ? "off" : "full");
       FX.setMotion(next);
-      say(next === "full" ? "动效：完整（四套方案全开）" : next === "calm" ? "动效：减弱（保留关键反馈）" : "动效：已关闭");
+      say(next === "full" ? "动效：完整" : next === "calm" ? "动效：减弱" : "动效：已关闭");
       if (next !== "off") runA();
     });
     ctrlHost.querySelector('[data-role="cmd"]').addEventListener("click", function () { FX.openPalette(); });
     var fxBtn = ctrlHost.querySelector('[data-role="fx"]');
-    fxBtn.dataset.tip = "四套动效方案 · 总览与演示";
+    fxBtn.dataset.tip = "四套动效方案";
     fxBtn.addEventListener("click", function () { FX.openOverview(); });
     paintCtrl();
     document.addEventListener("click", function () { requestAnimationFrame(syncCtrlDock); }, true);
@@ -9253,7 +9254,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   function paintCtrl() {
     if (!btnSound) return;
     btnSound.classList.toggle("off", sound !== "on");
-    btnSound.dataset.tip = sound === "on" ? "音效：开（点击静音）" : "音效：静音（点击开启）";
+    btnSound.dataset.tip = sound === "on" ? "音效：开" : "音效：静音";
     var wave = btnSound.querySelector(".wave"), mute = btnSound.querySelector(".mute");
     if (wave) wave.style.display = sound === "on" ? "" : "none";
     if (mute) mute.style.display = sound === "on" ? "none" : "";
@@ -9263,7 +9264,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   }
 
   
-  var GLYPHS = "▓▒░█▚▞＃＊01ΔΣΩ<>/\\|=+-*";
+  var GLYPHS = "01ΔΣΩ<>八勹匕匚丷几凵人亻入十厶/\\|=+-*";
   function glyph() { return GLYPHS.charAt(rnd(GLYPHS.length)); }
   var A_SEL = [".hud-top .brand", ".hero .kicker .kicker-tag", ".hero .kicker .kicker-text",
     ".title-text", ".hero-title-wrap .mission", ".hero-title-wrap .en", ".access .hint"];
@@ -9293,7 +9294,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     if (!hud) {
       hud = document.createElement("div");
       hud.className = "sals-decode-hud";
-      hud.innerHTML = "<i></i><span>DECODING · 方案一 终端解码</span>";
+      hud.innerHTML = "<i></i><span>DECODING 一</span>";
       terminal.appendChild(hud);
     }
     hud.classList.add("on");
@@ -9448,7 +9449,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       content.parentElement.insertBefore(bReadout, content);
     }
     bReadout.style.display = "";
-    bReadout.textContent = (full && FX.allowMotion()) ? "// TACTICAL SWEEP · 正在侦测属性信号" : "// SIGNAL LOCKED · 属性已锁定";
+    bReadout.textContent = (full && FX.allowMotion()) ? "// TACTICAL SWEEP  正在侦测" : "// SIGNAL LOCKED 属性已锁定";
 
     var finalPts = poly ? (poly.getAttribute("points") || "") : "";
     if (full && FX.allowMotion() && finalPts) drawPoly(poly, finalPts, 760, st);
@@ -9496,7 +9497,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       }, 2600);
     }
     st.timers.push(setTimeout(function () {
-      if (bReadout) bReadout.textContent = "// SIGNAL LOCKED · 属性已锁定";
+      if (bReadout) bReadout.textContent = "// SIGNAL LOCKED  属性已锁定";
     }, full ? 180 + rows.length * 110 + 520 : 0));
   }
   var bPendingFull = false, bScheduled = false;
@@ -9762,15 +9763,15 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       if (f.size > 25 * 1024 * 1024) {
         say("图片超过 25MB，请先压缩或换一张。", "warn"); input.value = ""; return;
       }
-      busy(true, "原图 " + Math.round(f.size / 1024) + " KB · 正在压缩…");
+      busy(true, "原图 " + Math.round(f.size / 1024) + " KB 正在压缩…");
     });
     if (preview) {
       preview.addEventListener("load", function () {
         var src = preview.getAttribute("src") || "";
         if (!src) return;
         var kb = kbFromDataUrl(src);
-        busy(false, "压缩后 " + kb + " KB · " + (preview.naturalWidth || "?") + "×" + (preview.naturalHeight || "?"));
-        right.textContent = kb > 700 ? "偏大，建议换更小的图" : "体积正常";
+        busy(false, "压缩后 " + kb + " KB " + (preview.naturalWidth || "?") + "×" + (preview.naturalHeight || "?"));
+        right.textContent = kb > 700 ? "图片偏大，建议换更小的图" : "体积正常";
         right.className = kb > 700 ? "warn" : "";
         if (hint) hint.style.display = "none";
       });
@@ -9894,21 +9895,17 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       { g: "前往", k: "VIEW", t: "除灵师档案", s: "archive", run: function () { go("archive"); } },
       { g: "前往", k: "VIEW", t: "任务行动面板", s: "tasks", run: function () { go("tasks"); } },
       { g: "前往", k: "VIEW", t: "限时活动中心", s: "events", run: function () { go("events"); if (window.loadLimitedEvents) window.loadLimitedEvents(); } },
-      { g: "前往", k: "VIEW", t: "任务悬赏", s: "bounty", run: function () { go("bounty"); } },
+      { g: "前往", k: "VIEW", t: "悬赏栏", s: "bounty", run: function () { go("bounty"); } },
       { g: "前往", k: "VIEW", t: "综合服务大厅", s: "service", run: function () { go("service"); } },
       { g: "个人", k: "SELF", t: "打开个人档案中心", s: "dossier", run: function () { if (window.openDossierScreen) window.openDossierScreen(); } },
-      { g: "个人", k: "SELF", t: "武器申领终端", s: "armory", run: function () { openModalById("weaponModal"); if (window.checkOwnedWeapons) window.checkOwnedWeapons(); } },
-      { g: "个人", k: "SELF", t: "武装携带偏好", s: "loadout", run: function () { var b = el("btnOpenPreference"); if (b) b.click(); } },
-      { g: "个人", k: "SELF", t: "绑定跨设备密钥", s: "bind", run: function () { var b = el("btnBindCrossDevice"); if (b) b.click(); } },
+      { g: "个人", k: "SELF", t: "武器申领", s: "armory", run: function () { openModalById("weaponModal"); if (window.checkOwnedWeapons) window.checkOwnedWeapons(); } },
+      { g: "个人", k: "SELF", t: "常用武器报备", s: "loadout", run: function () { var b = el("btnOpenPreference"); if (b) b.click(); } },
+      { g: "个人", k: "SELF", t: "绑定密钥", s: "bind", run: function () { var b = el("btnBindCrossDevice"); if (b) b.click(); } },
       { g: "操作", k: "ACT", t: "发布新悬赏", s: "publish", run: function () { go("bounty"); openModalById("publishBountyModal"); } },
       { g: "操作", k: "ACT", t: "刷新任务池", s: "refresh", run: function () { if (window.__loadTasks) window.__loadTasks(); say("任务池已刷新。"); } },
       { g: "操作", k: "ACT", t: "刷新档案列表", s: "reload", run: function () { if (window.__reloadArchive) window.__reloadArchive(); say("档案列表已刷新。"); } },
       { g: "操作", k: "ACT", t: "重看新手引导", s: "tour", run: function () { if (window.restartPortalTour) window.restartPortalTour(); else say("引导模块未加载。", "warn"); } },
-      { g: "操作", k: "ACT", t: "重播终端解码动画（方案一）", s: "replay", run: function () { go("home"); var p = el("portal"); if (p) p.classList.remove("open"); setTimeout(runA, 260); } },
-      { g: "操作", k: "ACT", t: "试放故障撕裂效果（方案四）", s: "glitch", run: function () { FX.glitch({ intensity: 1, duration: 900, label: "SIGNAL CORRUPTED", sub: "效果预览" }); } },
-      { g: "操作", k: "ACT", t: "四套动效方案总览", s: "fx", run: function () { FX.openOverview(); } },
       { g: "设置", k: "SET", t: "切换音效开关", s: "sound", run: function () { FX.setSound(sound === "on" ? "off" : "on"); say(sound === "on" ? "音效已开启。" : "音效已静音。"); } },
-      { g: "设置", k: "SET", t: "切换动效强度（完整 / 减弱 / 关闭）", s: "motion", run: function () { var n = motion === "full" ? "calm" : motion === "calm" ? "off" : "full"; FX.setMotion(n); say("动效：" + n); } }
     ];
     document.querySelectorAll("#taskList .task-row").forEach(function (row) {
       var code = row.dataset.code || "";
@@ -10119,12 +10116,12 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     if (previewBar) return previewBar;
     previewBar = document.createElement("div");
     previewBar.id = "salsTerminalPreviewBar";
-    previewBar.innerHTML = '<span class="t">方案一 · 终端解码演示</span>';
+    previewBar.innerHTML = '<span class="t">· </span>';
     var again = document.createElement("button");
-    again.type = "button"; again.className = "sals-fx-play"; again.textContent = "重播解码 ↻";
+    again.type = "button"; again.className = "sals-fx-play"; again.textContent = "重播 ↻";
     again.addEventListener("click", function () { runA(true); });
     var back = document.createElement("button");
-    back.type = "button"; back.className = "sals-fx-play pink"; back.textContent = "返回门户 ▸";
+    back.type = "button"; back.className = "sals-fx-play pink"; back.textContent = "返回首页 ▸";
     back.addEventListener("click", FX.closeTerminalPreview);
     previewBar.appendChild(again); previewBar.appendChild(back);
     document.body.appendChild(previewBar);
@@ -10805,20 +10802,14 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
 
   
   var WEAPON_POOL = [
-    { name: "护身符", cost: 100, stat: "atk", value: 4, tier: "基础防身" },
-    { name: "消音手枪", cost: 500, stat: "atk", value: 8, tier: "中阶除灵" },
-    { name: "爆破符*100", cost: 1500, stat: "atk", value: 12, tier: "高阶武装" },
-    { name: "镇魂铃", cost: 300, stat: "spr", value: 5, tier: "辅助法器" },
-    { name: "罗盘·寻灵", cost: 400, stat: "per", value: 6, tier: "情报侦测" },
-    { name: "桃木剑", cost: 600, stat: "con", value: 7, tier: "冷兵器" },
-    { name: "结界符", cost: 800, stat: "spr", value: 8, tier: "辅助法器" },
-    { name: "回春丹", cost: 700, stat: "rec", value: 7, tier: "医疗补给" },
-    { name: "定魂珠", cost: 900, stat: "will", value: 8, tier: "精神防护" },
-    { name: "狙击步枪", cost: 1200, stat: "atk", value: 10, tier: "热武器" },
-    { name: "灵视眼镜", cost: 1000, stat: "per", value: 9, tier: "情报侦测" },
-    { name: "玄铁盾", cost: 1100, stat: "con", value: 9, tier: "防具" },
-    { name: "净化符", cost: 200, stat: "spr", value: 4, tier: "一次性符咒" },
-    { name: "雷击符", cost: 900, stat: "atk", value: 9, tier: "一次性符咒" }
+    { name: "护身符", cost: 100, stat: "atk", value: 15, tier: "基础武装" },
+    { name: "消音手枪", cost: 1000, stat: "atk", value: 25, tier: "中阶武装" },
+    { name: "爆破符", cost: 1500, stat: "atk", value: 40, tier: "高阶武装" },
+    { name: "镇魂铃", cost: 450, stat: "spr", value: 20, tier: "基础武装" },
+    { name: "金疮药", cost: 700, stat: "rec", value:100, tier: "医疗补给" },
+    { name: "狙击步枪", cost: 2000, stat: "atk", value: 60, tier: "高阶武装" },
+    { name: "防爆盾", cost: 300, stat: "con", value: 25, tier: "基础武装" },
+    { name: "雷击符", cost: 1200, stat: "atk", value: 50, tier: "高阶武装" }
   ];
   function weekIndex() {
     var d = new Date(); var day = (d.getDay() + 6) % 7;
@@ -10841,7 +10832,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var info = document.createElement("div");
       var b = document.createElement("b"); b.textContent = w.name;
       var sp = document.createElement("span"); sp.style.cssText = "font-size:11px;color:var(--dim);";
-      sp.textContent = w.tier + " · " + (LABEL[w.stat]||w.stat) + "+" + w.value + " · 需贡献 " + w.cost + (/符/.test(w.name) ? " · 一次性" : " · 耐久10");
+      sp.textContent = w.tier + " · " + (LABEL[w.stat]||w.stat) + "+" + w.value + " · 需贡献 " + w.cost + (/符/.test(w.name) ? " 一次性" : "  耐久10");
       info.append(b, document.createElement("br"), sp);
       var btn = document.createElement("button"); btn.type="button"; btn.className="task-btn weapon-btn";
       btn.dataset.name=w.name; btn.dataset.cost=String(w.cost); btn.textContent="解锁申领";
@@ -11742,7 +11733,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var f1 = document.createElement("div");
       var l1 = document.createElement("label"); l1.textContent = "队伍名称";
       var i1 = document.createElement("input"); i1.type = "text"; i1.maxLength = 24;
-      i1.placeholder = squadTab === "long" ? "例如：城西常驻第一班" : "例如：医院夜间突入组";
+      i1.placeholder = squadTab === "long" ? "例如：这是一个小队名称" : "例如：这是一个短期小队名称";
       f1.appendChild(l1); f1.appendChild(i1);
       form.appendChild(f1);
       var taskSel = null;
@@ -11788,8 +11779,8 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       var em = document.createElement("div");
       em.className = "sq-empty";
       em.textContent = squadTab === "long"
-        ? "长期小队会一直保留，适合固定搭档与日常派遣。"
-        : "短期行动组绑定单个任务，6 小时或任务结算后自动解散。";
+        ? "长期小队将会一直保留，适合固定搭档与日常派遣。"
+        : "短期行动组只绑定单个任务，6 小时或任务结算后自动解散。";
       panel.appendChild(em);
     }
     left.appendChild(panel);
@@ -12063,13 +12054,13 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       return i;
     }
     var code = inp("text", "例如：Intermediate Task-501");
-    var title = inp("text", "例如：城西医院夜间灵体清剿");
+    var title = inp("text", "例如：这是一个任务名称");
     var g1 = document.createElement("div"); g1.className = "pub-grid";
     g1.appendChild(field("任务编号 *", code));
     g1.appendChild(field("任务标题 *", title));
     form.appendChild(g1);
 
-    var loc = inp("text", "例如：城西医院 住院区 B 栋");
+    var loc = inp("text", "例如：这是一个地址");
     var gradeSel = document.createElement("select");
     ["不限", "初级", "中级", "高级", "特级", "内勤"].forEach(function (g) {
       var o = document.createElement("option"); o.value = g; o.textContent = g; gradeSel.appendChild(o);
@@ -12109,7 +12100,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
 
     var imgWrap = document.createElement("div");
     imgWrap.className = "pub-field";
-    var imgLabel = document.createElement("label"); imgLabel.textContent = "任务图片（管理员可上传现场照片 / 示意图）";
+    var imgLabel = document.createElement("label"); imgLabel.textContent = "任务图片（管理员可上传灵体示意图）";
     var drop = document.createElement("div");
     drop.className = "pub-imgdrop";
     var ph = document.createElement("div"); ph.className = "ph";
@@ -12301,7 +12292,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
       sub.appendChild(b);
     }
     if (dead.length) {
-      sub.appendChild(document.createTextNode(" · " + dead.length + " 件已破损，加成已回落，可修理后恢复"));
+      sub.appendChild(document.createTextNode(" · " + dead.length + " 件已破损，加成已取消，可修理后恢复"));
     }
   }
 
@@ -12333,7 +12324,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     function toggleBrief() {
       brief.hidden = !brief.hidden;
       cta.textContent = brief.hidden ? "展开行动简报 ▾" : "收起简报 ▴";
-      if (hint) hint.textContent = brief.hidden ? "点击查看行动简报 · 悬停可扫描现场" : "简报已展开 · 下方为进行中的活动";
+      if (hint) hint.textContent = brief.hidden ? "点击查看行动简报" : "正在进行中的活动";
       if (!brief.hidden) paintBriefGrid();
     }
     if (!banner.__rpgBound) {
