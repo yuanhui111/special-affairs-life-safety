@@ -1810,7 +1810,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
       </div>      <div class="af-row"><label>所属部门</label><select name="district">
         <option value="" selected disabled hidden>请选择您的部门</option><option value="特殊任务行动局">特殊任务行动局（非管理不要选）</option>
         <option value="突击行动处">突击行动处（外勤）</option><option value="常规执行处">常规执行处（外勤）</option>
-        <option value="情报管理局">情报管理局（内勤）</option><option value="技术研发院">技术研发院（内勤）</option>
+        <option value="情报管理局">情报管理局（内勤）</option><option value="技术研究院">技术研究院（内勤）</option>
         <option value="综合保障部">综合保障部（内勤）</option><option value="内部督查处" data-admin-only="true" hidden disabled>内部督查处（管理）</option>
       </select>
       <div id="deptHint" style="margin-top:8px;font-family:var(--font-mono);font-size:10.5px;line-height:1.7;color:var(--dim);border-left:2px solid var(--blue);padding:6px 10px;background:rgba(26,159,255,0.05);"></div>
@@ -1932,7 +1932,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
           <div class="pn-rows" id="noticeRows">
             <div class="pn-row"><span>[公告]</span>关于开展 2026 年度除灵师执照年审的通知</div>
             <div class="pn-row"><span>[公告]</span>城西医院住院区灵体活动频繁，请途经人员注意</div>
-            <div class="pn-row"><span>[公告]</span>技术研发中心新一批武器已开放领取名额</div>
+            <div class="pn-row"><span>[公告]</span>技术研究院新一批武器已开放领取名额</div>
           </div>
         </div>
         <div class="live-feed" style="margin-top: 0; width: 100%;">
@@ -2438,7 +2438,7 @@ body:not(.is-logged-in) .hud-avatar:hover .avatar-card {
     return departmentHeadRoles.get(normalizeRoleName(name)) || null;
   }
   const departmentColors = [
-    { match: ["技术研发院"], color: "#00b89c" },
+    { match: ["技术研究院"], color: "#00b89c" },
     { match: ["内部督查处"], color: "#8717dd" },
     { match: ["情报管理局"], color: "#1260d5" },
     { match: ["特殊任务行动局", "突击行动处", "常规执行处"], color: "#a40810" },
@@ -11068,7 +11068,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     var dept = String((p && p.district) || "");
     if (dept === "综合保障部") return ROLES.log;
     if (dept === "情报管理局") return ROLES.int;
-    if (dept === "技术研发院") return ROLES.sup;
+    if (dept === "技术研究院") return ROLES.sup;
     if (dept === "内部督查处") return ROLES.sup;
     var sp = schoolStat(p && p.school);
     if (sp === "per") return ROLES.int;
@@ -12067,7 +12067,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     });
     gradeSel.value = "中级";
     var deptSel = document.createElement("select");
-    ["", "特殊任务行动局", "突击行动处", "常规执行处", "情报管理局", "技术研发院", "综合保障部", "内部督查处"].forEach(function (d) {
+    ["", "特殊任务行动局", "突击行动处", "常规执行处", "情报管理局", "技术研究院", "综合保障部", "内部督查处"].forEach(function (d) {
       var o = document.createElement("option"); o.value = d; o.textContent = d || "不限部门"; deptSel.appendChild(o);
     });
     var g2 = document.createElement("div"); g2.className = "pub-grid";
