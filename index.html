@@ -4063,7 +4063,7 @@ function bindArchiveCards(container, records) {
 
     try {
       const { data, error } = await db.from("archives")
-        .select("id, name, grade, district, status, school, photo, fp, created_at, experience, contribution, stat_atk, stat_con, stat_will, stat_spr, stat_per, stat_rec")
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(currentArchiveLimit);
       
@@ -12390,28 +12390,55 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     var body = el("pcBody");
     if (!body) return;
     var observer = new MutationObserver(function () {
-      var input = body.querySelector("#pcAvatarInput");
-      if (!input || body.querySelector("#pcIntroInput")) return;
-      var controls = input.closest(".pc-profile-controls");
-      if (!controls) return;
+      var anchor = body.querySelector(".pc-photo-wrap");
+      if (!anchor || body.querySelector("#pcIntroWrap")) return;
+      var canEdit = !!body.querySelector("#pcAvatarInput");
       var cur = window.__rpgCurrentProfile || null;
       var id = cur && cur.id != null ? cur.id : null;
+
+      var title = document.createElement("div");
+      title.className = "ac-service-title";
+      title.style.cssText = "margin-top:20px;";
+      title.textContent = "INTRODUCTION / 个人介绍图";
+      // 介绍图独立成块，追加到卡片最底部，绝不占用头像区
+      body.appendChild(title);
+
       var wrap = document.createElement("div");
+      wrap.id = "pcIntroWrap";
       wrap.className = "pc-intro-wrap";
-      var ctrl = document.createElement("div");
-      ctrl.className = "pc-intro-controls";
-      ctrl.innerHTML = '<label for="pcIntroInput">个人介绍图（展示在档案页，与头像分开保存）</label><div class="row"><input id="pcIntroInput" type="file" accept="image/*"><button type="button" class="task-refresh" id="pcIntroSave" disabled>保存介绍图</button><button type="button" class="task-refresh pc-image-remove" id="pcIntroRemove">移除介绍图</button></div>';
-      controls.parentElement.insertBefore(wrap, controls.nextSibling);
-      controls.parentElement.insertBefore(ctrl, wrap.nextSibling);
+      wrap.style.cssText = "width:100%;min-height:160px;max-height:460px;margin:8px 0 16px;background:var(--panel);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:" + (canEdit ? "pointer" : "default");
+      body.appendChild(wrap);
+
+      var ctrl = null;
+      if (canEdit) {
+        ctrl = document.createElement("div");
+        ctrl.className = "pc-intro-controls";
+        ctrl.innerHTML = '<label for="pcIntroInput">上传或更换个人介绍图（展示在档案页，与头像分开保存）</label><div class="row"><input id="pcIntroInput" type="file" accept="image/*"><button type="button" class="task-refresh" id="pcIntroSave" disabled>保存介绍图</button><button type="button" class="task-refresh pc-image-remove" id="pcIntroRemove">移除介绍图</button></div>';
+        body.appendChild(ctrl);
+      }
+
       var preview = wrap;
       function paint(data) {
         preview.replaceChildren();
-        if (data) { var im = document.createElement("img"); im.src = data; im.alt = "个人介绍图"; preview.appendChild(im); }
-        else { var e0 = document.createElement("div"); e0.className = "pc-intro-empty"; e0.textContent = "尚未上传个人介绍图\n支持点击选择、拖拽或粘贴"; preview.appendChild(e0); }
+        if (data) {
+          var im = document.createElement("img");
+          im.src = data; im.alt = "个人介绍图";
+          im.style.cssText = "width:100%;height:100%;object-fit:contain;display:block;";
+          preview.appendChild(im);
+        } else {
+          var e0 = document.createElement("div");
+          e0.className = "pc-intro-empty";
+          e0.style.cssText = "color:var(--dim);font:11px var(--font-mono);letter-spacing:.12em;text-align:center;padding:16px;line-height:1.8;white-space:pre-line;";
+          e0.textContent = canEdit ? "尚未上传个人介绍图\n支持点击选择、拖拽或粘贴" : "该除灵师尚未上传个人介绍图";
+          preview.appendChild(e0);
+        }
       }
       var existing = (cur && cur.profile_image) || "";
       if (!existing && id != null) existing = lsGet(localFieldKey(id, "profile_image"), "") || "";
       paint(existing);
+
+      if (!canEdit) return;
+
       var pending = "";
       var fi = ctrl.querySelector("#pcIntroInput");
       var sv = ctrl.querySelector("#pcIntroSave");
@@ -12447,6 +12474,7 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
           btn.disabled = false; btn.textContent = old;
           if (!res.ok) { say("保存失败：" + (res.reason || "未知错误"), "warn"); return; }
           lsSet(localFieldKey(id, "profile_image"), data || "");
+          if (cur) cur.profile_image = data || "";
           paint(data);
           pending = ""; sv.disabled = true;
           if (res.localOnly && res.localOnly.indexOf("profile_image") >= 0) {
