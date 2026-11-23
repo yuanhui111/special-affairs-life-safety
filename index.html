@@ -6842,7 +6842,7 @@ function bindArchiveCards(container, records) {
 
       const { error: err2 } = await db.from("bounties").insert([{
         publisher_fp: myFp,
-        publisher_name: me[0].name || "匿名除灵师",
+        publisher_name: "匿名委托人",
         title, description: desc, reward: cost, money_reward: moneyCost, status: "open",
         expires_at: expiresAt ? expiresAt.toISOString() : null
       }]);
