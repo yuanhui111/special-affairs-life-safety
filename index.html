@@ -12938,5 +12938,42 @@ img,svg,canvas,video{max-width:100%}
   window.addEventListener("load",function(){ setTimeout(function(){ if(sessionValid()) forcePortal(); },2600); });
 })();
 </script>
+
+<style id="sals-mobile-adapt">
+
+.portal, .wiki-screen, .dossier-screen, .person-card { overflow: hidden; }
+.portal-main, .wiki-content, .wiki-side, .pc-body, .plm-body,
+.dept-modal-panel, .tc-panel {
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.portal-main { touch-action: pan-y; }
+body { -webkit-overflow-scrolling: touch; }
+
+
+@media (max-width: 1024px) {
+  .archive-card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .archive-card .ac-image-wrap { max-height: 42vh; }
+  .pc-profile-upload { height: min(46vh, 360px); }
+  .pc-image-upload-wrap { max-height: 360px; }
+  .ds-avatar { height: min(40vh, 230px); }
+}
+
+@media (max-width: 700px) {
+  .archive-card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .archive-card .ac-image-wrap { aspect-ratio: 3 / 3.4; max-height: 44vw; }
+  .pc-photo-wrap { width: 110px; height: 110px; margin-bottom: 12px; }
+  .pc-image-upload-wrap { min-height: 140px; max-height: 56vw; }
+  .pc-profile-upload { height: min(38vh, 260px); min-height: 140px; }
+  .ds-avatar { height: min(34vh, 190px); margin-bottom: 14px; }
+  #taskReportWall { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important; gap: 10px !important; }
+}
+
+@media (max-width: 420px) {
+  .archive-card-grid { grid-template-columns: 1fr; }
+  .archive-card .ac-image-wrap { aspect-ratio: 3 / 3; max-height: 80vw; }
+}
+</style>
 </body>
 </html>
