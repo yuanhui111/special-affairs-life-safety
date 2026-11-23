@@ -6040,12 +6040,22 @@ function bindArchiveCards(container, records) {
       if (weaponData) {
         const maxD = maxDurOf(name);
         const dur = weaponData.durability !== undefined ? weaponData.durability : maxD;
-        btn.outerHTML = `
-          <div style="text-align:right; display:flex; flex-direction:column; gap:5px; flex-shrink:0;">
+        const cost = Number(btn.getAttribute("data-cost")) || 0;
+        const holder = document.createElement("div");
+        holder.style.cssText = "text-align:right; display:flex; flex-direction:column; gap:5px; flex-shrink:0;";
+        holder.innerHTML = `
             <span style="font-size:11px; color:${dur <= 0 ? 'var(--pink)' : 'var(--blue)'};">耐久: ${dur}/${maxD}</span>
             ${dur < maxD ? `<button class="task-btn" onclick="window.repairWeapon('${weaponData.id}', ${maxD - dur})" style="padding:2px 8px; font-size:10px;">修(耗${(maxD - dur) * 50}金)</button>` : ''}
-          </div>
         `;
+        if (dur <= 0) {
+          const re = document.createElement("button");
+          re.type = "button"; re.className = "task-btn";
+          re.style.cssText = "padding:2px 8px; font-size:10px;";
+          re.textContent = `重新申领(耗${cost}贡献)`;
+          re.addEventListener("click", () => window.claimWeapon(cost, name));
+          holder.appendChild(re);
+        }
+        btn.replaceWith(holder);
       }
     });
   }
@@ -6231,9 +6241,10 @@ function bindArchiveCards(container, records) {
   window.claimWeapon = async function(cost, name) {
     const myFp = getFingerprint();
     if (!db) return false;
-    const { data: owned, error: ownedError } = await db.from("player_weapons").select("id").eq("fp", myFp).eq("weapon_name", name).limit(1);
+    const { data: owned, error: ownedError } = await db.from("player_weapons").select("id, durability").eq("fp", myFp).eq("weapon_name", name).limit(1);
     if (ownedError) { toast("读取武器库失败：" + ownedError.message, "warn"); return false; }
-    if (owned && owned.length > 0) { toast("你已拥有该武器，无需重复解锁", "warn"); return false; }
+    const brokenOwned = owned && owned.length > 0 && (owned[0].durability == null ? maxDurOf(name) : owned[0].durability) <= 0;
+    if (owned && owned.length > 0 && !brokenOwned) { toast("你已拥有该武器，无需重复解锁", "warn"); return false; }
     const { data, error: balanceError } = await db.from("archives").select("contribution").eq("fp", myFp).limit(1);
     if (balanceError) { toast("读取贡献点失败：" + balanceError.message, "warn"); return false; }
     if (!data || !data.length) { toast("未找到当前除灵师档案。", "warn"); return false; }
@@ -6242,14 +6253,20 @@ function bindArchiveCards(container, records) {
       toast(`贡献点不足！解锁【${name}】需要 ${cost} 点，你当前只有 ${curContrib} 点。`, "warn");
       return false;
     }
-    if (!confirm(`确认消耗 ${cost} 贡献点解锁【${name}】吗？`)) return false;
+    if (!confirm(brokenOwned ? `【${name}】已损毁，确认消耗 ${cost} 贡献点重新申领吗？` : `确认消耗 ${cost} 贡献点解锁【${name}】吗？`)) return false;
     if (cost > 0 && !checkIsAdmin()) {
       const { error: err1 } = await db.from("archives").update({ contribution: curContrib - cost }).eq("fp", myFp);
       if (err1) { toast("扣款失败：" + err1.message, "warn"); return false; }
     }
-    const { error: err2 } = await db.from("player_weapons").insert([{ fp: myFp, weapon_name: name, durability: maxDurOf(name) }]);
-    if (err2) { toast("写入武器库失败：" + err2.message, "warn"); return false; }
-    toast(`解锁成功！你已永久拥有【${name}】。`);
+    if (brokenOwned) {
+      const { error: err2 } = await db.from("player_weapons").update({ durability: maxDurOf(name) }).eq("id", owned[0].id);
+      if (err2) { toast("写入武器库失败：" + err2.message, "warn"); return false; }
+      toast(`重新申领成功！【${name}】耐久已恢复满值。`);
+    } else {
+      const { error: err2 } = await db.from("player_weapons").insert([{ fp: myFp, weapon_name: name, durability: maxDurOf(name) }]);
+      if (err2) { toast("写入武器库失败：" + err2.message, "warn"); return false; }
+      toast(`解锁成功！你已永久拥有【${name}】。`);
+    }
     checkOwnedWeapons();
     if (window.__reloadArchive) window.__reloadArchive();
     return true;
@@ -6501,6 +6518,7 @@ function bindArchiveCards(container, records) {
         weaponList.appendChild(row);
       });
       checkOwnedWeapons();
+      if (window.SALSRPG && typeof window.SALSRPG.syncWeeklyExtra === "function") window.SALSRPG.syncWeeklyExtra(rows);
     }
 
     async function refreshBoard() {
@@ -10818,9 +10836,18 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
   }
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
   function weeklyWeapons() {
+    var pool = WEAPON_POOL.concat(RPG.extraPool || []);
+    var pickKey = "sals_weekly_pick:" + weekIndex();
+    var locked = lsJson(pickKey, null);
+    if (Array.isArray(locked) && locked.length === 3) {
+      var kept = locked.map(function (n) { return pool.filter(function (w) { return w.name === n; })[0]; }).filter(Boolean);
+      if (kept.length === 3) return kept;
+    }
+    pool = pool.slice().sort(function (a, b) { return String(a.name).localeCompare(String(b.name), "zh-CN"); });
     var rnd = mulberry32(weekIndex() * 7919 + 13);
-    var pool = WEAPON_POOL.slice(); var out = [];
-    for (var i = 0; i < 6 && pool.length; i++) out.push(pool.splice(Math.floor(rnd()*pool.length),1)[0]);
+    var out = [];
+    for (var i = 0; i < 3 && pool.length; i++) out.push(pool.splice(Math.floor(rnd()*pool.length),1)[0]);
+    lsSet(pickKey, JSON.stringify(out.map(function (w) { return w.name; })));
     return out;
   }
   function renderWeeklyWeapons() {
@@ -10841,6 +10868,9 @@ body.sals-terminal-preview #salsTerminalPreviewBar{display:flex}
     });
   }
   RPG.renderWeekly = renderWeeklyWeapons;
+  RPG.extraPool = [];
+  RPG.weeklyWeapons = weeklyWeapons;
+  RPG.baseNames = WEAPON_POOL.map(function (w) { return w.name; });
 
   function loadoutKey() { return "sals_preferred_weapons:" + fp(); }
   function getLoadout() { var a = lsJson(loadoutKey(), []); return Array.isArray(a) ? a : []; }
@@ -12940,7 +12970,12 @@ img,svg,canvas,video{max-width:100%}
 </script>
 
 <style id="sals-mobile-adapt">
+/* ===== 移动端 / 平板适配补丁（追加，仅覆盖，不改动原结构） ===== */
 
+/* A. 修复"手机划不动页面"
+   根因: .portal/.wiki-screen/.dossier-screen/.person-card 为 fixed + flex column,
+   其 flex:1 滚动子项未设 min-height:0, 被内容撑破视口 -> fixed 容器无法滚动 -> 触屏划不动。
+   给容器 overflow:hidden、滚动子项 min-height:0, 即恢复内部滚动。 */
 .portal, .wiki-screen, .dossier-screen, .person-card { overflow: hidden; }
 .portal-main, .wiki-content, .wiki-side, .pc-body, .plm-body,
 .dept-modal-panel, .tc-panel {
@@ -12951,7 +12986,9 @@ img,svg,canvas,video{max-width:100%}
 .portal-main { touch-action: pan-y; }
 body { -webkit-overflow-scrolling: touch; }
 
+/* B. 图片对手机/平板过大: 限制各类展示大图与归档卡片图 */
 
+/* 平板 (701~1024px) */
 @media (max-width: 1024px) {
   .archive-card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
   .archive-card .ac-image-wrap { max-height: 42vh; }
@@ -12960,6 +12997,7 @@ body { -webkit-overflow-scrolling: touch; }
   .ds-avatar { height: min(40vh, 230px); }
 }
 
+/* 手机 (<=700px): 归档卡片两列、图高受控; 展示大图按比例缩小 */
 @media (max-width: 700px) {
   .archive-card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .archive-card .ac-image-wrap { aspect-ratio: 3 / 3.4; max-height: 44vw; }
@@ -12970,10 +13008,318 @@ body { -webkit-overflow-scrolling: touch; }
   #taskReportWall { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important; gap: 10px !important; }
 }
 
+/* 极窄手机 (<=420px): 单列卡片, 避免图片过大 */
 @media (max-width: 420px) {
   .archive-card-grid { grid-template-columns: 1fr; }
   .archive-card .ac-image-wrap { aspect-ratio: 3 / 3; max-height: 80vw; }
 }
 </style>
+
+<style id="sals-responsive-v2">
+/* ===== 适配修复 v2（真浏览器三宽度自检后追加，仅覆盖，不改原结构） =====
+   修复项：
+   1) 手机端首页六维面板/头像行被裁切（固定宽 140+220 超出视口）
+   2) 个人档案中心(ds-main)在手机/平板/矮屏下内容超出且无法滚动
+   3) 登录框在小屏/横屏下内容被裁切且无法滚动
+   4) 悬赏列表/移动端服务/限时活动的内联多列样式在窄屏不降列
+   5) 顶栏品牌名过长溢出；触控目标与 iOS 输入防放大补全 */
+
+/* 全局：滚动容器惯性滚动 + 弹窗高度保险（含横屏矮视口） */
+.portal-main, .pc-body, .plm-body, .wiki-content, .wiki-side,
+.ds-main, .tc-panel, .dept-modal-panel { -webkit-overflow-scrolling: touch; }
+.dept-modal-panel { max-height: min(92vh, 92dvh); overflow-y: auto; overscroll-behavior: contain; }
+.login-screen { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.login-box { margin: auto; }
+
+/* 个人档案中心：任何尺寸下内容超出都可纵向滚动 */
+.ds-main { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+.ds-left { flex-shrink: 0; }
+.ds-radar-box { min-height: 220px; }
+.ds-btn { min-height: 44px; }
+
+/* 顶栏品牌：长名称省略号，不再撑破导航 */
+.pn-brand { min-width: 0; max-width: 100%; }
+.pn-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 空态/加载提示：允许换行，极窄屏不再横向撑破 */
+.af-empty { white-space: normal !important; overflow-wrap: anywhere; }
+
+@media (max-width: 980px) {
+  .ds-right { min-height: 0; }
+  .ds-radar-box { flex: 0 0 auto; min-height: 240px; }
+  .ds-btn-grid { grid-template-rows: none !important; grid-auto-rows: minmax(48px, auto); }
+}
+
+@media (max-width: 700px) {
+  /* 首页右侧头像+数值区：允许换行，六维面板独占整行，不再被裁切 */
+  .portal-hero > div:last-child { flex-wrap: wrap; width: 100%; }
+  .home-stats-panel { flex: 1 1 100%; width: 100% !important; }
+  .pn-sub { display: none; }
+
+  /* 登录框：内容高于视口时整屏可滚动，不再裁切 */
+  .login-screen { align-items: flex-start; }
+  .login-box { height: auto !important; min-height: 100dvh; max-height: none !important; }
+
+  /* 覆盖内联固定列数，窄屏降列 */
+  #bountyList { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+  .mobile-wrap { grid-template-columns: 1fr !important; }
+
+  .dossier-screen { padding: 12px 12px calc(12px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 420px) {
+  #bountyList { grid-template-columns: 1fr !important; }
+  #limitedEventList { grid-template-columns: 1fr !important; }
+}
+
+/* 横屏矮视口：登录/弹窗/档案中心全部可滚动 */
+@media (max-height: 560px) {
+  .login-screen { align-items: flex-start; }
+  .dept-modal-panel, .tc-panel { max-height: 94vh; }
+}
+
+/* 触控目标补全（仅触屏设备） */
+@media (pointer: coarse) {
+  .pn-exit, .wiki-exit, .task-refresh, .sv-btn, .task-page-btn,
+  .login-close, .pc-close, .tc-close, .plm-close { min-height: 42px; }
+  .login-close, .pc-close, .tc-close, .plm-close { min-width: 42px; }
+  .search-mode-btn { width: 42px; height: 42px; }
+  .sq-remove { width: 34px; height: 34px; }
+}
+</style>
+
+<style id="sals-weapon-pool-style">
+#weaponPoolAdmin { border-top: 1px dashed var(--line-2); margin-top: 10px; padding-top: 10px; }
+#weaponPoolAdmin .cf-row { margin-bottom: 10px; }
+#wpAdminList .dept-card b { font-size: 13px; }
+#wpAdminStatus { min-height: 16px; }
+@media (pointer: coarse) {
+  #weaponPoolAdmin .cf-submit, #weaponPoolAdmin .task-btn { min-height: 42px; }
+}
+</style>
+
+<script id="sals-weapon-pool">
+/* ===== 武器轮换池 v1 =====
+   1) 每周轮换固定 3 把（当周快照锁定，周一自动换新）
+   2) 管理员可在武器申领弹窗添加/移除轮换池武器（云端 weapon_pool 表，失败降级本机）
+   3) 已通过审核的研发提案自动进入轮换池（syncWeeklyExtra 钩子） */
+(function () {
+  var RPG = window.SALSRPG;
+  if (!RPG) return;
+  var CACHE_KEY = "sals_weapon_pool_cache_v1";
+
+  function readCache() {
+    try {
+      var c = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
+      return {
+        poolRows: Array.isArray(c.poolRows) ? c.poolRows : [],
+        approved: Array.isArray(c.approved) ? c.approved : [],
+        local: Array.isArray(c.local) ? c.local : []
+      };
+    } catch (e) { return { poolRows: [], approved: [], local: [] }; }
+  }
+  function writeCache() { try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch (e) {} }
+  var cache = readCache();
+
+  function toEntry(row, tier) {
+    var name = String(row.name || "").trim();
+    var cost = Math.max(0, Math.round(Number(row.cost) || 0));
+    if (!name) return null;
+    var bonus = RPG.bonusOfWeapon ? RPG.bonusOfWeapon(name, cost) : { stat: "atk", value: 3 };
+    return { name: name, cost: cost, stat: bonus.stat, value: bonus.value, tier: tier, note: String(row.note || "") };
+  }
+
+  function rebuildExtra() {
+    var seen = {};
+    (RPG.baseNames || []).forEach(function (n) { seen[n] = 1; });
+    var out = [];
+    function push(rows, tier) {
+      rows.forEach(function (r) {
+        var e = toEntry(r, tier);
+        if (e && !seen[e.name]) { seen[e.name] = 1; out.push(e); }
+      });
+    }
+    push(cache.poolRows, "管理员添加");
+    push(cache.approved, "研发提案");
+    push(cache.local, "本机添加");
+    RPG.extraPool = out;
+    if (RPG.renderWeekly) RPG.renderWeekly();
+    renderAdminList();
+  }
+
+  /* 研发提案审核通过后由提案板调用 */
+  RPG.syncWeeklyExtra = function (proposals) {
+    cache.approved = (proposals || [])
+      .filter(function (p) { return p.status === "approved"; })
+      .map(function (p) { return { name: p.weapon_name, cost: Number(p.contribution_cost) || 0 }; });
+    writeCache();
+    rebuildExtra();
+  };
+
+  /* 云端轮换池读取（表不存在时静默降级用缓存） */
+  function fetchPool() {
+    if (typeof db === "undefined" || !db) return Promise.resolve();
+    return db.from("weapon_pool")
+      .select("id,name,cost,note,enabled,created_by_name,created_at")
+      .eq("enabled", true)
+      .order("created_at", { ascending: true })
+      .limit(200)
+      .then(function (r) {
+        if (r.error) throw r.error;
+        cache.poolRows = (r.data || []).map(function (x) { return { id: x.id, name: x.name, cost: x.cost, note: x.note || "" }; });
+        writeCache();
+        rebuildExtra();
+      })
+      .catch(function (e) { console.warn("[SALS] 读取武器轮换池失败（可能尚未执行建表 SQL）：", e && e.message || e); });
+  }
+
+  /* 云端已通过研发提案读取（与钩子互为备份，避免脚本时序差） */
+  function fetchApproved() {
+    if (typeof db === "undefined" || !db) return Promise.resolve();
+    return db.from("weapon_proposals")
+      .select("weapon_name,contribution_cost,status")
+      .eq("status", "approved")
+      .limit(200)
+      .then(function (r) {
+        if (r.error) throw r.error;
+        cache.approved = (r.data || []).map(function (x) { return { name: x.weapon_name, cost: Number(x.contribution_cost) || 0 }; });
+        writeCache();
+        rebuildExtra();
+      })
+      .catch(function (e) { console.warn("[SALS] 读取已通过研发武器失败：", e && e.message || e); });
+  }
+
+  function isAdmin() { return typeof checkIsAdmin === "function" && checkIsAdmin(); }
+  function syncAdminVisibility() {
+    var b = document.getElementById("weaponPoolAdmin");
+    if (b) b.hidden = !isAdmin();
+  }
+
+  function renderAdminList() {
+    var list = document.getElementById("wpAdminList");
+    if (!list) return;
+    list.replaceChildren();
+    var rows = [];
+    cache.poolRows.forEach(function (r) { rows.push({ src: "cloud", name: r.name, cost: r.cost, id: r.id }); });
+    cache.approved.forEach(function (r) { rows.push({ src: "approved", name: r.name, cost: r.cost }); });
+    cache.local.forEach(function (r, i) { rows.push({ src: "local", name: r.name, cost: r.cost, idx: i }); });
+    if (!rows.length) {
+      list.innerHTML = '<div style="color:var(--dim);font-size:11px;">暂无额外轮换武器。基础武器与已通过研发武器会自动参与轮换。</div>';
+      return;
+    }
+    rows.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "dept-card";
+      row.style.cssText = "display:flex;justify-content:space-between;align-items:center;padding:10px 12px;gap:10px;";
+      var info = document.createElement("div"); info.style.minWidth = "0";
+      var b = document.createElement("b"); b.textContent = r.name;
+      var sp = document.createElement("span"); sp.style.cssText = "font-size:10px;color:var(--dim);display:block;";
+      sp.textContent = (r.src === "cloud" ? "管理员添加" : r.src === "approved" ? "研发通过" : "本机添加") + " · 需贡献 " + r.cost;
+      info.append(b, sp);
+      row.appendChild(info);
+      if (r.src !== "approved") {
+        var del = document.createElement("button");
+        del.type = "button"; del.className = "task-btn"; del.textContent = "移除";
+        del.addEventListener("click", function () { removeWeapon(r, del); });
+        row.appendChild(del);
+      }
+      list.appendChild(row);
+    });
+  }
+
+  function removeWeapon(r, btn) {
+    if (!confirm("确定将「" + r.name + "」移出轮换池吗？")) return;
+    if (btn) btn.disabled = true;
+    function dropLocal() {
+      if (r.src === "local") cache.local.splice(r.idx, 1);
+      if (r.src === "cloud") cache.poolRows = cache.poolRows.filter(function (x) { return x.id !== r.id; });
+      writeCache(); rebuildExtra();
+    }
+    if (r.src === "cloud" && typeof db !== "undefined" && db) {
+      db.from("weapon_pool").update({ enabled: false }).eq("id", r.id)
+        .then(function (res) { if (res.error) throw res.error; dropLocal(); fetchPool(); if (window.toast) toast("已移出轮换池"); })
+        .catch(function (e) { console.warn("[SALS] 移除轮换武器失败：", e && e.message || e); if (btn) btn.disabled = false; if (window.toast) toast("云端移除失败，请重试", "warn"); });
+    } else {
+      dropLocal();
+    }
+  }
+
+  function addWeapon() {
+    var nameEl = document.getElementById("wpAdminName");
+    var costEl = document.getElementById("wpAdminCost");
+    var noteEl = document.getElementById("wpAdminNote");
+    var status = document.getElementById("wpAdminStatus");
+    var btn = document.getElementById("wpAdminAdd");
+    var name = String(nameEl.value || "").trim();
+    var cost = Math.round(Number(costEl.value));
+    if (!name) { status.textContent = "请填写武器名称。"; return; }
+    if (!Number.isFinite(cost) || cost < 0) { status.textContent = "贡献点需为不小于 0 的整数。"; return; }
+    var existing = (RPG.baseNames || []).concat((RPG.extraPool || []).map(function (w) { return w.name; }));
+    if (existing.indexOf(name) >= 0) { status.textContent = "该武器已在轮换池中。"; return; }
+    var note = String(noteEl.value || "").trim();
+    btn.disabled = true;
+    function doneLocal(msg) {
+      cache.local.push({ name: name, cost: cost, note: note });
+      writeCache(); rebuildExtra();
+      status.textContent = msg;
+      if (window.toast) toast(msg, "warn");
+      nameEl.value = ""; noteEl.value = "";
+      btn.disabled = false;
+    }
+    if (typeof db !== "undefined" && db) {
+      db.from("weapon_pool").insert({
+        name: name, cost: cost, note: note, enabled: true,
+        created_by_name: localStorage.getItem("sals_active_name") || "管理员"
+      })
+        .then(function (r) {
+          if (r.error) throw r.error;
+          status.textContent = "已添加到云端轮换池，所有玩家可见。";
+          if (window.toast) toast("武器已加入轮换池");
+          nameEl.value = ""; noteEl.value = "";
+          btn.disabled = false;
+          return fetchPool();
+        })
+        .catch(function (e) {
+          console.warn("[SALS] 云端写入轮换池失败：", e && e.message || e);
+          doneLocal("云端写入失败（请确认已执行建表 SQL），已暂存本机。");
+        });
+    } else {
+      doneLocal("数据库未连接，已保存在本机浏览器。");
+    }
+  }
+
+  function buildAdminUI() {
+    var host = document.getElementById("weeklyWeaponList");
+    if (!host || document.getElementById("weaponPoolAdmin")) return;
+    var block = document.createElement("div");
+    block.id = "weaponPoolAdmin";
+    block.hidden = true;
+    block.innerHTML =
+      '<div class="dm-tag" style="color:var(--pink);margin-top:6px;">管理员 · 轮换池管理</div>' +
+      '<div class="dm-desc" style="margin-bottom:10px;">添加的武器进入轮换池，参与每周 3 把的轮换抽取；已通过审核的研发武器会自动入池。当周轮换已锁定，新武器从下周起参与抽取。</div>' +
+      '<div class="cf-row"><label for="wpAdminName">武器名称</label><input id="wpAdminName" type="text" maxlength="60" placeholder="例如：镇魂铃"></div>' +
+      '<div class="cf-row"><label for="wpAdminCost">申领所需贡献点</label><input id="wpAdminCost" type="number" min="0" step="1" value="100"></div>' +
+      '<div class="cf-row"><label for="wpAdminNote">备注（可选）</label><input id="wpAdminNote" type="text" maxlength="120" placeholder="武器说明"></div>' +
+      '<button class="cf-submit" id="wpAdminAdd" type="button" style="padding:9px 20px;">添加到轮换池</button>' +
+      '<div id="wpAdminStatus" style="margin-top:8px;font:10px var(--font-mono);color:var(--dim);line-height:1.7;"></div>' +
+      '<div class="dm-tag" style="margin-top:14px;">轮换池武器（非基础）</div>' +
+      '<div id="wpAdminList" style="display:flex;flex-direction:column;gap:8px;"></div>';
+    host.insertAdjacentElement("afterend", block);
+    document.getElementById("wpAdminAdd").addEventListener("click", addWeapon);
+    syncAdminVisibility();
+    var modal = document.getElementById("weaponModal");
+    if (modal) new MutationObserver(syncAdminVisibility).observe(modal, { attributes: true, attributeFilter: ["class"] });
+  }
+
+  function init() {
+    buildAdminUI();
+    rebuildExtra();
+    fetchPool();
+    fetchApproved();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+</script>
 </body>
 </html>
